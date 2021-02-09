@@ -28,7 +28,7 @@ Developments Tools and Frameworks
 
 ## 3. SHN App - CI/CD Diagram
  In progress
-<!-- ![SHN APP](/git_diagrams/SHN-CICD1.png) -->
+![SHN APP](/git_diagrams/SHN-CICD1.png)
 
 
 ## 4. Sandbox Setup
