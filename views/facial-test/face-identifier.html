@@ -1,0 +1,46 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script defer src="face-api.min.js"></script>
+    <script defer src="face-identifier.js"></script>
+
+    <title>Face Identifier Demo</title>
+    
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+      footer {
+        margin-top: 20px;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div class="container">
+      <div id="canvas-holder">
+        <canvas id="canvas" width=600px height=450px></canvas>
+      </div>
+      <p>
+        <input type="text" id="image-url" placeholder="Paste an image url here."></input>
+        <button id="fit-image">Fit</button>
+      </p>
+      <p>
+        <input type="file" id="image-upload"  
+        accept="image/*" 
+        capture ></input>
+      </p>
+      <p>
+        <button id="get-image">Get Image</button>
+      </p>
+      <p>
+        <button id="detect-faces">Detect Faces</button>
+      </p>
+    </div>
+  </body>
+</html>

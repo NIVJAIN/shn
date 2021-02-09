@@ -1,0 +1,59 @@
+version: "2"
+services:
+  web:
+    build: .
+    volumes:
+    - ./logs:/app/kafkaCoronaMicroservices/logs
+    # https://gist.github.com/shaiguitar/627d52ebc0c03af488477b5d636a8909
+    - ./:/app/kafkaCoronaMicroservices
+    # - /app/kafkaCoronaMicroservices/node_modules/bcrypt/
+    # - ${PWD}:/app/project_lufthansa # Doesnt work
+    ports:
+    - "4200:4200"
+    depends_on:
+    - mongo
+  mongo:
+    image: mongo
+    # 6000 port is host port, so from host which is a mac machine use mongo localhost:6000 will bring you to the mongoshell, this mongo shell is for the container mongodb
+    # 27017 is container port
+    ports:
+    - "27017:27017"
+    # - "6000:27017"
+    volumes:
+    - data-volume:/data/db
+    links: 
+    - mongoexpress
+  mongoexpress:
+    image: mongo-express
+    ports: 
+    - "8081:8081"
+# below will create volume
+volumes:
+    data-volume:
+    logs:
+    .:
+
+    # ${PWD}:
+
+
+
+
+
+# cat /proc/mounts inside the container 
+# docker-compose build --no-cache --pull
+# docker-compose build --no-cache --pull
+# how to acces docker of mysql to check the tables
+# docker exec -it mysql_container_name mysql -uroot -p
+# name of the database 
+# mysql> use asrmysqldbinstance
+# mysql> show tables;
+# mysql> SELECT * FROM ipa;
+
+
+#docker system info
+#docker system prune -a
+#docker image prune -a
+#docker image prune
+# docker container prune
+# docker volume prune
+

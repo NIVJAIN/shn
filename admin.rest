@@ -1,0 +1,107 @@
+@accesstoken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNyaXBhbC5qYWluQGdtYWlsLmNvbSIsIm9yZ2lkIjoiSU1EQSIsImlhdCI6MTU4ODU1NTI5MywiZXhwIjoxNTg4NTU1MzYzfQ.gs0cJmuoQePQw542byXG4vXR7uII2wv0CG_DLfNoZsk
+
+@refreshtoken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNyaXBhbC5qYWluQGdtYWlsLmNvbSIsIm9yZ2lkIjoiSU1EQSIsImlhdCI6MTU4ODUyMjQ2M30.S21l9DoUF_GpSx9cN73FnMpDm-2k0QPgGErgghDEDWs
+
+GET  http://localhost:4200/novel/biopins
+###
+
+# POST http://localhost:4200/user/adminlogin HTTP/1.1
+POST https://www.locationreport.gov.sg/user/adminlogin HTTP/1.1
+# POST https://lufthansadsl.tk/user/adminlogin
+content-type: application/json
+# make sure content-type and below body must have a space
+
+{
+	"email": "sripal.jain@gmail.com",
+	"password": "sripaljain",
+	"orgid": "IMDA"
+}
+### 
+
+# POST http://localhost:4200/user/token
+POST https://www.locationreport.gov.sg/user/token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshtoken}}"
+}
+
+###
+
+POST http://localhost:4200/user/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNyaXBhbC5qYWluQGdtYWlsLmNvbSIsIm9yZ2lkIjoiSU1EQSIsImlhdCI6MTU4ODUwOTYzMX0.VTJLtXMjX7NxEdJjRVD_dYAZZM64eBC1iTBLCYMbBPU"
+}
+
+###
+
+
+POST https://www.locationreport.gov.sg/virusrip/user/adminsignup HTTP/1.1
+content-type: application/json
+# make sure content-type and below body must have a space
+
+{
+	"email": "sripal.jain@gmail.com",
+	"password": "sripaljain",
+	"password2": "sripaljain",
+	"orgid": "IMDA"
+}
+### 
+# GET https://www.locationreport.gov.sg/otp/getjain/jain?name=hello
+# GET http://ec2-13-251-29-17.ap-southeast-1.compute.amazonaws.com:4200/otp/getjain/jain?name=hello
+# GET https://lufthansadsl.tk/otp/getjain/jain?name=hello
+GET https://www.locationreport.gov.sg/otp/getjain/jain?name=hello
+# GET http://localhost:4200/otp/getjain/jain?name=hello
+content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfcGluIjoibmdfaG9uZ19xdWFuQGltZGEuZ292LnNnIiwiaWF0IjoxNTg3NTUwOTkyLCJleHAiOjE2NzM4NjQ1OTJ9.93Y4MYzxqIpXpm52GdhLnP-MT1ocTarTlrBx3oDNQFU
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfcGluIjoic2MiLCJpYXQiOjE1ODU1ODQxNzgsImV4cCI6MzE3MTMwMDI2NTc4fQ.QxO3k_CaWdf9pCrLzYgGMFeF8yfNqVhGU6wILQ4923k
+Authorization: Bearer {{accesstoken}}
+###
+
+
+###
+# GET  https://lufthansadsl.tk/novel/get/1/IMDA/61RG61VH
+# GET https://lufthansadsl.tk/novel/gettrk/0/61RG61VH
+# GET  https://www.locationreport.gov.sg/novel/get/0/61RG61VH/
+# GET  https://lufthansadsl.tk/novel/get/0/61RG61VH/
+GET http://ec2-13-251-29-17.ap-southeast-1.compute.amazonaws.com:4200/novel/get/0/IMDA
+content-type: application/json
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfcGluIjoic2MiLCJpYXQiOjE1ODU1ODQxNzgsImV4cCI6MzE3MTMwMDI2NTc4fQ.QxO3k_CaWdf9pCrLzYgGMFeF8yfNqVhGU6wILQ4923k
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfcGluIjoibmdfaG9uZ19xdWFuQGltZGEuZ292LnNnIiwiaWF0IjoxNTg3NDU2MDU0LCJleHAiOjE2NzM3Njk2NTR9.dMOlcagRjMOrBwFlBICwIonwutf49jMB3kU8JR7mdCs
+
+###
+
+GET  https://www.locationreport.gov.sg/novel/get/30/61RG61VH/
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaW4iOiI2MVJHNjFWSCIsImlhdCI6MTU4ODkxMDAwNywiZXhwIjoxNTg4OTk2NDA3fQ.OWfv8TqO8whne47yMx0PI-j9Ui9Pqphacx3QNez1RF8
+
+### 
+GET https://www.locationreport.gov.sg/novel/get/0/IMDA
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfcGluIjoic2MiLCJpYXQiOjE1ODU1ODQxNzgsImV4cCI6MzE3MTMwMDI2NTc4fQ.QxO3k_CaWdf9pCrLzYgGMFeF8yfNqVhGU6wILQ4923k
+
+###
+GET  https://lufthansadsl.tk/novel/get/0/IMDA/61RG61VH/
+# GET  http://ec2-13-251-29-17.ap-southeast-1.compute.amazonaws.com:4200/novel/get/0/IMDA/61RG61VH/
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfcGluIjoic2MiLCJpYXQiOjE1ODU1ODQxNzgsImV4cCI6MzE3MTMwMDI2NTc4fQ.QxO3k_CaWdf9pCrLzYgGMFeF8yfNqVhGU6wILQ4923k
+
+###
+POST https://lufthansadsl.tk/otp/login
+content-type: application/json
+
+{ 	
+	"mobile" : "6582015620", 
+	"pin" : "57ZE77LV"
+}
+
+### REQUEST OTP
+POST https://lufthansadsl.tk/otp/requestotp 
+content-type: application/json
+
+{ 	
+	"mobile" : "6582015620", 
+	"pin" : "57ZE77LV"
+}

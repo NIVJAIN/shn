@@ -1,0 +1,14 @@
+node_modules
+READMENOTINUSE.md
+Requirements.MD
+KAFKA.md
+awscommand.txt
+kafka-consumer.js
+kafkaBootstrap.js
+kafka_producer_node.js
+jain.sh
+jwt.rest
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

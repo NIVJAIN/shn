@@ -1,0 +1,197 @@
+const express = require('express')
+const router = express.Router();
+const routeController = require('../controllers/kafkaCoronaController');
+
+
+//http://localhost:4200/novel/register
+//https://lufthansadsl.tk/virusrip/novel/register
+//locationreport.gov.sg/novel/register ->pending verification
+router.post('/register', routeController.REGISTER)
+
+
+//http://localhost:4200/novel/updatepcode
+
+router.post('/updatepcode', routeController.PCODE_UPDATE_BY_PIN)
+
+//http://localhost:4200/novel/update
+//https://lufthansadsl.tk/virusrip/novel/update
+router.post('/update', routeController.UPDATE_INFO)
+
+router.post('/updatetoken', routeController.UPDATE_TOKEN)
+router.get('/gettoken/:pin', routeController.GET_TOKEN_2)
+
+//decommissioned
+//http://localhost:4200/novel/getlatlng
+//https://lufthansadsl.tk/virusrip/novel/getlatlng
+// router.post('/getlatlng', routeController.GET_LAT_LNG_BY_POSTALCODE)
+// router.post('/updateconfig', routeController.UPDATE_CONFIG)
+router.get('/config', routeController.CONFIG_GET)
+
+//http://localhost:4200/novel/push
+//https://lufthansadsl.tk/virusrip/novel/push
+router.get('/push', routeController.GET_ALL_FOR_PUSHNOTIFICATION)
+
+// router.post('/corona', routeController.CORONA)
+router.get('/getall', routeController.GETALLDATA)
+router.get('/getall/:pin', routeController.GETALLDATA_BYPIN)
+// router.post('/update', routeController.UPDATE_MONGODB)
+router.get('/getupdateddata', routeController.GET_UPDATED_DATA)
+module.exports = {router};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//http://localhost:4200/novel/updatepcode
+// {
+//     "pin": "pinH",
+//     "pcode": "313138"
+// }
+
+// {
+//     "error": {
+//         "status": 2,
+//         "desc": "invalid pin"
+//     }
+// }
+
+// {
+//     "error": {
+//         "status": 2,
+//         "desc": "invalid pcode"
+//     }
+// }
+
+//http://localhost:4200/novel/update
+//https://lufthansadsl.tk/virusrip/novel/update
+// {
+// 	"pin": "pin123",
+//     "pf": "pass",
+//     "dist": "50.00",
+//     "temp": "36.7",
+//     "symptoms": "running nose"
+// }
+
+// {
+//     "message": {
+//         "trk": [
+//             {
+//                 "pf": "pass",
+//                 "ts": 1582602027082,
+//                 "dist": "50.00",
+//                 "temp": "36.7",
+//                 "symptoms": "running nose"
+//             },
+//             {
+//                 "pf": "fail",
+//                 "ts": 1582602040820,
+//                 "dist": "50.00",
+//                 "temp": "36.7",
+//                 "symptoms": "running nose"
+//             },
+//             {
+//                 "pf": "fail",
+//                 "ts": 1582602205603,
+//                 "dist": "50.00",
+//                 "temp": "36.7",
+//                 "symptoms": "running nose"
+//             }
+//         ],
+//         "_id": "5e53e081944a6b21fe84a491",
+//         "pin": "pin123",
+//         "mobile": "6581397860",
+//         "loastart": "25-05-2020",
+//         "loaend": "26-05-2020",
+//         "timestamp": "1582555265174",
+//         "__v": 0,
+//         "initlat": "1.3362641370000001",
+//         "initlng": "103.8449074",
+//         "pcode": "313138"
+//     }
+// }
+
+// {
+//     "error": {
+//         "status": 2,
+//         "desc": "invalid pin"
+//     }
+// }
+
+
+//http://localhost:4200/novel/register
+// {
+//     "pin": "pinA",
+//     "mobile": "6581397860",
+//     "loastart": "25-05-2020",
+//     "loaend": "26-05-2020",
+//     "devicetype": "iphone",
+//     "expiry": "false",
+//     "timestamp": "154321000"
+// }
+// {
+//     "message": {
+//         "trk": [],
+//         "_id": "5e53f076946752570d6b97d3",
+//         "pin": "pinI",
+//         "mobile": "6581397860",
+//         "loastart": "25/02/2020",
+//         "loaend": "26/02/2020",
+//         "hrloastart": "1582560000000",
+//         "hrloaend": "1582646400000",
+//         "devicetype": "iphone",
+//         "expiry": "false",
+//         "timestamp": "1582559350363",
+//         "__v": 0
+//     }
+// }
+
+//http://localhost:4200/novel/getlatlng
+// {
+//     "pin": "pin123",
+//     "pcode": "313138"
+// }
+// {
+//     "message": {
+//         "trk": [],
+//         "_id": "5e53e081944a6b21fe84a491",
+//         "pin": "pin123",
+//         "mobile": "6581397860",
+//         "loastart": "25-05-2020",
+//         "loaend": "26-05-2020",
+//         "timestamp": "1582555265174",
+//         "__v": 0,
+//         "initlat": "1.3362641370000001",
+//         "initlng": "103.8449074"
+//     }
+// }
+
+//http://localhost:4200/novel/updatepcode
+//https://lufthansadsl.tk/virusrip/novel/updatepcode
+//locationreport.gov.sg/novel/updatepcode ->pending verification
+// {
+//     "pin": "pinH",
+//     "pcode": "313138"
+// }
+
+
+
+// {
+// "name": "Jain", 
+// "mobile": "81397860",
+// "uuid": "794acdf1-77d1-4ef1-a963-fa58db8e7928"
+// "lat": undefined
+// "lng": undefined
+// "name": "Sripal Jain"
+// "mobile": "81397860"
+// "pcode": "313138"
+// "timestamp": 1581579139198
+// }

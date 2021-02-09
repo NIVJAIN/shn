@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <title>Stay-Home-Notice Admin Portal - Logout</title>
+    <meta property="og:site_name" content="Stay-Home-Notice Admin Portal - Logout">
+    <meta property="og:title" content="Stay-Home-Notice Admin Portal - Logout">
+    <meta name="description" content="A simple page for logging out of the SHN admin portal.">
+    <meta property="og:description" content="A simple page for logging out of the SHN admin portal.">
+    <meta property="og:description:secure_url" content="A simple page for logging out of the SHN admin portal.">
+    <meta property="og:image" itemprop="image" content="/logout-ad.png">
+    <meta property="og:image:secure_url" itemprop="image" content="/logout-ad.png">
+
+  </head>
+<body>
+
+<script>
+
+window.onload = function() {
+  localStorage.removeItem('userid');
+  localStorage.removeItem('orgid');
+  localStorage.removeItem('token');
+  location.replace("https://www.locationreport.gov.sg");
+}
+
+</script>
+
+</body>
+</html> 

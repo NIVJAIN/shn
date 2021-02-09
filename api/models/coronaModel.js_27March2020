@@ -1,0 +1,55 @@
+const mongoose = require('mongoose');
+const imageSchema = mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    pin: {type:String, required:true,unique: true},
+    mobile: {type:String, required:false},
+    pcode: {type:String, required:false},
+    loastart: {type:String, required:false},
+    loaend: {type:String, required:false},
+    hrloastart: {type:String, required:false},
+    hrloaend: {type:String, required:false},
+    devicetype: {type:String, required:false},
+    expiry: {type:String, required:false},
+    initlat: {type:String, required:false},
+    initlng: {type:String, required:false},
+    timestamp: {type:String, required:false},
+    token: {type:String, required:false},
+    trk : { type : Array , "default" : [] }, 
+    lastupdate: {type:Number, required:false},
+    biopush : { type : Array , "default" : [] },
+    bioupdate : { type : Array , "default" : [] },
+    biolastupdate: {type:Number, required:false},
+    otp:{type:String, required:false},
+    otpexpiry: {type:String, required:false},
+    otptimestamp: {type:Number, required:false},
+    issuspended : {type:String, required:false},
+    maxdist : {type:Number, required:false},
+    mindist: {type:Number, required:false},
+    maxalt: {type:Number, required:false},
+    minalt: {type:Number, required:false},
+    updfreq : {type:Number, required:false},
+    maxvltn : {type:Number, required:false},
+    otpireq : {type:Number, required:false},
+    otpmaxtry : {type:Number, required:false},
+    otptout : {type:Number, required:false},
+    orgid : {type:String, required:false},
+    userfirstlogin: {type:String, required:false},
+    multilogin: {type:String, required:false},
+    lang:  {type:Number, required:false},
+	appalt: {type:Number, required:false}
+},{ collection: 'novelmodel' })
+module.exports = mongoose.model('Corona', imageSchema)
+
+
+
+// const mongoose = require('mongoose');
+// const imageSchema = mongoose.Schema({
+//     _id: mongoose.Schema.Types.ObjectId,
+//     uuid: {type:String, required:true},
+//     trk : { type : Array , "default" : [] }, 
+//     timestamp: {type:String, required:true},
+//     emailid: {type:String, required:true},
+//     name: {type:String, required:true}
+
+// },{ collection: 'novelmodel' })
+// module.exports = mongoose.model('Corona', imageSchema)

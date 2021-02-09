@@ -1,0 +1,136 @@
+---
+    swagger: '2.0'
+    # openapi: 3.0.0
+    info:
+      title: IMDA NSTT API GATEWAY
+      version: '1.0'
+    # host: imdadsl.ml
+    host: localhost:4200
+    basePath: /
+    tags:
+    - name: OTP
+      description: Automatic Speech Recognition (ASR)
+    - name: NOVEL
+      description: Speech Activity Detection Engine (SADE)
+    # - name: ASR-DICTATION
+    #   description: MSTTS FEDUP WITH TYAMK Speech Activity Detection Engine (SADE)
+    schemes:
+    # - https
+    - http
+    security:
+    - apiKey: []
+    paths:      
+      /virusrip/otp:
+        post:
+          tags:
+          - OTP
+          summary: Using National Speech Corpus (NSC) trained model to transcribe
+            Singapore accented audio speeches from a wave file to plain text.
+          operationId: addWaveFile
+          consumes:
+          - "application/json"
+          parameters:
+          - in: "body"
+            name: "otp"
+            summary: "Transcribe encoded based64 wave file to text"
+            schema:
+              $ref: "#/definitions/otp"
+          responses:
+            '200':
+              description: OK
+      /virusrip/novel:
+        post:
+          tags:
+          - NOVEL
+          summary: Proprietary engine created to distinguish speech from non-speech
+            audio inputs. e.g. music and silence.
+          operationId: addWaveFile2
+          consumes:
+          # - multipart/form-data
+          # - "application/xml"
+          - "application/json"
+          parameters:
+          - in: "body"
+            name: "body"
+            description: "Convert text to speech in local context"
+            schema:
+              $ref: "#/definitions/novel"
+          responses:
+            '200':
+             description: OK
+      /virusrip/novel/update:
+        post:
+          tags:
+          - NOVEL
+          summary: Proprietary engine created to distinguish speech from non-speech
+            audio inputs. e.g. music and silence.
+          operationId: addWaveFile2
+          consumes:
+            - application/json
+          parameters:
+            - in: body
+              name: user
+              description: The user to create.
+              schema:
+                type: object
+                required:
+                  - userName
+                properties:
+                  userName:
+                    type: string
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string    
+          responses:
+            '200':
+              description: Returns sections of timecoded with voice detected.
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: status 200 ok
+                  status_message:
+                    type: string
+                  TimecodeFile:
+                    type: string
+                  TimecodeContent:
+                    type: string
+                  timeElapse:
+                    type: integer
+                    description: total time taken
+    definitions:
+      otp:
+        type: object
+        properties:
+          Wavfile:
+            type: string
+            description: Name of the wave file (Required)
+          EncodedSpeech:
+            type: string
+            description: Encoded Base64 audio file for the engine. (Required)
+      novel:
+        type: object
+        properties:
+          Wavfile:
+            type: string
+            description: Name of the wave file (Required)
+          EncodedSpeech:
+            type: string
+            description: Encoded Base64 audio file for the engine. (Required)
+      novel2:
+        type: object
+        properties:
+          Wavefile:
+            type: string
+            description: Name of the Wave file (Required)
+          EncodedWav:
+            type: string
+            description: Audio file path for uploading to SADE, Audio should be a .wav
+              file (Required)
+    securityDefinitions:
+      apiKey:
+        type: apiKey
+        in: header
+        name: Authorization

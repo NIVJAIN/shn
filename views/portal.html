@@ -1,0 +1,3956 @@
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+  <head profile="http://gmpg.org/xfn/11">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>SHN Admin Portal</title>
+    <meta property="og:site_name" content="Stay Home Notice & Quarantine Order (SHN & QO) Admin Portal">
+    <meta property="og:title" content="Stay Home Notice & Quarantine Order (SHN & QO) Admin Portal">
+    <meta name="description" content="An administrative portal for operators to configure the front-end and back-end services of the SHN app.">
+    <meta property="og:description" content="An administrative portal for operators to configure the front-end and back-end services of the SHN app.">
+    <meta property="og:description:secure_url" content="An administrative portal for operators to configure the front-end and back-end services of the SHN app.">
+    <meta property="og:image" itemprop="image" content="/portal-ad.png">
+    <meta property="og:image:secure_url" itemprop="image" content="/portal-ad.png">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap" rel="stylesheet">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+    
+    <script
+			  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+			  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+
+    <style>
+      body {
+        font-family: 'Montserrat';
+        background-color: lightgray;
+        --scrollbar-thumb-color: gray;
+        --scrollbar-color: #dfdfdf;
+      }
+      body.dark {
+        background-color: #171e24;
+        color: white;
+        --scrollbar-thumb-color: #466d8a;
+        --scrollbar-color: #263846;
+      }
+      .card {
+        background-color: rgb(235, 235, 235);
+      }
+      .card-header {
+        font-weight:900;
+      }
+      input, select {
+        background-color: white;
+        color: black;
+      }
+      body.dark input, body.dark select {
+        background-color: #171e24;
+        color: white;
+      }
+      a {
+        color: grey;
+      }
+      #list-pins a {
+        color: black;
+      }
+      body.dark a, body.dark #list-pins a {
+        color: white;
+      }
+      .banner {
+        display: flex;
+        align-items: center;
+        height: 8vh;
+      }
+      .bg-gradient-shnqo {
+        background-color: #f787de;
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #f787de), to(#429be0));
+        background-image: linear-gradient(90deg, #f787de 10%, #429be0 100%);
+        background-size: cover;
+      }
+      body.dark .bg-gradient-shnqo {
+        background-color: #bd68aa;
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #bd68aa), to(#3175a8));
+        background-image: linear-gradient(90deg, #bd68aa 10%, #3175a8 100%);
+        background-size: cover;
+      }
+      .bg-gradient-imda {
+        background-color: #e01f34;
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #e01f34), to(#70358f));
+        background-image: linear-gradient(90deg, #e01f34 10%, #70358f 100%);
+        background-size: cover;
+      }
+      body.dark .bg-gradient-imda {
+        background-color: #e01f34;
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #e01f34), to(#70358f));
+        background-image: linear-gradient(270deg, #e01f34 10%, #70358f 100%);
+        background-size: cover;
+      }
+      .banner-content {
+        display: inline-block;
+        width: 100%;
+        padding: 0.5vh;
+      }
+      .logo { height: 7vh;}
+      .left { float: left; }
+      .right { float: right; }
+      .col {
+        background-color: rgb(128, 128, 128);
+      }
+      body.dark .col {
+        background-color: #171e24;
+      }
+      body.dark .card {
+        background-color: #1c2a35;
+        color: white;
+        border: 0px;
+      }
+      body.dark .card-header { border-bottom: 0px solid #9fa9b2; }
+      body.dark .card-body { background-color: #2b4050; }
+      body.dark .card-footer { border-top: 0px solid #9fa9b2; }
+      body.dark hr { border: 1px solid #9fa9b2;}
+      table {
+        width: 100%;
+      }
+      body.dark table {
+        background-color: #2b4050;
+        color: lightgray;
+      }
+      body.dark table th {
+        color: white;
+      }
+      .done {
+        color: rgb(0,160,0);
+      }
+      .pending {
+        color: rgb(200,160,0);
+      }
+
+      html>body #table-pins.scrollable-pins td {
+        width: 28%;
+      }
+      html>body #table-pins.scrollable-pins td + td {
+        width: 30%;
+      }
+      html>body #table-pins.scrollable-pins td + td + td {
+        width: 26%;
+      }
+      html>body #table-pins.scrollable-pins td + td + td + td {
+        text-align: center;
+        width: 16%;
+      }
+
+      .scrollable-header-wrapper {
+        font-weight: 600;
+      }
+
+      #shnchange-header {
+        font-weight: 600;
+      }
+
+      #list-pins-header div, #list-info-header div, #list-floating-header,
+      #individual-checker-datetime-header div, #individual-checker-info-header div,
+      #group-checker-datetime-header div, #group-checker-info-header div,
+      #batch-upload-pin-header div, #batch-upload-info-header div,
+      #trigger-pin-header div, #trigger-info-header div {
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      #list-pins-notch {
+        cursor: pointer;
+      }
+
+      #list-info, #list-info-header {
+        width: 1920px;
+      }
+      #group-checker-info, #group-checker-info-header,
+      #individual-checker-info, #individual-checker-info-header {
+        width: 900px;
+      }
+      #trigger-info, #trigger-info-header {
+        width: 1280px;
+      }
+      #batch-upload-info, #batch-upload-info-header {
+        width: 600px;
+      }
+      .checker-unit {
+        width: 120px;
+      }
+      .checker-unit-lg {
+        width: 160px;
+      }
+      .status-fail, .status-pass, .status-amber {
+        font-weight: 600;
+      }
+      .status-fail {
+        color: red;
+      }
+      .status-amber {
+        color: orange;
+      }
+      .status-pass {
+        color: green;
+      }
+      body.dark .status-pass {
+        color: limegreen;
+      }
+      #list-pins-wrapper, #list-info-wrapper,
+      #group-checker-datetime-wrapper, #group-checker-info-wrapper,
+      #individual-checker-datetime-wrapper, #individual-checker-info-wrapper,
+      #trigger-pin-wrapper, #trigger-info-wrapper {
+        height: 100px;
+      }
+      #list-pins-wrapper.expanded, #list-info-wrapper.expanded,
+      #group-checker-datetime-wrapper.expanded, #group-checker-info-wrapper.expanded,
+      #individual-checker-datetime-wrapper.expanded, #individual-checker-info-wrapper.expanded,
+      #trigger-pin-wrapper.expanded, #trigger-info-wrapper.expanded {
+        height: 50vh;
+      }
+
+      #list-floating-wrapper, #batch-upload-pin-wrapper,
+      #batch-upload-info-wrapper {
+        height: 100px;
+      }
+
+      #list-floating-wrapper.expanded,
+      #batch-upload-pin-wrapper.expanded,
+      #batch-upload-info-wrapper.expanded {
+        height: 50vh;
+      }
+
+      body.dark .content {
+        background-color: rgba(255,255,255,0.075);
+      }
+      .content {
+        background-color: rgba(0,0,0,0.075);
+      }
+
+      .vertical-scrollable-wrapper {
+        width: 100%;
+        overflow-x:hidden;
+        overflow-y:scroll;
+        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-color);
+      }
+      .horizontal-scrollable-wrapper {
+        width: 100%;
+        overflow-x:scroll;
+        overflow-y:hidden;
+        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-color);
+      }
+      .scrollable-hidden {
+        overflow-x:hidden;
+        overflow-y:hidden;
+      }
+
+      .v-mid {
+        display: flex;
+        align-items: center;
+      }
+      .t-center {
+        text-align: center;
+      }
+      .div-unit {
+        float: left;
+        width: 160px;
+      }
+      .div-unit-2 {
+        float: left;
+        width: 130px;
+      }
+      .div-unit-3 {
+        float: left;
+        width: 100px;
+      }
+      .div-unit-4 {
+        float: left;
+        width: 70px;
+      }
+      .shade {
+        background-color:rgba(0,0,0,0.125);
+      }
+      .global-holder {
+        height: 92vh;
+        overflow-y:scroll;
+      }
+      .global-wrapper {
+        height: 100%;
+      }
+
+      #curtain {
+        position: absolute;
+        width:100%;
+        height:92vh;
+        /*background-color: rgba(50,50,50,0.75);*/
+        background-color: gray;
+        z-index: 1;
+      }
+
+      .login {
+        position: absolute;
+        width: 300px;
+        height: 230px;
+        left: calc(50% - 150px);
+        top: calc(50% - 115px);
+        z-index: 2;
+      }
+      #login-alert {
+        text-align: center;
+        font-size: 0.7em;
+      }
+      #login-alert, .error-alert {
+        color: red;
+      }
+      body.dark #login-alert, body.dark .error-alert {
+        color: pink;
+      }
+      .forgot-password, .commentary {
+        font-size: 0.7em;
+      }
+
+      #trigger-alert, #input-list-pins-alert, #refresh-list-pins-alert,
+      #group-checker-alert, #checker-alert, #individual-checker-alert,
+      #input-count-newpin-alert, #input-newpin-alert,
+      #batch-upload-alert, #sms-batch-alert,
+      #frsm-batch-alert, #shnchange-alert, #shngroup-alert {
+        text-align: center;
+        font-size: 0.8em;
+      }
+
+      .success-alert {
+        color: darkgreen;
+      }
+      body.dark .success-alert {
+        color: limegreen;
+      }
+      .warning-alert {
+        color: darkorange;
+      }
+
+      .span-setting {
+        color: lightgray;
+        cursor: pointer;
+      }
+      body.dark .span-setting { color: gray; }
+      
+      .span-setting.chosen { color: black; }
+      body.dark .span-setting.chosen { color: white; }
+
+    </style>
+  </head>
+  <body class="dark">
+    <!--START BANNER ROW-->
+    <div class="row mx-0">
+      <div class="col-12 px-0 banner bg-gradient-shnqo">
+        <div class="banner-content px-0">
+          <div class="row mx-0" style="overflow-x:hidden;">
+            <div class="col-6 pl-2 logo" style="color:white; display:flex; align-items:center; justify-content:flex-start;">
+              <svg version="1.1" viewBox="0 300 5200 2000" preserveAspectRatio="xMidYMid meet" class="svg-content logo left">
+                <g transform="translate(0.000000,3200.000000) scale(0.1200000,-0.1200000)" fill="#FFFFFF" stroke="none">
+                  <path d="M4085 20293 c-1943 -1878 -2998 -2920 -3540 -3493 -148 -157 -304 -321 -346 -366 -79 -84 -135 -173 -164 -261 -9 -29 -21 -53 -26 -53 -5 0 -9 -79 -9 -185 0 -102 4 -185 8 -185 4 0 14 -21 21 -47 17 -56 79 -177 122 -236 103 -143 266 -258 444 -313 45 -14 93 -18 195 -19 116 0 145 3 205 24 88 30 168 74 222 124 24 22 48 37 55 34 9 -3 21 -96 41 -318 55 -615 196 -1751 220 -1775 3 -3 83 10 179 30 379 77 786 145 1042 176 44 5 131 16 191 24 61 8 211 25 335 37 124 12 239 23 255 24 28 3 239 17 468 31 l97 6 0 1574 0 1574 -65 0 c-36 0 -65 -2 -65 -5 0 -31 -456 -1643 -476 -1682 -91 -181 -360 -174 -448 11 -37 78 -35 85 238 1071 303 1094 297 1077 450 1230 153 152 239 181 681 231 226 26 635 23 870 -5 398 -47 496 -82 641 -226 79 -78 97 -103 142 -195 28 -58 58 -134 67 -170 9 -36 124 -453 256 -927 168 -607 239 -877 239 -913 0 -213 -272 -319 -425 -165 -53 52 -26 -32 -301 958 l-218 787 -63 0 -63 0 0 -1574 0 -1574 113 -6 c157 -9 426 -27 462 -31 17 -1 131 -12 255 -24 124 -12 275 -29 335 -37 61 -9 146 -19 190 -24 210 -23 698 -105 1013 -171 78 -16 155 -32 170 -34 l29 -3 21 136 c75 478 176 1350 219 1885 5 65 9 77 24 77 9 0 19 -3 21 -8 9 -22 111 -95 169 -121 99 -45 175 -61 287 -61 232 0 471 122 619 315 60 78 139 227 149 280 3 19 10 35 15 35 5 0 9 81 9 179 0 150 -2 180 -15 185 -8 3 -15 14 -15 25 0 10 -20 60 -45 110 -43 84 -64 109 -332 393 -389 411 -1790 1811 -2603 2599 -956 927 -1818 1759 -1822 1758 -2 0 -336 -322 -743 -716z m889 -1469 c267 -69 445 -326 408 -589 -45 -318 -366 -526 -691 -450 -206 49 -376 229 -411 437 -45 261 127 522 395 599 77 23 218 24 299 3z"/>
+                  <path d="M12840 21004 c-19 -2 -82 -9 -140 -15 -837 -88 -1405 -514 -1546 -1159 -28 -128 -26 -459 3 -586 52 -221 138 -379 293 -535 126 -126 249 -211 444 -305 198 -95 461 -178 931 -294 468 -115 609 -155 750 -212 321 -130 465 -296 465 -538 0 -271 -179 -464 -522 -564 -166 -48 -283 -61 -548 -61 -257 0 -333 7 -550 51 -370 76 -774 250 -1020 439 -32 25 -61 41 -65 36 -3 -6 -75 -166 -160 -358 l-155 -347 28 -23 c54 -46 219 -152 312 -201 642 -341 1610 -457 2345 -282 652 155 1081 540 1207 1080 28 122 35 392 14 522 -87 533 -457 864 -1211 1083 -88 26 -308 82 -490 126 -493 119 -683 177 -845 259 -233 117 -341 266 -341 470 0 100 13 162 52 245 94 200 318 334 654 391 127 22 425 29 570 15 343 -35 709 -146 1023 -313 63 -33 115 -58 116 -56 3 2 264 645 282 692 7 18 -76 70 -231 145 -278 136 -604 229 -965 277 -117 15 -609 28 -700 18z"/>
+                  <path d="M33045 20999 c-372 -36 -769 -155 -1075 -324 -546 -302 -950 -784 -1139 -1360 -88 -269 -120 -457 -128 -755 -8 -336 29 -594 128 -895 304 -918 1111 -1548 2146 -1674 l81 -10 54 -57 c94 -101 359 -343 488 -447 289 -232 554 -375 832 -446 183 -47 263 -56 508 -56 195 0 240 3 339 23 220 45 428 129 604 247 98 65 247 194 300 259 34 41 37 49 25 64 -61 78 -401 482 -405 482 -3 0 -41 -34 -85 -75 -193 -182 -416 -285 -657 -304 -116 -9 -249 0 -343 24 -151 38 -341 154 -498 305 l-74 72 116 39 c893 298 1512 1000 1673 1899 60 331 60 629 0 960 -202 1123 -1108 1917 -2315 2029 -132 13 -443 12 -575 0z m493 -800 c231 -25 405 -75 607 -175 167 -82 293 -172 425 -304 280 -280 440 -634 481 -1065 61 -642 -221 -1263 -726 -1597 -505 -335 -1206 -382 -1763 -118 -589 279 -942 860 -942 1550 0 831 520 1500 1301 1674 196 44 421 57 617 35z"/>
+                  <path d="M38935 20999 c-723 -69 -1382 -408 -1798 -924 -285 -353 -456 -756 -529 -1240 -18 -121 -18 -569 0 -690 44 -288 122 -547 236 -780 427 -872 1322 -1395 2386 -1395 1141 0 2082 601 2464 1574 233 589 233 1303 0 1892 -348 886 -1163 1469 -2184 1563 -132 13 -443 12 -575 0z m493 -800 c231 -25 405 -75 607 -175 167 -82 293 -172 425 -304 127 -128 220 -255 300 -415 291 -582 240 -1327 -128 -1845 -85 -121 -251 -286 -372 -373 -177 -126 -426 -234 -638 -276 -558 -113 -1104 12 -1514 346 -268 218 -473 557 -552 913 -132 602 23 1212 414 1624 357 376 905 566 1458 505z"/>
+                  <path d="M15840 18490 l0 -2450 455 0 455 0 0 1050 0 1050 1265 0 1265 0 0 -1050 0 -1050 455 0 455 0 0 2450 0 2450 -455 0 -455 0 0 -1010 0 -1010 -1265 0 -1265 0 0 1010 0 1010 -455 0 -455 0 0 -2450z"/>
+                  <path d="M21510 18490 l0 -2450 450 0 450 0 2 1653 3 1653 1345 -1651 1346 -1650 377 -3 377 -2 0 2450 0 2450 -450 0 -450 0 -2 -1653 -3 -1653 -1345 1651 -1346 1650 -377 3 -377 2 0 -2450z"/>
+                  <path d="M28159 20025 c-225 -35 -410 -141 -514 -295 -64 -94 -95 -188 -102 -306 -13 -210 61 -391 240 -589 l66 -72 -42 -23 c-23 -13 -88 -54 -144 -92 -188 -127 -308 -251 -378 -390 -61 -123 -79 -209 -72 -366 5 -151 25 -216 96 -325 138 -209 402 -350 730 -388 132 -16 380 -6 503 21 198 42 395 129 544 241 l79 59 80 -78 c44 -42 123 -119 175 -169 l95 -93 138 162 c76 89 136 165 135 168 -2 4 -80 80 -175 170 l-172 164 25 40 c47 76 122 240 157 346 36 110 72 249 66 254 -2 2 -93 33 -202 69 -134 45 -199 62 -202 54 -2 -7 -11 -46 -21 -87 -32 -137 -119 -374 -135 -368 -13 5 -589 559 -589 567 0 4 30 25 68 46 172 101 335 246 405 362 105 173 115 407 25 591 -48 99 -151 198 -259 251 -174 84 -394 111 -620 76z m362 -372 c129 -59 189 -216 130 -347 -38 -87 -177 -207 -348 -302 l-53 -29 -56 55 c-132 130 -195 245 -195 355 0 136 68 229 204 277 73 26 251 21 318 -9z m-25 -1512 c198 -189 360 -347 362 -352 4 -10 -97 -78 -175 -118 -119 -60 -222 -83 -388 -88 -128 -4 -163 -2 -237 16 -165 39 -274 114 -328 225 -36 76 -45 135 -31 212 17 89 65 178 136 249 64 64 270 208 291 203 6 -2 173 -158 370 -347z"/>
+                  <path d="M4775 14698 c-3 -7 -4 -265 -3 -573 l3 -560 55 0 55 0 0 570 0 570 -53 3 c-36 2 -54 -1 -57 -10z"/>
+                  <path d="M31880 14570 c-515 -63 -866 -281 -1010 -628 -54 -128 -73 -244 -67 -402 13 -321 142 -535 423 -702 168 -99 361 -164 814 -276 464 -115 627 -181 750 -302 76 -74 108 -135 123 -232 22 -139 -29 -287 -133 -389 -140 -137 -385 -209 -712 -209 -420 0 -819 127 -1106 352 -35 27 -65 48 -66 46 -31 -52 -177 -381 -173 -392 16 -40 236 -181 382 -244 312 -136 652 -199 1020 -189 370 9 647 83 870 231 271 181 415 446 415 766 0 390 -200 657 -617 824 -146 58 -281 98 -651 191 -340 85 -437 117 -567 183 -118 60 -222 160 -253 244 -46 124 -38 250 23 375 85 173 297 290 585 324 128 14 393 7 510 -15 189 -34 405 -112 560 -200 52 -29 98 -51 102 -47 10 9 158 372 158 387 0 15 -110 82 -216 130 -157 71 -349 127 -549 159 -118 19 -502 28 -615 15z"/>
+                  <path d="M11574 12799 c-434 -958 -790 -1746 -792 -1750 -2 -5 113 -9 256 -9 l259 0 193 440 193 440 927 0 927 0 193 -440 193 -440 263 0 c145 0 264 1 264 3 0 1 -357 787 -793 1747 l-792 1745 -251 3 -251 2 -789 -1741z m1410 379 c203 -458 370 -839 373 -845 4 -10 -149 -13 -747 -13 -598 0 -751 3 -747 13 44 109 742 1677 747 1677 4 0 172 -375 374 -832z"/>
+                  <path d="M14970 12790 l0 -1750 815 0 c504 0 853 4 913 11 996 108 1632 785 1632 1739 0 954 -636 1631 -1632 1739 -60 7 -409 11 -913 11 l-815 0 0 -1750z m1670 1299 c256 -31 463 -104 655 -230 109 -72 266 -233 334 -342 153 -248 221 -552 193 -857 -31 -327 -141 -577 -347 -785 -215 -218 -482 -341 -835 -384 -50 -7 -308 -11 -627 -11 l-543 0 0 1310 0 1310 543 0 c319 0 577 -4 627 -11z"/>
+                  <path d="M19100 12790 l0 -1750 240 0 240 0 2 1261 3 1261 630 -1051 630 -1051 112 0 113 0 33 53 c19 28 303 506 633 1060 l599 1008 3 -1270 2 -1271 240 0 240 0 0 1750 0 1750 -207 0 -208 0 -715 -1225 c-393 -673 -717 -1224 -720 -1224 -3 -1 -331 550 -730 1224 l-725 1224 -207 1 -208 0 0 -1750z"/>
+                  <path d="M23880 12790 l0 -1750 250 0 250 0 0 1750 0 1750 -250 0 -250 0 0 -1750z"/>
+                  <path d="M25430 12790 l0 -1750 250 0 250 0 2 1300 3 1300 1045 -1299 1045 -1300 208 -1 207 0 0 1750 0 1750 -250 0 -250 0 -2 -1300 -3 -1300 -1045 1299 -1045 1300 -207 1 -208 0 0 -1750z"/>
+                  <path d="M29490 12790 l0 -1750 250 0 250 0 0 1750 0 1750 -250 0 -250 0 0 -1750z"/>
+                  <path d="M33580 14320 l0 -220 600 0 600 0 0 -1530 0 -1530 250 0 250 0 0 1530 0 1530 598 2 597 3 3 218 2 217 -1450 0 -1450 0 0 -220z"/>
+                  <path d="M37030 12790 l0 -1750 1270 0 1270 0 0 220 0 220 -1020 0 -1020 0 0 560 0 560 878 2 877 3 3 213 2 212 -880 0 -880 0 0 535 0 535 985 0 985 0 0 220 0 220 -1235 0 -1235 0 0 -1750z"/>
+                  <path d="M40380 12790 l0 -1750 250 0 250 0 0 530 0 530 448 0 c246 0 490 3 542 6 l95 5 374 -535 374 -536 274 0 274 0 -19 28 c-10 15 -194 275 -407 577 -213 303 -389 555 -392 561 -2 6 28 23 66 38 91 36 214 110 303 183 249 204 388 522 388 891 0 688 -440 1127 -1212 1211 -60 7 -389 11 -853 11 l-755 0 0 -1750z m1570 1300 c296 -37 508 -150 632 -339 140 -214 155 -554 35 -801 -32 -67 -58 -102 -122 -166 -68 -68 -97 -89 -185 -133 -124 -61 -252 -95 -411 -110 -63 -6 -318 -11 -566 -11 l-453 0 0 785 0 785 493 0 c280 0 529 -4 577 -10z"/>
+                  <path d="M4775 13468 c-3 -7 -6 -371 -7 -808 l-3 -795 -23 -43 c-61 -115 -154 -173 -286 -180 -111 -5 -180 20 -257 97 -99 100 -93 39 -97 940 l-3 783 -137 -6 c-75 -4 -155 -9 -177 -11 -22 -3 -80 -7 -130 -10 -49 -3 -139 -10 -200 -16 -280 -25 -394 -38 -660 -74 -360 -49 -436 -61 -677 -105 -32 -5 -82 -14 -110 -19 -86 -15 -109 -20 -183 -36 -38 -9 -92 -20 -120 -25 -103 -20 -136 -28 -140 -32 -4 -4 59 -394 94 -578 11 -58 32 -168 46 -245 44 -236 162 -776 228 -1045 l63 -255 2831 -3 2831 -2 7 32 c4 18 35 150 70 293 59 239 104 443 183 825 33 158 132 698 157 851 20 129 20 139 -6 139 -12 0 -38 4 -58 9 -20 5 -63 15 -96 21 -33 6 -77 16 -98 21 -21 6 -53 12 -73 14 -19 3 -69 12 -112 20 -75 15 -126 24 -247 45 -54 10 -416 64 -505 75 -157 21 -357 45 -415 50 -38 4 -86 8 -105 10 -70 8 -257 24 -345 30 -49 3 -108 7 -130 10 -22 2 -104 7 -182 11 l-142 6 -3 -783 c-4 -901 2 -840 -97 -940 -77 -77 -146 -102 -257 -97 -132 7 -225 65 -286 180 l-23 43 -5 805 -5 805 -53 3 c-36 2 -54 -1 -57 -10z"/>
+                </g>
+              </svg>
+            </div>
+            <div class="col-6 v-mid" style="color:white; display:flex; align-items:center; justify-content:flex-end;">
+              <span id="button-dark-mode" onclick="toggleDarkMode()"
+              style="cursor:pointer;">
+              </span>
+              &emsp;|&emsp;
+              <span onclick="quit()" style="cursor:pointer;">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <!--END BANNER ROW-->
+
+    <!--START BODY ROW-->
+      
+    <div id="login" class="login card fade">
+      <div class="card-header">
+        Login
+      </div>
+      <div class="card-body py-0">
+        <div class="row mt-2 v-mid">
+          <div class="col-12" id="login-alert">
+            &nbsp;
+          </div>
+        </div>
+        <div class="row mt-2 v-mid">
+          <div class="col-5">
+            Email:
+          </div>
+          <div class="col-7">
+            <input type="text" id="input-email" style="width:9rem;" />
+          </div>
+        </div>
+        <div class="row mt-2 v-mid">
+          <div class="col-5">
+            Password:
+          </div>
+          <div class="col-7">
+            <input type="password" id="input-password" style="width:9rem;" />
+          </div>
+        </div>
+        <div class="row mt-0 v-mid">
+          <div class="col-5"></div>
+          <div class="col-7 t-center">
+            <a class="forgot-password" 
+            href="mailto:Digital_Services@imda.gov.sg?subject=Forgotten SHN Portal Password">
+              Forgot Password
+            </a>
+          </div>
+        </div>
+        <div class="row mt-3 v-mid">
+          <div class="col-12 px-2" style="text-align:right;">
+            <input type="button" class="mr-1" value="Cancel"/> <!--onclick="window.location.replace('https://www.locationreport.gov.sg');">-->
+            <input type="button" onclick="login()" value="Login">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="curtain" class="fade show"></div>
+
+    <div class="global-holder" id="holder">
+      <div class="global-wrapper">
+        
+        <div class="row mx-0">
+          <!--START FIRST COLUMN-->
+          <div class="col col-sm-12 col-lg-8 px-0">
+
+            <!--GET SHN GROUP CARD-->
+            <div class="card mx-1 my-1 d-none">
+              <!--TITLE IN HEADER-->
+              <a id="card-shngroup">
+                <div class="card-header px-1 py-2">
+                  Get SHN Group
+                </div>
+              </a>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                
+                <div class="row mx-0 my-0">
+                  
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    SHN Type:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <select id="shngroup-type">
+                      <option value="-1" disabled selected>Select Type</option>
+                      <option value="start">Start Date</option>
+                      <option value="end">End Date</option>
+                    </select>
+                  </div>
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Date:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="text" id="shngroup-date-input" style="width:10rem;"\
+                    placeholder="DD/MM/YYYY">
+                  </div>
+                </div>
+                <div class="col-12 px-0 mt-2" style="text-align: right;">
+                  <span id="shngroup-alert">&nbsp;</span>
+                  &nbsp;
+                  <input type="button" value="Submit" id="shngroup-submit-button"
+                  onclick="">
+                </div>
+                
+
+              </div>
+            </div>
+            <!--END CARD-->
+
+            <!--TRIGGER CARD-->
+            <div class="card mx-1 my-1">
+              <!--TITLE IN HEADER-->
+              <a id="card-trigger">
+                <div class="card-header px-1 py-2">
+                  Batch Trigger
+                </div>
+              </a>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                
+                <div class="row mx-0 my-0">
+                  <div class="px-0 py-0" style="width: 130px;">
+                    
+                    <div>
+                      <div id="trigger-pin-header" class="row mx-0 my-0">
+                        <div class="col-12 px-1 py-0" id="trigger-info-pin"
+                            onclick="sortTriggerDetails(this.id, 'asc', false, false, false)">
+                          PIN <i class="fa fa-sort" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="row mx-0 my-0">
+                        <div class="col-12 px-1 py-0">
+                          <input type="text" style="max-width:100%"
+                          id="trigger-pin-filter" onkeyup="rebuildTriggerDetailsRows();">
+                        </div>
+                      </div>
+                    </div>
+            
+                    <div id="trigger-pin-wrapper"
+                        class="vertical-scrollable-wrapper">
+                      <div id="trigger-pin" class="row mx-0 my-0">
+                        
+                      </div>
+                    </div>
+            
+                  </div>
+                  <div class="px-0 py-0 content" style="width: calc(100% - 130px);">
+            
+                    <div id="trigger-info-header-wrapper"
+                        class="horizontal-scrollable-wrapper
+                                scrollable-hidden">
+                      <div id="trigger-info-header" class="row mx-0 my-0">
+                        <div class="div-unit px-1 py-0">
+                          <div id="trigger-info-mobile"
+                            onclick="sortTriggerDetails(this.id, false, 'asc', false, false)">
+                            Mobile <i class="fa fa-sort" aria-hidden="true"></i>
+                          </div>
+                          <div>
+                            <input type="text" style="max-width:100%"
+                            id="trigger-mobile-filter" onkeyup="rebuildTriggerDetailsRows();">
+                          </div>
+                        </div>
+                        <div class="div-unit-2 px-1 py-0">
+                          <div id="trigger-info-shn-start"
+                            onclick="sortTriggerDetails(this.id, false, false, 'asc', false)">
+                            SHN Start <i class="fa fa-sort" aria-hidden="true"></i>
+                          </div>
+                          <div>
+                            <input type="text" style="max-width:100%"
+                            id="trigger-start-filter" onkeyup="rebuildTriggerDetailsRows();">
+                          </div>
+                        </div>
+                        <div class="div-unit-2 px-1 py-0">
+                          <div id="trigger-info-shn-end"
+                            onclick="sortTriggerDetails(this.id, false, false, false, 'asc')">
+                            SHN End <i class="fa fa-sort" aria-hidden="true"></i>
+                          </div>
+                          <div>
+                            <input type="text" style="max-width:100%"
+                            id="trigger-end-filter" onkeyup="rebuildTriggerDetailsRows();">
+                          </div>
+                        </div>
+                        <div class="div-unit-3 px-1 py-0" id="trigger-info-expired" style="cursor:text;">
+                          PIN<br/>Expired
+                        </div>
+                        <div class="div-unit-2 px-1 py-0" id="trigger-info-suspended" style="cursor:text;">
+                          PIN<br/>Suspended
+                        </div>
+                        <div class="div-unit-2 px-1 py-0" id="trigger-info-multi-login" style="cursor:text;">
+                          PIN<br/>Multi Login
+                        </div>
+                        <div class="div-unit-3 py-0" id="trigger-info-wellness" style="cursor:text;">
+                          Wellness<br/>Page
+                        </div>
+                        <div class="div-unit-3 py-0" id="trigger-info-expired" style="cursor:text;">
+                          Biometric
+                          Check
+                        </div>
+                        <div class="div-unit-3 px-1 py-0" id="trigger-info-ad-hoc-push"
+                            onclick="selectAllCheckboxes('', 'trigger-checkbox-adhocpush');">
+                          Ad-Hoc<br/>Bio. Push
+                        </div>
+                        <div class="div-unit-3 px-1 py-0" id="trigger-info-get-heartbeat"
+                            onclick="selectAllCheckboxes('', 'trigger-checkbox-heartbeat');">
+                          Ad-Hoc Dist. Req.
+                        </div>
+                        <div class="div-unit-3 px-1 py-0" id="trigger-info-frsm-push"
+                            onclick="selectAllCheckboxes('', 'trigger-checkbox-frsm');">
+                          Ad-Hoc FRSM
+                        </div>
+            
+                      </div>
+                    </div>
+            
+                    <div id="trigger-info-wrapper"
+                        class="horizontal-scrollable-wrapper">
+                      <div id="trigger-info" class="row mx-0 my-0">
+
+                        <div class="col-12 px-1 py-0">
+                          &nbsp;
+                        </div>
+            
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                    
+                <div class="row mx-0 mt-1">
+                  <div class="col-12 px-0" style="text-align:center;">
+                    <i class="fa fa-bars" aria-hidden="true"
+                      id="trigger-notch"></i>
+                      <div style="text-align:right;">
+                        <span id="trigger-alert">
+                          &nbsp;
+                        </span>&nbsp;
+                        <input type="button" value="Refresh" class="mt-2 mb-0"
+                        onclick="refreshTrigger();">
+                        <input type="button" value="Trigger"
+                          id="trigger-button"/>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="d-none" id="card-shnchange">
+
+                  <hr class="mb-0 mt-2 mb-1">
+
+                  <div id="shnchange-header" class="row mx-0 my-0">
+                    <div class="col-12 px-1 py-0" id="shnchange-title">
+                      &nbsp;
+                    </div>
+                  </div>
+
+                  <div class="row mx-0">
+                  
+                    <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                      PIN:
+                    </div>
+                    <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                      <input type="text" id="shnchange-pin-input" style="width:10rem;" onchange="">
+                    </div>
+                    <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                      New Date:
+                    </div>
+                    <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                      <input type="text" id="shnchange-date-input" style="width:10rem;" onchange="">
+                    </div>
+                  </div>
+                  <div class="col-12 px-0 mt-2" style="text-align: right;">
+                    <span id="shnchange-alert">&nbsp;</span>
+                    &nbsp;
+                    <input type="button" value="Cancel" id="shnchange-cancel-button"
+                    onclick="cancelSHNChange();">
+                    <input type="button" value="Submit" id="shnchange-submit-button"
+                    onclick="submitSHNChange();">
+                  </div>
+                
+                </div>
+                
+
+              </div>
+            </div>
+            <!--END CARD-->
+
+            <!--PIN INFO CARD-->
+            <div class="card mx-1 my-1">
+
+              <!--PIN INFO DISPLAY-->
+              <div class="card-header px-1 py-2">
+                PIN Front-end App Config
+              </div>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                <div class="row mx-0 my-0">
+                  <div class="col-6 col-sm-4 col-xl-3 px-0 py-0">
+                    
+                    <div>
+                      <div id="list-pins-header" class="row mx-0 my-0">
+                        <div class="col-7 px-1 py-0" id="list-info-pin"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          PIN
+                        </div>
+                        <div class="col-5 px-1 py-0"
+                            onclick="selectAllCheckboxes('config', 'checkbox-configure')">
+                          Config
+                        </div>
+                      </div>
+                    </div>
+            
+                    <div id="list-pins-wrapper"
+                        class="vertical-scrollable-wrapper">
+                      <div id="list-pins" class="row mx-0 my-0">
+            
+                        <div class="col-12">
+                          &nbsp;
+                        </div>
+            
+                      </div>
+                    </div>
+            
+                  </div>
+                  <div class="col-6 col-sm-8 col-xl-9 px-0 py-0 content">
+            
+                    <div id="list-header-wrapper"
+                        class="horizontal-scrollable-wrapper
+                                scrollable-hidden">
+                      <div id="list-info-header" class="row mx-0 my-0">
+                      <!--
+                        <div class="col-1 px-1 py-0" id="list-info-mobile"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Mobile
+                        </div>
+                        <div class="col-1 px-1 py-0" id="list-info-start"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          SHN Start
+                        </div>
+                      -->
+                        <!--<div class="col-1 px-1 py-0" id="list-info-end"-->
+                        <div class="div-unit px-1 py-0" id="list-info-mobile"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Mobile
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-start"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          SHN Start
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-end"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          SHN End
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-min_alt"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Min. Altitude
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-max_alt"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Max. Altitude
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-min_dist"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Min. Distance
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-max_dist"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Max. Distance
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-max_vltn"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Max. Violations
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-upd_freq"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Update Freq.
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-last_update"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Last Update
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-bio_last_update"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Last Bio. Push
+                        </div>
+                        <div class="div-unit px-1 py-0" id="list-info-bio_last_update"
+                            onclick="sortAndBuildPinDetails(this.id)">
+                          Last Bio. Upd.
+                        </div>
+                        <div class="d-none div-unit px-1 py-0">
+                          Watch List
+                        </div>
+            
+                      </div>
+                    </div>
+            
+                    <div id="list-info-wrapper"
+                        class="horizontal-scrollable-wrapper">
+                      <div id="list-info" class="row mx-0 my-0">
+            
+                        <div class="col-12 px-1 py-0">
+                          &nbsp;
+                        </div>
+            
+                      </div>
+                    </div>
+            
+                  </div>
+                </div>
+                <div class="row mx-0 mt-1">
+                  <div class="col-12 px-0" style="text-align:center;">
+                    <i class="fa fa-bars" aria-hidden="true"
+                      id="list-pins-notch"></i>
+                  </div>
+                </div>
+                <div class="row mx-0 my-0">
+                  <div class="col-12 px-0 py-0" style="text-align:right;">
+                    <span id="refresh-list-pins-alert">&nbsp;</span>&nbsp;
+                    <input type="button" value="Refresh" class="mt-2 mb-0"
+                      onclick="getReqCallbackAuth(`${get_all}/${orgid}`, loadPinDetails);"/>
+                  </div>
+                </div>
+                <hr class="mb-0 mt-2 mb-1">
+
+                <div class="row mx-0 my-0">
+                  <div class="col-12 px-0 py-0" id="input-list-pins-alert">
+                    &nbsp;
+                  </div>
+                </div>
+
+                <div class="row mx-0">
+                  
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    SHN Start:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="date" id="input-list-pins-start" style="width:10rem;"
+                    onchange="">
+                  </div>
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    SHN End:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="date" id="input-list-pins-end" style="width:10rem;"
+                    onchange="">
+                  </div>
+                </div>
+
+                <div class="row mx-0">
+                  <div class="col-12 px-1 mt-2" style="text-align: center;">
+                    - OR -
+                  </div>
+                </div>
+                  
+                <div class="row mx-0">
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Maximum<br/>Violation:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="number" id="input-list-pins-maxvltn" style="width:6rem;" placeholder="N/A"
+                    onchange="document.getElementById('input-list-pins-maxvltn-preset').checked=false;">
+                    &nbsp;
+                    <input id="input-list-pins-maxvltn-preset" type="checkbox" onclick="(this.checked)
+                      ? document.getElementById('input-list-pins-maxvltn').value = getPresetMaxVltn()
+                      : document.getElementById('input-list-pins-maxvltn').value = ''">&nbsp;Preset
+                  </div>
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Update<br/>Frequency:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="number" id="input-list-pins-updfreq" style="width:6rem;" placeholder="N/A"
+                    onchange="document.getElementById('input-list-pins-updfreq-preset').checked=false;">
+                    &nbsp;
+                    <input id="input-list-pins-updfreq-preset" type="checkbox" onclick="(this.checked)
+                      ? document.getElementById('input-list-pins-updfreq').value = getPresetUpdFreq()
+                      : document.getElementById('input-list-pins-updfreq').value = ''">&nbsp;Preset
+                  </div>
+                  
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Minimum<br/>Distance (m):
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="number" id="input-list-pins-mindist" style="width:6rem;" placeholder="N/A"
+                    onchange="document.getElementById('input-list-pins-mindist-preset').checked=false;">
+                    &nbsp;
+                    <input id="input-list-pins-mindist-preset" type="checkbox" onclick="(this.checked)
+                      ? document.getElementById('input-list-pins-mindist').value = getPresetMinDist()
+                      : document.getElementById('input-list-pins-mindist').value = ''">&nbsp;Preset
+                  </div>
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Maximum<br/>Distance (m):
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="number" id="input-list-pins-maxdist" style="width:6rem;" placeholder="N/A"
+                    onchange="document.getElementById('input-list-pins-maxdist-preset').checked=false;">
+                    &nbsp;
+                    <input id="input-list-pins-maxdist-preset" type="checkbox" onclick="(this.checked)
+                      ? document.getElementById('input-list-pins-maxdist').value = getPresetMaxDist()
+                      : document.getElementById('input-list-pins-maxdist').value = ''">&nbsp;Preset
+                  </div>
+                  
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Minimum<br/>Altitude (m):
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="number" id="input-list-pins-minalt" style="width:6rem;" placeholder="N/A"
+                    onchange="document.getElementById('input-list-pins-minalt-preset').checked=false;">
+                    &nbsp;
+                    <input id="input-list-pins-minalt-preset" type="checkbox" onclick="(this.checked)
+                      ? document.getElementById('input-list-pins-minalt').value = getPresetMinAlt()
+                      : document.getElementById('input-list-pins-minalt').value = ''">&nbsp;Preset
+                  </div>
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Maximum<br/>Altitude (m):
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input type="number" id="input-list-pins-maxalt" style="width:6rem;" placeholder="N/A"
+                    onchange="document.getElementById('input-list-pins-maxalt-preset').checked=false;">
+                    &nbsp;
+                    <input id="input-list-pins-maxalt-preset" type="checkbox" onclick="(this.checked)
+                      ? document.getElementById('input-list-pins-maxalt').value = getPresetMaxAlt()
+                      : document.getElementById('input-list-pins-maxalt').value = ''">&nbsp;Preset
+                  </div>
+                </div>
+
+                <div class="col-12 px-0 mt-2" style="text-align: right;">
+                  <input type="button" value="Clear" onclick="clearInputListConfig()">
+                  <input type="button" value="Submit" id="btn-list-config-submit"
+                    onclick="submitInputListConfig(); clearAllCheckboxes('checkbox-configure')">
+                </div>
+
+                <!--END CONTENT-->
+              </div>
+              <!--END BODY-->
+            </div>
+            <!--END CARD-->
+
+
+            <!--GROUP CHECKER CARD-->
+            <div class="card mx-1 my-1">
+              <!--TITLE IN HEADER-->
+              <a id="card-group-checker">
+                <div class="card-header px-1 py-2">
+                  Multiple PIN Checker
+                </div>
+              </a>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+
+                <div class="row mx-0 my-0">
+                  <div class="col-12 px-0 py-0" id="group-checker-alert">
+                    &nbsp;
+                  </div>
+                </div>
+                
+                <div class="row mx-0">
+                  
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Range:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <select id="group-checker-day-range" style="width:10rem;">
+                      <option value="0" selected>Today</option>
+                      <option value="1">1 day</option>
+                      <option value="2">2 days</option>
+                      <option value="3">3 days</option>
+                      <option value="4">4 days</option>
+                      <option value="5">5 days</option>
+                      <option value="6">6 days</option>
+                      <option value="7">1 week</option>
+                      <option value="8">8 days</option>
+                      <option value="9">9 days</option>
+                      <option value="10">10 days</option>
+                      <option value="11">11 days</option>
+                      <option value="12">12 days</option>
+                      <option value="13">13 days</option>
+                      <option value="14">2 weeks</option>
+                    </select>
+                  </div>
+
+                  <div class="col-12 px-0 mt-2" style="text-align: right;">
+                    <input type="button" value="Submit" onclick="getMultiChecker()">
+                  </div>
+                </div>
+
+                  <hr></hr>
+
+                <div class="row mx-0 my-0">
+                  <div class="px-0 py-0" style="width: 170px;">
+                    
+                    <div>
+                      <div id="group-checker-datetime-header" class="row mx-0 my-0">
+                        <div class="col-12 px-1 py-0" id="group-checker-info-datetime"
+                            onclick="sortMultiChecker(this.id, 'asc', false, false);//sortMultiCheckerByKey(this.id)">
+                          Date Time <i class="fa fa-sort" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+            
+                    <div id="group-checker-datetime-wrapper"
+                        class="vertical-scrollable-wrapper">
+                      <div id="group-checker-datetime" class="row mx-0 my-0">
+            
+                      </div>
+                    </div>
+            
+                  </div>
+                  <div class="px-0 py-0 content" style="width: calc(100% - 170px);">
+            
+                    <div id="group-checker-info-header-wrapper"
+                        class="horizontal-scrollable-wrapper
+                                scrollable-hidden">
+                      <div id="group-checker-info-header" class="row mx-0 my-0">
+                        <div class="col-2 px-1 py-0" id="group-checker-info-pin"
+                            onclick="sortMultiChecker(this.id, '', 'asc', '');//sortMultiCheckerByKey(this.id)">
+                          PIN <i class="fa fa-sort" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-2 px-1 py-0" id="group-checker-info-type"
+                            onclick="changeMultiCheckerType(this.id)">
+                          Type
+                        </div>
+                        <div class="col-2 px-1 py-0" id="group-checker-info-value"
+                            onclick="sortMultiChecker(this.id, '', '', 'asc');//sortMultiCheckerByKey(this.id)">
+                          Value <i class="fa fa-sort" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-6 px-1 py-0" id="group-checker-info-remarks"
+                          style="cursor:text;">
+                          Remarks
+                        </div>
+            
+                      </div>
+                    </div>
+            
+                    <div id="group-checker-info-wrapper"
+                        class="horizontal-scrollable-wrapper">
+                      <div id="group-checker-info" class="row mx-0 my-0">
+            
+                        <div class="col-12 px-1 py-0">
+                          &nbsp;
+                        </div>
+            
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                    
+                <div class="row mx-0 mt-1">
+                  <div class="col-12 px-0" style="text-align:center;">
+                    <i class="fa fa-bars" aria-hidden="true"
+                      id="group-checker-datetime-notch"></i>
+                      <div style="text-align:right;">
+                        <input type="button" value="Download CSV"
+                          onclick="downloadMultiCheckerCSV()"/>
+                      </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!--END CARD-->
+
+            <!--INDIVIDUAL CHECKER CARD-->
+            <div class="card mx-1 my-1">
+              <!--TITLE IN HEADER-->
+              <a id="card-individual-checker">
+                <div class="card-header px-1 py-2">
+                  Individual PIN Checker
+                </div>
+              </a>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+
+                <div class="row mx-0 my-0">
+                  <div class="col-12 px-0 py-0" id="individual-checker-alert">
+                    &nbsp;
+                  </div>
+                </div>
+                
+                <div class="row mx-0">
+                  
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    PIN/Mobile:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <input id="individual-checker-user" type="text" style="width:10rem;">
+                  </div>
+                  
+                  <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                    Range:
+                  </div>
+                  <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                    <select id="individual-checker-day-range" style="width:10rem;">
+                      <option value="0" selected>Today</option>
+                      <option value="1">1 day</option>
+                      <option value="2">2 days</option>
+                      <option value="3">3 days</option>
+                      <option value="4">4 days</option>
+                      <option value="5">5 days</option>
+                      <option value="6">6 days</option>
+                      <option value="7">1 week</option>
+                      <option value="8">8 days</option>
+                      <option value="9">9 days</option>
+                      <option value="10">10 days</option>
+                      <option value="11">11 days</option>
+                      <option value="12">12 days</option>
+                      <option value="13">13 days</option>
+                      <option value="14">2 weeks</option>
+                    </select>
+                  </div>
+
+                  <div class="col-12 px-0 mt-2" style="text-align: right;">
+                    <input type="button" value="Submit" onclick="getIndividualCheckerByUser()">
+                  </div>
+                </div>
+
+                  <hr></hr>
+
+                <div class="row mx-0 my-0">
+                  <div class="px-0 py-0" style="width: 170px;">
+                    
+                    <div>
+                      <div id="individual-checker-datetime-header" class="row mx-0 my-0">
+                        <div class="col-12 px-1 py-0" id="individual-checker-info-datetime"
+                            onclick="sortIndividualChecker(this.id, 'asc', false, false);//sortMultiCheckerByKey(this.id)">
+                          Date Time <i class="fa fa-sort" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+            
+                    <div id="individual-checker-datetime-wrapper"
+                        class="vertical-scrollable-wrapper">
+                      <div id="individual-checker-datetime" class="row mx-0 my-0">
+            
+                      </div>
+                    </div>
+            
+                  </div>
+                  <div class="px-0 py-0 content" style="width: calc(100% - 170px);">
+            
+                    <div id="individual-checker-info-header-wrapper"
+                        class="horizontal-scrollable-wrapper
+                                scrollable-hidden">
+                      <div id="individual-checker-info-header" class="row mx-0 my-0">
+                        <div class="col-2 px-1 py-0" id="individual-checker-info-pin"
+                            onclick="sortIndividualChecker(this.id, '', 'asc', '');//sortMultiCheckerByKey(this.id)">
+                          PIN <i class="fa fa-sort" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-2 px-1 py-0" id="individual-checker-info-type"
+                            onclick="changeIndividualCheckerType(this.id)">
+                          Type
+                        </div>
+                        <div class="col-2 px-1 py-0" id="individual-checker-info-value"
+                            onclick="sortIndividualChecker(this.id, '', '', 'asc');//sortMultiCheckerByKey(this.id)">
+                          Value <i class="fa fa-sort" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-6 px-1 py-0" id="individual-checker-info-remarks"
+                          style="cursor:text;">
+                          Remarks
+                        </div>
+            
+                      </div>
+                    </div>
+            
+                    <div id="individual-checker-info-wrapper"
+                        class="horizontal-scrollable-wrapper">
+                      <div id="individual-checker-info" class="row mx-0 my-0">
+            
+                        <div class="col-12 px-1 py-0">
+                          &nbsp;
+                        </div>
+            
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                    
+                <div class="row mx-0 mt-1">
+                  <div class="col-12 px-0" style="text-align:center;">
+                    <i class="fa fa-bars" aria-hidden="true"
+                      id="individual-checker-datetime-notch"></i>
+                      <div style="text-align:right;">
+                        <input type="button" value="Download CSV"
+                          onclick="downloadIndividualCheckerCSV()"/>
+                      </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!--END CARD-->
+
+            <!--BATCH SMS NOTIFICATION CARD-->
+            <div class="card mx-1 my-1">
+              <div class="card-header px-1 py-2">
+                <table style="background-color: rgba(0,0,0,0); font-weight: 900;">
+                  <tr>
+                    <td style="text-align:left;">Batch SMS Notification</td>
+                    <td style="text-align:right;">
+                      <span style="cursor:pointer;" onclick="
+                        warningAlert(alert_sms_batch, 'Upload a CSV containing a single column of PINs...', 3000);
+                        setTimeout(() => {
+                          warningAlert(alert_sms_batch, 'With only 1 item in the header: PIN.', 3000);
+                        }, 3010);
+                      ">?</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                
+                <div id="module-sms-batch">
+                  <div class="row mx-0">
+                    <div class="col-12 px-0" id="sms-batch-alert">
+                      &nbsp;
+                    </div>
+                    <div class="col-6 px-0 mt-2" style="text-align: left;">
+                      <input type="button" value="Download Template" onclick="downloadBatchSMSTemplate()">
+                    </div>
+                    <div class="col-6 px-0 mt-2" style="text-align: right;">
+                      <input type="file" id="sms-batch-file" size="50" onclick="this.value=null;"
+                      onchange="batchSMSByPinsUpload()"
+                      style="display: none;">
+                      <input type="button" value="Blast SMS"
+                      onclick="document.getElementById('sms-batch-file').click();">
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+              <!--END BODY-->
+            </div>
+            <!--END CARD-->
+
+            <!--PIN GENERATION AND ASSIGNMENT CARD-->
+            <div class="card mx-1 my-1">
+              <!--TITLE IN HEADER-->
+              <div class="card-header px-1 py-2">
+                PIN Generation & Assignment
+              </div>
+              
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                <!--ADD NEW PINS TABLE FORM-->
+                <table class="my-0">
+                  <tbody>
+                    <tr>
+                      <th colspan="3">Generate New PINs</th>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <div class="row mx-0 my-0">
+                  <div class="col-12 px-0 py-0" id="input-count-newpin-alert">
+                    &nbsp;
+                  </div>
+                </div>
+
+                <table class="my-0">
+                  <tbody>
+                  <!--ADD NEW PINS SETTING-->
+                  <tr class="mb-0">
+                    <td>
+                      &emsp;<br>
+                      Input Count
+                      <br>&emsp;
+                    </td>
+                    <td>
+                      <input type="number" id="input-count-newpins" style="width:5rem;" onchange="">
+                    </td>
+                    <td style="text-align: right;">
+                      <input type="button" value="Generate" id="btn-generate-newpins"
+                             onclick="generateNewPins()">
+                    </td>
+                  </tr>
+                </tbody></table>
+
+                <hr class="mt-0 mb-1">
+
+                <div class="row mx-0 my-0">
+                  <div class="col-12 px-0 py-0" width="100%">
+                    
+                    <div id="list-floating-header-wrapper">
+                      <div id="list-floating-header" class="row mx-0 my-0">
+                        <div class="col-6 px-1 py-0">
+                          Available PINs
+                        </div>
+                        <div class="col-6 px-1 py-0" style="text-align:right;">
+                          <span id="newpins">0</span> total
+                        </div>
+                      </div>
+                    </div>
+            
+                    <div id="list-floating-wrapper" class="vertical-scrollable-wrapper">
+                      <div id="list-floating" class="row mx-0 my-0">
+                      </div>
+                    </div>
+                    <div class="row mx-0 mt-1">
+                      <div class="col-12 px-0" style="text-align:center;">
+                        <i class="fa fa-bars" aria-hidden="true"
+                          id="list-floating-pins-notch"></i>
+                          <div style="text-align:right;">
+                            <input type="button" value="Refresh" class="mt-2"
+                              onclick="getReqCallback(`${get_floating_pins}/${orgid}`, loadFloatingPins);"/>
+                            <input type="button" value="Download CSV"
+                              onclick="downloadFloatingPins()"/>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div id="assign-pin-module" class="">
+                      <hr class="mb-0 mt-2 mb-1"></hr>
+                      
+                      <table class="my-0">
+                        <tbody>
+                          <tr>
+                            <th colspan="3">PIN Assignment:&emsp;
+                              <span id="setting-input-newpin"
+                                    class="span-setting setting-pin-assignment"
+                                    onclick="renderPinAssignmentType(this.id);">
+                                Single
+                              </span>
+                              &emsp;
+                              |
+                              &emsp;
+                              <span id="setting-batch-upload"
+                                    class="span-setting setting-pin-assignment"
+                                    onclick="renderPinAssignmentType(this.id);">
+                                Batch
+                              </span>
+                            </th>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      <!--PIN ASSIGNMENT MODULE-->
+                      <div id="module-input-newpin">
+                        <div class="row mx-0">
+                          <div class="col-12 px-0" id="input-newpin-alert">
+                            &nbsp;
+                          </div>
+                        </div>
+                        
+                        <div class="row mx-0">
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            PIN:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2">
+                            <input type="string" id="input-newpin" style="width:10rem;" disabled="" placeholder="Select PIN above" onchange="">
+                          </div>
+                          
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            Mobile:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2">
+                            <input type="string" id="input-newpin-ccode" style="width:3.5rem"
+                            placeholder="+65"/>
+                            <input type="string" id="input-newpin-mobile" style="width:6.25rem;" onchange="">
+                          </div>
+
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            SHN Start:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="date" id="input-newpin-start" style="width:10rem;" onchange="">
+                          </div>
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            SHN End:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="date" id="input-newpin-end" style="width:10rem;" onchange="">
+                          </div>
+                          
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            Max Vltn:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="number" id="input-newpin-maxvltn" style="width:6rem;" placeholder="N/A"
+                            onchange="document.getElementById('input-newpin-maxvltn-preset').checked=false;">
+                            &nbsp;
+                            <input id="input-newpin-maxvltn-preset" type="checkbox" onclick="(this.checked)
+                              ? document.getElementById('input-newpin-maxvltn').value = getPresetMaxVltn()
+                              : document.getElementById('input-newpin-maxvltn').value = ''">&nbsp;Preset
+                          </div>
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            Update Freq:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="number" id="input-newpin-updfreq" style="width:6rem;" placeholder="N/A"
+                            onchange="document.getElementById('input-newpin-updfreq-preset').checked=false;">
+                            &nbsp;
+                            <input id="input-newpin-updfreq-preset" type="checkbox" onclick="(this.checked)
+                              ? document.getElementById('input-newpin-updfreq').value = getPresetUpdFreq()
+                              : document.getElementById('input-newpin-updfreq').value = ''">&nbsp;Preset
+                          </div>
+                          
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            Min Dist:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="number" id="input-newpin-mindist" style="width:6rem;" placeholder="N/A"
+                            onchange="document.getElementById('input-newpin-mindist-preset').checked=false;">
+                            &nbsp;
+                            <input id="input-newpin-mindist-preset" type="checkbox" onclick="(this.checked)
+                              ? document.getElementById('input-newpin-mindist').value = getPresetMinDist()
+                              : document.getElementById('input-newpin-mindist').value = ''">&nbsp;Preset
+                          </div>
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            Max Dist:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="number" id="input-newpin-maxdist" style="width:6rem;" placeholder="N/A"
+                            onchange="document.getElementById('input-newpin-maxdist-preset').checked=false;">
+                            &nbsp;
+                            <input id="input-newpin-maxdist-preset" type="checkbox" onclick="(this.checked)
+                              ? document.getElementById('input-newpin-maxdist').value = getPresetMaxDist()
+                              : document.getElementById('input-newpin-maxdist').value = ''">&nbsp;Preset
+                          </div>
+                          
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            Min Alti:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="number" id="input-newpin-minalt" style="width:6rem;" placeholder="N/A"
+                            onchange="document.getElementById('input-newpin-minalt-preset').checked=false;">
+                            &nbsp;
+                            <input id="input-newpin-minalt-preset" type="checkbox" onclick="(this.checked)
+                              ? document.getElementById('input-newpin-minalt').value = getPresetMinAlt()
+                              : document.getElementById('input-newpin-minalt').value = ''">&nbsp;Preset
+                          </div>
+                          <div class="col-5 col-md-2 px-1 mt-2 v-mid">
+                            Max Alti:
+                          </div>
+                          <div class="col-7 col-md-4 px-1 mt-2 v-mid">
+                            <input type="number" id="input-newpin-maxalt" style="width:6rem;" placeholder="N/A"
+                            onchange="document.getElementById('input-newpin-maxalt-preset').checked=false;">
+                            &nbsp;
+                            <input id="input-newpin-maxalt-preset" type="checkbox" onclick="(this.checked)
+                              ? document.getElementById('input-newpin-maxalt').value = getPresetMaxAlt()
+                              : document.getElementById('input-newpin-maxalt').value = ''">&nbsp;Preset
+                          </div>
+
+                          <div class="col-12 px-0 mt-2" style="text-align: right;">
+                            <input type="button" value="Clear" onclick="clearInputNewMobile()">
+                            <input type="button" value="Submit" onclick="checkInputNewMobile()">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--BATCH PIN ASSIGNMENT MODULE-->
+                <div id="module-batch-upload">
+                  <div class="row mx-0">
+                    <div class="col-12 px-0" id="batch-upload-alert">
+                      &nbsp;
+                    </div>
+                    <div class="col-6 px-0 mt-2" style="text-align: left;">
+                      <input type="button" value="Download Template" onclick="downloadBatchPinTemplate()">
+                    </div>
+                    <div class="col-6 px-0 mt-2" style="text-align: right;">
+                      <input type="file" id="batch-upload-file" size="50" onchange="batchUpload()"
+                      style="display: none;">
+                      <input type="button" value="Upload CSV"
+                      onclick="document.getElementById('batch-upload-file').click();">
+                      <!--<input type="button" value="Submit" onclick="checkBatchForExisting()">-->
+                    </div>
+                  </div>
+
+                  <hr class="mt-2 mb-1">
+
+                  <div class="row mx-0 my-0">
+                    <div class="col-5 col-xl-4 px-0 py-0">
+                      
+                      <div>
+                        <div id="batch-upload-pin-header" class="row mx-0 my-0">
+                          <div class="col-12 px-1 py-0" id="batch-upload-info-pin"
+                              onclick="//sortAndBuildBatchUploadDetails(this.id)">
+                            PIN
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div id="batch-upload-pin-wrapper"
+                          class="vertical-scrollable-wrapper">
+                        <div id="batch-upload-pin" class="row mx-0 my-0">
+              
+                          <div class="col-12">
+                            &nbsp;
+                          </div>
+              
+                        </div>
+                      </div>
+              
+                    </div>
+                    <div class="col-7 col-xl-8 px-0 py-0 content">
+              
+                      <div id="batch-upload-info-header-wrapper"
+                          class="horizontal-scrollable-wrapper
+                                  scrollable-hidden">
+                        <div id="batch-upload-info-header" class="row mx-0 my-0">
+                          <div class="col-4 px-1 py-0" id="batch-upload-info-mobile"
+                              onclick="//sortAndBuildBatchUploadDetails(this.id)">
+                            Mobile
+                          </div>
+                          <div class="col-4 px-1 py-0" id="batch-upload-info-start"
+                              onclick="//sortAndBuildBatchUploadDetails(this.id)">
+                            SHN Start
+                          </div>
+                          <div class="col-4 px-1 py-0" id="batch-upload-info-end"
+                              onclick="//sortAndBuildBatchUploadDetails(this.id)">
+                            SHN End
+                          </div>
+                        </div>
+                      </div>
+              
+                      <div id="batch-upload-info-wrapper"
+                          class="horizontal-scrollable-wrapper">
+                        <div id="batch-upload-info" class="row mx-0 my-0">
+              
+                          <div class="col-12 px-1 py-0">
+                            &nbsp;
+                          </div>
+              
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row mx-0 mt-1">
+                    <div class="col-12 px-0" style="text-align:center;">
+                      <i class="fa fa-bars" aria-hidden="true"
+                        id="batch-upload-notch"></i>
+                        <div style="text-align:right;">
+                          <input type="button" value="Download CSV"
+                            onclick="downloadBatchPinCSV()"/>
+                          <input type="button" value="Send SMS"
+                            onclick="sendBatchSMS()"/>
+                        </div>
+                    </div>
+                  </div>
+                </div>   
+                <!--END BODY-->
+              </div>
+              <!--END CARD-->
+            </div>
+          </div>
+          <!--END COLUMN-->
+
+          <!--START SECOND COLUMN-->
+          <div class="col col-sm-12 col-lg-4 px-0">
+
+            <!--DAILY SCHEDULED PUSH NOTIFICATIONS CARD-->
+            <div class="card mx-1 my-1">
+              <div class="card-header px-1 py-2">
+                Daily Scheduled Pushes
+              </div>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                <!--DAILY SCHEDULED PUSHES TABLE DISPLAY-->
+                <table>
+                  <tr>
+                    <td colspan="3" id="today-push-date">
+                      -
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Morning</th>
+                    <th>Afternoon</th>
+                    <th>Evening</th>
+                  </tr>
+                  <tr>
+                    <td id="today-push-am">
+                      -
+                    </td>
+                    <td id="today-push-pm">
+                      -
+                    </td>
+                    <td id="today-push-ev">
+                      -
+                    </td>
+                  </tr>
+                  <tr>
+                    <td id="today-push-am-status">
+                      -
+                    </td>
+                    <td id="today-push-pm-status">
+                      -
+                    </td>
+                    <td id="today-push-ev-status">
+                      -
+                    </td>
+                  </tr>
+                </table>
+                
+                <hr class="d-none"></hr>
+
+                <!--DAILY SCHEDULED PUSHES CONFIG TABLE FORM-->
+                <table class="d-none">
+                  <!--HEADER-->
+                  <tr>
+                    <th>Time of Day</th>
+                    <th>Start</th>
+                    <th>End</th>
+                  </tr>
+                  <!--MORNING SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Morning
+                      <br/>&emsp;
+                    </td>
+                    <td>
+                      <select id="input-push-am-start" name="am-start" disabled>
+                        <option value="-1" disabled selected>-</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                      </select>&nbsp;:00
+                    </td>
+                    <td>
+                      <select id="input-push-am-end" name="am-end" disabled>
+                        <option value="-1" disabled selected>-</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                      </select>&nbsp;:59
+                    </td>
+                  </tr>
+                  <!--AFTERNOON SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Afternoon
+                      <br/>&emsp;
+                    </td>
+                    <td>
+                      <select id="input-push-pm-start" name="pm-start" disabled>
+                        <option value="-1" disabled selected>-</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                      </select>&nbsp;:00
+                    </td>
+                    <td>
+                      <select id="input-push-pm-end" name="pm-end" disabled>
+                        <option value="-1" disabled selected>-</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                      </select>&nbsp;:59
+                    </td>
+                  </tr>
+                  <!--EVENING SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Evening
+                      <br/>&emsp;
+                    </td>
+                    <td>
+                      <select id="input-push-ev-start" name="ev-start" disabled>
+                        <option value="-1" disabled selected>-</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                      </select>&nbsp;:00
+                    </td>
+                    <td>
+                      <select id="input-push-ev-end" name="ev-end" disabled>
+                        <option value="-1" disabled selected>-</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                      </select>&nbsp;:59
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="text-align: right;">
+                      <span class="commentary">Edit feature temporarily unavailable.</span>&nbsp;
+                      <input type="button" value="Update" disabled>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!--END BODY-->
+            </div>
+            <!--END CARD-->
+            
+            <!--BATCH DSTA FRSM CARD-->
+            <div class="card mx-1 my-1">
+              <div class="card-header px-1 py-2">
+                <table style="background-color: rgba(0,0,0,0); font-weight: 900;">
+                  <tr>
+                    <td style="text-align:left;">Batch FRSM Challenge</td>
+                    <td style="text-align:right;">
+                      <span style="cursor:pointer;" onclick="
+                        warningAlert(alert_frsm_batch, 'Download CSV containing mobile numbers of all users...', 3000);
+                        setTimeout(() => {
+                          warningAlert(alert_frsm_batch, 'Upload file to DSTA FRSM system...', 3000);
+                        }, 3010);
+                        setTimeout(() => {
+                          warningAlert(alert_frsm_batch, 'Upload processed file with URL links back here.', 3000);
+                        }, 6020);
+                      ">?</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                
+                <div id="module-sms-batch">
+                  <div class="row mx-0">
+                    <div class="col-12 px-0" id="frsm-batch-alert">
+                      &nbsp;
+                    </div>
+                    <div class="col-6 px-0 mt-2" style="text-align: left;">
+                      <input type="button" value="Download CSV" onclick="getAllMobileForFRSM()">
+                    </div>
+                    <div class="col-6 px-0 mt-2" style="text-align: right;">
+                      <input type="file" id="frsm-batch-file" size="50" onchange="batchFRSMUpload()"
+                      style="display: none;">
+                      <input type="button" value="Blast FRSM" id="frsm-batch-button"
+                      onclick="document.getElementById('frsm-batch-file').click();">
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+              <!--END BODY-->
+            </div>
+            <!--END CARD-->
+
+            <!--FRONT-END APP CONFIG CARD-->
+            <div class="card mx-1 my-1">
+              <div class="card-header px-1 py-2">
+                Front-end App Configurations
+              </div>
+              <!--BODY-->
+              <div class="card-body px-1 py-1">
+                <!--FRONT-END APP CONFIG FORM-->
+                <table>
+                  <!--HEADER-->
+                  <tr>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Preset</th>
+                  </tr>
+                  <!--UPDATE FREQUENCY SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Update Frequency<br/><i>(in minutes)</i>
+                      <br/>&emsp;
+                    </td>
+                    <td id="updfreq">
+                      N/A
+                    </td>
+                    <td>
+                      <input type="number" id="input-updfreq" style="width:4rem;"
+                      onchange="">
+                    </td>
+                  </tr>
+                  <!--MIN DISTANCE SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Minimum Distance<br/><i>(in metres)</i>
+                      <br/>&emsp;
+                    </td>
+                    <td id="mindist">
+                      N/A
+                    </td>
+                    <td>
+                      <input type="number" id="input-mindist" style="width:4rem;"
+                      onchange="">
+                    </td>
+                  </tr>
+                  <!--MAX DISTANCE SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Maximum Distance<br/><i>(in metres)</i>
+                      <br/>&emsp;
+                    </td>
+                    <td id="maxdist">
+                      N/A
+                    </td>
+                    <td>
+                      <input type="number" id="input-maxdist" style="width:4rem;"
+                      onchange="">
+                    </td>
+                  </tr>
+                  <!--MIN ALTITUDE SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Minimum Altitude<br/><i>(in metres)</i>
+                      <br/>&emsp;
+                    </td>
+                    <td id="minalt">
+                      N/A
+                    </td>
+                    <td>
+                      <input type="number" id="input-minalt" style="width:4rem;"
+                      onchange="">
+                    </td>
+                  </tr>
+                  <!--MAX ALTITUDE SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Maximum Altitude<br/><i>(in metres)</i>
+                      <br/>&emsp;
+                    </td>
+                    <td id="maxalt">
+                      N/A
+                    </td>
+                    <td>
+                      <input type="number" id="input-maxalt" style="width:4rem;"
+                      onchange="">
+                    </td>
+                  </tr>
+                  <!--MAX VIOLATIONS SETTING-->
+                  <tr>
+                    <td>
+                      &emsp;<br/>
+                      Maximum Violations<br/><i>(in amount)</i>
+                      <br/>&emsp;
+                    </td>
+                    <td id="maxvltn">
+                      N/A
+                    </td>
+                    <td>
+                      <input type="number" id="input-maxvltn" style="width:4rem;"
+                      onchange="">
+                    </td>
+                  </tr>
+
+                  <!--UPDATE SETTINGS BUTTON-->
+                  <tr>
+                    <td colspan="3" style="text-align: right;">
+                      <input type="button" value="Update" onclick="updatePresetConfig()">
+                    </td>
+                  </tr>
+                  
+                </table>
+              </div>
+              <!--END BODY-->
+            </div>
+            <!--END CARD-->
+
+          </div>
+          <!--END COLUMN-->
+        </div>
+        <!--END ROW-->
+      </div>
+    </div>
+    </div>
+    <script>
+      $(function(){
+        $("#list-info-wrapper").scroll(function(){
+          $("#list-header-wrapper")
+            .scrollLeft($("#list-info-wrapper").scrollLeft());
+        })
+        $("#list-pins-wrapper").scroll(function(){
+          $("#list-info-wrapper")
+            .scrollTop($("#list-pins-wrapper").scrollTop());
+        })
+        $("#batch-upload-info-wrapper").scroll(function(){
+          $("#batch-upload-info-header-wrapper")
+            .scrollLeft($("#batch-upload-info-wrapper").scrollLeft());
+        })
+        $("#batch-upload-pin-wrapper").scroll(function(){
+          $("#batch-upload-info-wrapper")
+            .scrollTop($("#batch-upload-pin-wrapper").scrollTop());
+        })
+      });
+    </script>
+    <script src="./js/login.js"></script>
+    <script src="./js/frsm.js"></script>
+    <script src="./js/checker.js"></script>
+    <script src="./js/multichecker.js"></script>
+    <script src="./js/trigger.js"></script>
+    <script src="./js/shnchange.js"></script>
+    <script>
+
+      // URL to get biometric push notification config data.
+      var get_bio_config = "https://www.locationreport.gov.sg/otp/getbioconfig";
+      // URL to get scheduled push notification info by date.
+      var get_scheduled_push_by_date = "https://www.locationreport.gov.sg/otp/getbio";
+      // URL to get front-end config data.
+      var get_frontend_config = "https://www.locationreport.gov.sg/novel/config";
+      // URL to get all data of active PINs.
+      var get_all = `https://www.locationreport.gov.sg/novel/get/1`;
+      // URL to get all trk data of PIN.
+      var get_trk = "https://www.locationreport.gov.sg/novel/get";
+      // URL to get all floating pins.
+      var get_floating_pins = "https://www.locationreport.gov.sg/novel/floatingpins";
+      // URL to generate new floating pins.
+      var generate_floating_pins = "https://www.locationreport.gov.sg/otp/genpins";
+      // URL to set floating pin with SHN assignee details.
+      var set_floating_pins = "https://www.locationreport.gov.sg/otp/setfloatingpins";
+      // URL to set multi-login.
+      var set_multi_login = "https://www.locationreport.gov.sg/novel/multilogin";
+      // URL to set suspended.
+      var set_suspended = "https://www.locationreport.gov.sg/novel/suspension";
+      // URL to set biometric.
+      var set_biometric = "https://www.locationreport.gov.sg/novel/ed-biometric";
+      // URL to set wellness.
+      var set_wellness = "https://www.locationreport.gov.sg/novel/showtemperature";
+      // URL to change SHN start date.
+      var change_start_date = "https://www.locationreport.gov.sg/novel/changestartdate";
+      // URL to change SHN end date.
+      var change_end_date = "https://www.locationreport.gov.sg/novel/changeenddate";
+      // URL to change config.
+      var change_config = "https://www.locationreport.gov.sg/novel/changeconfig";
+      // URL to trigger ad-hoc push.
+      var ad_hoc_push = "https://www.locationreport.gov.sg/novel/adminpush";
+      // URL to trigger ad-hoc heartbeat.
+      var dist_request = "https://www.locationreport.gov.sg/novel/ping";
+      // URL to trigger FRSM push.
+      var ad_hoc_frsm = "https://www.locationreport.gov.sg/novel/frsm";
+      // URL to get PIN from mobile.
+      var get_all_mobile = "https://www.locationreport.gov.sg/novel/getallmobile";
+
+      var debug = true;
+
+      var today_push_date = document.getElementById('today-push-date');
+      var today_push_am = document.getElementById('today-push-am');
+      var today_push_am_status = document.getElementById('today-push-am-status');
+      var today_push_pm = document.getElementById('today-push-pm');
+      var today_push_pm_status = document.getElementById('today-push-pm-status');
+      var today_push_ev = document.getElementById('today-push-ev');
+      var today_push_ev_status = document.getElementById('today-push-ev-status');
+
+      var input_push_am_start = document.getElementById('input-push-am-start');
+      var input_push_am_end   = document.getElementById('input-push-am-end');
+      var input_push_pm_start = document.getElementById('input-push-pm-start');
+      var input_push_pm_end   = document.getElementById('input-push-pm-end');
+      var input_push_ev_start = document.getElementById('input-push-ev-start');
+      var input_push_ev_end   = document.getElementById('input-push-ev-end');
+      var input_pin_generation = document.getElementById('input-pin-generation');
+
+      var display_newpins = document.getElementById('newpins');
+      var display_updfreq = document.getElementById('updfreq');
+      var display_mindist = document.getElementById('mindist');
+      var display_maxdist = document.getElementById('maxdist');
+      var display_minalt = document.getElementById('minalt');
+      var display_maxalt = document.getElementById('maxalt');
+      var display_maxvltn = document.getElementById('maxvltn');
+
+      var table_pins = document.getElementById('table-pins');
+
+      var setting_input_newpin = document.getElementById('setting-input-newpin');
+      var setting_batch_upload = document.getElementById('setting-batch-upload');
+
+      var push_schedule;
+
+      var email, orgid, token;
+      window.onload = function() {
+        renderPage("");
+        email = localStorage.getItem('email');
+        orgid = localStorage.getItem('orgid');
+        token = localStorage.getItem('token');
+        if (email && orgid && token) {
+          //TO-DO
+          //Verify with backend if token is still valid.
+          clearLogin();
+          loadPage();
+          clearCurtain();
+        } else {
+          localStorage.removeItem('email');
+          localStorage.removeItem('orgid');
+          localStorage.removeItem('token');
+          showLogin();
+        }
+      }
+
+      function loadPage() {
+        email = localStorage.getItem('email');
+        token = localStorage.getItem('token');
+        orgid = localStorage.getItem('orgid');
+        renderPinAssignmentType(0);
+        getReqCallbackAuth(`${get_all}/${orgid}`, loadPinDetails);
+        loadTrigger(orgid);
+        getReqCallbackAuth(`${get_floating_pins}/${orgid}`, loadFloatingPins);
+        getDailySchedule();
+        getReqCallbackAuth(get_bio_config, loadBioConfig);
+        getReqCallbackAuth(get_frontend_config, loadFrontEndConfig);
+      }
+
+      function renderPinAssignmentType(id) {
+        var setting = document.getElementsByClassName('setting-pin-assignment');
+        if (!id) {
+          id = localStorage.getItem('setting-pin-assignment')
+          if (!id || id == null) {
+            id = 'setting-batch-upload';
+          }
+        }
+        localStorage.setItem('setting-pin-assignment', id);
+
+        setting[0].classList.remove('chosen'),
+        setting[1].classList.remove('chosen'),
+        document.getElementById(id).classList.add('chosen');
+        if (id == 'setting-input-newpin') {
+          document.getElementById('module-input-newpin').classList.remove('d-none'),
+          document.getElementById('module-batch-upload').classList.add('d-none');
+        }
+        else if (id == 'setting-batch-upload') {
+          document.getElementById('module-input-newpin').classList.add('d-none'),
+          document.getElementById('module-batch-upload').classList.remove('d-none');
+        }
+      }
+
+      function clearCurtain() {
+        var curtain = document.getElementById('curtain');
+        curtain.classList.remove('show');
+        
+        setTimeout(function() {
+          curtain.classList.add('d-none');
+        }, 500);
+      }
+
+      var list_pins = document.getElementById('list-pins');
+      var list_pins_header = document.getElementById('list-pins-header');
+      var list_pins_wrapper = document.getElementById('list-pins-wrapper');
+      var list_info = document.getElementById('list-info');
+      var list_info_header = document.getElementById('list-info-header');
+      var list_info_wrapper = document.getElementById('list-info-wrapper');
+      var list_pins_notch = document.getElementById('list-pins-notch');
+      
+      list_pins_notch.addEventListener('click', function() {
+        if (list_pins_wrapper.classList.contains('expanded')) {
+          list_pins_wrapper.classList.remove('expanded'),
+          list_info_wrapper.classList.remove('expanded');
+        } else {
+          list_pins_wrapper.classList.add('expanded'),
+          list_info_wrapper.classList.add('expanded');
+        }
+      });
+
+      var list_floating_wrapper = document.getElementById('list-floating-wrapper');
+      var list_floating_pins = document.getElementById('list-floating');
+      var list_floating_pins_notch = document.getElementById('list-floating-pins-notch');
+
+      list_floating_pins_notch.addEventListener('click', function() {
+        if (list_floating_wrapper.classList.contains('expanded')) {
+          list_floating_wrapper.classList.remove('expanded');
+        } else {
+          list_floating_wrapper.classList.add('expanded');
+        }
+      });
+
+      var batch_upload_pin = document.getElementById('batch-upload-pin');
+      var batch_upload_info = document.getElementById('batch-upload-info');
+      var batch_upload_pin_wrapper = document.getElementById('batch-upload-pin-wrapper');
+      var batch_upload_info_wrapper = document.getElementById('batch-upload-info-wrapper');
+      var batch_upload_notch = document.getElementById('batch-upload-notch');
+
+      batch_upload_notch.addEventListener('click', function() {
+        if (batch_upload_pin_wrapper.classList.contains('expanded')) {
+          batch_upload_pin_wrapper.classList.remove('expanded'),
+          batch_upload_info_wrapper.classList.remove('expanded');
+        } else {
+          batch_upload_pin_wrapper.classList.add('expanded'),
+          batch_upload_info_wrapper.classList.add('expanded');
+        }
+      });
+
+      var batch_upload_filename = "";
+      function batchUpload() {
+        batch_submitted = false;
+        var sms_batch_submission = false;
+        uploaded_batch.length = 0;
+        var file = document.getElementById("batch-upload-file").files[0];
+        if (file) {
+          var fileName = document.getElementById("batch-upload-file").value;
+          fileName = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length);
+          var fileExt = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length);
+          if (fileExt.toLowerCase() != "csv") {
+            errorAlert(alert_batch_upload, `Error: ${fileName} is not a valid CSV file.`, 3500);
+            return;
+          }
+          fileName = fileName.substring(0, fileName.lastIndexOf("."));
+          batch_upload_filename = fileName;
+          console.log(batch_upload_filename);
+
+          var reader = new FileReader();
+          reader.readAsText(file, "UTF-8");
+          reader.onload = function (evt) {
+            var result = evt.target.result;
+            processBatchUpload(result);
+          }
+          reader.onerror = function (evt) {
+            errorAlert(alert_batch_upload, "Error: Unable to read file.", 3500);
+          }
+        }
+      }
+
+      var template_header_new = "Mobile,SHN Start Date (DD/MM/YYYY),SHN End Date (DD/MM/YYYY)";
+      var template_header_existing = "PIN,Mobile,SHN Start Date (DD/MM/YYYY),SHN End Date (DD/MM/YYYY)";
+      var uploaded_batch = [];
+      var batch_submitted = false;
+      var sms_batch_submission = false;
+      var sms_batch_completed = false;
+
+      function processBatchUpload(result) {
+        result = result.split('\n');
+        var length = result.length;
+        if (length <= 1) {
+          errorAlert(alert_batch_upload, "Error: CSV file lacking contents.", 3500);
+          return;
+        } else {
+          var errors = [];
+          var header = result[0];
+          var result = result.splice(1);
+          console.log(header)
+          console.log(template_header_new)
+          if (header.trim() == template_header_new.trim()) {
+            length = result.length;
+            for (i = 0; i < length; i++) {
+              var _element = result[i].split(',');
+              if (_element.length != 3) {
+                errors.push(i + 1);
+                continue;
+              }
+              // Check Mobile
+              var _mobile = _element[0];
+              if (_mobile.length < 8 || parseInt(_mobile) == NaN) {
+                errors.push(i + 1);
+                continue;
+              }
+              // Check dates
+              var _start = _element[1];
+              var _end = _element[2];
+              if (_start == "") {
+                _start = moment().format("DD/MM/YYYY");
+                console.log("_start",_start);
+              } else {
+                var _test = _start.split('/');
+                if (_test.length != 3) {
+                  errors.push(i + 1);
+                  continue;
+                }
+                if (parseInt(_test[0]) == NaN || parseInt(_test[1]) == NaN || parseInt(_test[2]) == NaN) {
+                  errors.push(i + 1);
+                  continue;
+                }
+              }
+              if (_end == "") {
+                _end = moment(_start, "DD/MM/YYYY").add(14, "days").format("DD/MM/YYYY");
+                console.log("_end",_end);
+              } else {
+                _test = _end.split('/');
+                if (_test.length != 3) {
+                  errors.push(i + 1);
+                  continue;
+                }
+                if (parseInt(_test[0]) == NaN || parseInt(_test[1]) == NaN || parseInt(_test[2]) == NaN) {
+                  errors.push(i + 1);
+                  continue;
+                }
+              }
+
+              var _entry = {
+                pin: '-',
+                mobile: _mobile,
+                loastart: _start,
+                loaend: _end
+              };
+              _entry.mobile = (_entry.mobile.length == 8)
+              ? `65${_entry.mobile}` : _entry.mobile;
+              uploaded_batch.push(_entry);
+            }
+            if (errors.length == 1) {
+              errorAlert(alert_batch_upload, `Error: Line ${errors[0]} failed.`, false);
+            }
+            else if (errors.length > 1) {
+              errorAlert(alert_batch_upload, `Error: Lines ${errors.join(', ')} failed.`, false);
+            }
+            buildBatchUploadTable();
+            checkBatchForExisting();
+          }
+          else if (header.trim() == template_header_existing.trim()) {
+            length = result.length;
+            for (i = 0; i < length; i++) {
+              var _element = result[i].split(',');
+              if (_element.length != 4) {
+                errors.push(i + 1);
+                continue;
+              }
+              // Check PIN
+              var _pin = _element[0];
+              if (_pin == '' || _pin == 'NA' || _pin == 'N/A') {
+                _pin = '-';
+              } else if (_pin.length != 8) {
+                errors.push(i + 1);
+                continue;
+              }
+              // Check Mobile
+              var _mobile = _element[1];
+              if (_mobile.length < 8 || parseInt(_mobile) == NaN) {
+                errors.push(i + 1);
+                continue;
+              }
+              // Check dates
+              var _start = _element[2];
+              var _test = _start.split('/');
+              if (_test.length != 3) {
+                errors.push(i + 1);
+                continue;
+              }
+              if (parseInt(_test[0]) == NaN || parseInt(_test[1]) == NaN || parseInt(_test[2]) == NaN) {
+                errors.push(i + 1);
+                continue;
+              }
+              var _end = _element[3];
+              _test = _end.split('/');
+              if (_test.length != 3) {
+                errors.push(i + 1);
+                continue;
+              }
+              if (parseInt(_test[0]) == NaN || parseInt(_test[1]) == NaN || parseInt(_test[2]) == NaN) {
+                errors.push(i + 1);
+                continue;
+              }
+
+              var _entry = {
+                pin: _pin,
+                mobile: _mobile,
+                loastart: _start,
+                loaend: _end
+              };
+              _entry.mobile = (_entry.mobile.length == 8)
+              ? `65${_entry.mobile}` : _entry.mobile;
+              uploaded_batch.push(_entry);
+            }
+            if (errors.length == 1) {
+              errorAlert(alert_batch_upload, `Error: Line ${errors[0]} failed.`, false);
+            }
+            else if (errors.length > 1) {
+              errorAlert(alert_batch_upload, `Error: Lines ${errors.join(', ')} failed.`, false);
+            }
+            buildBatchUploadTable();
+            checkBatchForExisting();
+          } else {
+            errorAlert(alert_batch_upload, "Error: CSV Header is not similar to template.", 3500);
+            return;
+          }
+        }
+      }
+
+      function sendBatchSMS() {
+        if (uploaded_batch.length == 0) {
+          errorAlert(alert_batch_upload, "Error: Empty batch.", 3500);
+          return;
+        }
+        if (!batch_submitted) {
+          errorAlert(alert_batch_upload, "Error: Batch has not been submitted yet.", 3500);
+          return;
+        } else {
+          if (sms_batch_submission) {
+            if (sms_batch_completed == false) {
+              warningAlert(alert_batch_upload, "Commencing batch SMS transmission...", false);
+              batchSMS();
+            } else {
+              errorAlert(alert_batch_upload, "Error: SMS transmission for this batch is done.", 3500);
+            }
+          } else {
+            errorAlert(alert_batch_upload, "Error: Batch is still undergoing validation.", 3500);
+          }
+        }
+      }
+
+      var sms_count = 0;
+      function batchSMS() {
+        sms_batch_completed = true;
+        var length = uploaded_batch.length;
+        var pins = [];
+
+        for (i = 0; i < length; i++) {
+          pins.push(uploaded_batch[i].pin);
+        }
+        sms_count = 1;
+
+        var payload = {
+          "arrayofpins": pins
+        }
+        console.log("payload", payload)
+        postReqCallback("https://www.locationreport.gov.sg/otp/batchsms", payload, updateSMSCount);
+      }
+
+      function updateSMSCount(result) {
+        console.log(result);
+        sms_count -= 1;
+        if (sms_count == 0) {
+          successAlert(alert_batch_upload, "Batch SMS transmission completed.", 3500);
+        }
+      }
+      
+      function buildBatchUploadTable() {
+        var _batch_upload_pin_content = "";
+        var _batch_upload_info_content = "";
+        batch_upload_pin.innerHTML = _batch_upload_pin_content;
+        batch_upload_info.innerHTML = _batch_upload_info_content;
+
+        var length = uploaded_batch.length;
+        for (i = 0; i < length; i++) {
+          var _uploaded_entry = uploaded_batch[i];
+          _batch_upload_pin_content += buildBatchUploadContent(i, _uploaded_entry.pin);
+          _batch_upload_info_content += buildBatchUploadInfoContent(i, _uploaded_entry);
+        }
+        _batch_upload_pin_content += '<div class="col-12 px-1 py-0">&nbsp;</div>';
+        _batch_upload_info_content += '<div class="col-12 px-1 py-0">&nbsp;</div>';
+
+        batch_upload_pin.innerHTML = _batch_upload_pin_content;
+        batch_upload_info.innerHTML = _batch_upload_info_content;
+
+        if (batch_submitted) {
+          sms_batch_submission = true;
+          sms_batch_completed = false;
+        }
+      }
+
+      function buildBatchUploadContent(_index, _pin) {
+        var _div_class = "col-12 px-1 py-1 mx-0 my-0 v-mid";
+        var _shade = (_index % 2 == 0) ? 'shade' : '';
+        var _html = "";
+        _html += buildContent(_div_class, _shade, _pin);
+        return _html;
+      }
+
+      function buildBatchUploadInfoContent(_index, _entry) {
+        var _div_class = "col-4 px-1 py-1 mx-0 my-0 v-mid";
+        var _shade = (_index % 2 == 0) ? 'shade' : '';
+        var _html = "";
+        _html += buildContent(_div_class, _shade, _entry.mobile);
+        _html += buildContent(_div_class, _shade, _entry.loastart);
+        _html += buildContent(_div_class, _shade, _entry.loaend);
+        return _html;
+      }
+
+      var batch_generated_pins = [];
+      var batch_check_count = 0;
+      function checkBatchForExisting() {
+        batch_submitted = true;
+        var length = uploaded_batch.length;
+        if (length <= 0) {
+          errorAlert(alert_batch_upload, 'Error: Empty submission.', 3500);
+          return;
+        } else {
+          warningAlert(alert_batch_upload, 'Processing...', false);
+          batch_check_count = length;
+          var time_delay = 500;
+          for (i = 0; i < length; i++) {
+            var _mobile = uploaded_batch[i].mobile
+            getReqCheckBatchForExisting(`${get_all_mobile}/${_mobile}`, _mobile, updateBatchCheckCount, time_delay * i);
+          }
+        }
+      }
+
+      function getReqCheckBatchForExisting(_url, _mobile, _callback, _delay) {
+        setTimeout(function() {
+          getReqCallbackWithParmAuth(`${_url}`, _mobile, _callback);
+        }, _delay);
+      }
+
+      function updateBatchCheckCount(result, _mobile) {
+        if (result.message.length > 0) {
+          result = result.message[0];
+          var _pin = result.pin;
+          var _start = result.loastart;
+          var _end = result.loaend;
+          var _index = _.findIndex(uploaded_batch, function(batch) {
+            return batch.mobile == _mobile;
+          });
+          if (_index != -1) {
+            uploaded_batch[_index].pin = _pin;
+            uploaded_batch[_index].loastart = _start;
+            uploaded_batch[_index].loaend = _end;
+            buildBatchUploadTable();
+          }
+        }
+        batch_check_count -= 1;
+        if (batch_check_count == 0) {
+          var size = 0;
+          var length = uploaded_batch.length;
+          if (length == 0) {
+            successAlert(alert_batch_upload, "Processing completed.", 3500);
+          }
+          for (i = 0; i < length; i++) {
+            if (uploaded_batch[i].pin == '-') {
+              size += 1;
+            }
+          }
+          batch_generated_pins = [];
+          generateNewPinsBatch(size);
+        }
+      }
+
+      var batch_submission_count = 0;
+      function generateNewPinsBatch(size) {
+        var _max_capacity = 20;
+        batches = Math.floor(size / _max_capacity);
+        remainder = size % _max_capacity;
+
+        btn_list_pins_trigger.disabled = true;
+        batch_genpins_count = (remainder != 0) ? batches + 1 : batches;
+        batch_submission_count = size;
+
+        var time_delay = 250;
+        for (i = 0; i < batches; i++) {
+          getReqGenerateNewPinsBatch(`${generate_floating_pins}/${_max_capacity}/${orgid}`, updateBatchGenPinsCount, time_delay * i);
+        }
+        if (remainder != 0) {
+          getReqGenerateNewPinsBatch(`${generate_floating_pins}/${remainder}/${orgid}`, updateBatchGenPinsCount, time_delay * i);
+        }
+      }
+
+      function getReqGenerateNewPinsBatch(_url, _callback, _delay) {
+        setTimeout(function() {
+          getReqCallbackAuth(_url, _callback);
+        }, _delay);
+      }
+
+      var batch_genpins_count = 0;
+      function updateBatchGenPinsCount(result) {
+        result = result.message;
+        var length = result.length;
+        for (i = 0; i < length; i++) {
+          batch_generated_pins.push(result[i].pin);
+        }
+
+        console.log('batch_generated_pins', batch_generated_pins);
+        console.log('config_count',batch_genpins_count);
+
+        if (batch_genpins_count > 0) {
+          batch_genpins_count -= 1;
+          var length = uploaded_batch.length;
+          for (i = 0; i < length; i++) {
+            var _entry = uploaded_batch[i];
+            var time_delay = 250;
+            if (_entry.pin == '-') {
+              _entry.pin = batch_generated_pins.shift();
+              _entry.orgid = localStorage.getItem('orgid');
+              _entry.maxvltn = localStorage.getItem('preset-maxvltn');
+              _entry.updfreq = localStorage.getItem('preset-updfreq');
+              _entry.mindist = localStorage.getItem('preset-mindist');
+              _entry.maxdist = localStorage.getItem('preset-maxdist');
+              _entry.minalt = localStorage.getItem('preset-minalt');
+              _entry.maxalt = localStorage.getItem('preset-maxalt');
+              postReqUpdateBatchGenPinsCount(set_floating_pins, _entry, _entry.mobile, updateBatchUploadTable, time_delay);
+            }
+          }
+        }
+      }
+
+      function postReqUpdateBatchGenPinsCount(_url, _entry, _mobile, _callback, _delay) {
+        setTimeout(function() {
+          postReqCallbackWithParmAuth(_url, _entry, _mobile, _callback);
+        }, _delay);
+      }
+
+      function updateBatchUploadTable(result, _mobile) {
+        if (result.message) {
+          result = result.message;
+          var _pin = result.pin;
+          
+          var _index = _.findIndex(uploaded_batch, function(batch) {
+            return batch.mobile == _mobile;
+          });
+          if (_index != -1) {
+            uploaded_batch[_index].pin = _pin;
+          }
+        }
+        batch_submission_count -= 1;
+        if (batch_submission_count == 0) {
+          successAlert(alert_batch_upload, "Processing completed.", 3500);
+          buildBatchUploadTable();
+        }
+      }
+
+// ===========================
+
+      var alert_sms_batch = document.getElementById('sms-batch-alert');
+
+      function batchSMSByPinsUpload() {
+        var file = document.getElementById("sms-batch-file").files[0];
+        if (file) {
+          var fileName = document.getElementById("sms-batch-file").value;
+          fileName = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length);
+          var fileExt = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length);
+          if (fileExt.toLowerCase() != "csv" && fileExt.toLowerCase() != "txt") {
+            errorAlert(alert_sms_batch, `Error: ${fileName} is not a valid CSV/TXT file.`, 3500);
+            return;
+          }
+          fileName = fileName.substring(0, fileName.lastIndexOf("."));
+          console.log(fileName);
+
+          var reader = new FileReader();
+          reader.readAsText(file, "UTF-8");
+          reader.onload = function (evt) {
+            var result = evt.target.result;
+            console.log(result);
+            processBatchSMSByPinsUpload(result);
+          }
+          reader.onerror = function (evt) {
+            errorAlert(alert_sms_batch, "Error: Unable to read file.", 3500);
+          }
+        }
+      }
+
+      var template_header_pin = "PIN";
+      var batch_sms_by_pins = [];
+
+      function processBatchSMSByPinsUpload(result) {
+        result = result.split('\n');
+        var length = result.length;
+        if (length <= 1) {
+          errorAlert(alert_sms_upload, "Error: CSV/TXT file lacking contents.", 3500);
+          return;
+        } else {
+          var count = 0;
+          var header = result[0];
+          console.log(header);
+          var result = result.splice(1);
+          batch_sms_by_pins = [];
+          if (header.trim() == template_header_pin.trim()) {
+            length = result.length;
+            for (i = 0; i < length; i++) {
+              console.log(result[i]);
+              var _element = result[i].split(',');
+              if (_element[0] != "") {
+                batch_sms_by_pins.push(_element[0]);
+                count++;
+              }
+            }
+            warningAlert(alert_sms_batch, `Collected ${count} PINs.`, false);
+            setTimeout(function() {
+              sendBatchSMSByPins();
+            }, 3500);
+          } else {
+            errorAlert(alert_sms_batch, 'Error: Header should be "PIN" with a single column of PINs.', 3500);
+            return;
+          }
+        }
+      }
+
+      function sendBatchSMSByPins() {
+        if (batch_sms_by_pins.length == 0) {
+          errorAlert(alert_sms_batch, "Error: Empty batch.", 3500);
+          return;
+        } else {
+          warningAlert(alert_sms_batch, "Commencing batch SMS transmission...", false);
+          batchSMSByPins();
+        }
+      }
+
+      function batchSMSByPins() {
+        var length = batch_sms_by_pins.length;
+        
+        var pins = [];
+
+        for (i = 0; i < length; i++) {
+          pins.push(batch_sms_by_pins[i].trim());
+        }
+
+        var payload = {
+          "arrayofpins": pins
+        }
+        console.log("payload", payload)
+        postReqCallback("https://www.locationreport.gov.sg/otp/batchsms", payload, batchSMSByPinsComplete);
+      }
+
+      function batchSMSByPinsComplete(result) {
+        console.log(result);
+        successAlert(alert_sms_batch, "Successfully completed batch SMS broadcast.", 3500);
+      }
+
+      pins_floating = [];
+      function loadFloatingPins(details) {
+        pins_floating.length = 0;
+        var _html = "";
+        list_floating_pins.innerHTML = _html;
+
+        details = details.message.result;
+        var _length = details.length;
+        display_newpins.innerHTML = _length;
+
+        for (i = 0; i < _length; i++) {
+          pins_floating.push(details[i].pin);
+          var _shade = (i % 2 == 0) ? 'shade' : '';
+          _html = `<div class="col-4 col-lg-3 col-xl-2 px-1 py-0 ${_shade}"
+            onclick="inputNewPin('${details[i].pin}');">${details[i].pin}</div>`;
+          list_floating_pins.insertAdjacentHTML('beforeend', _html);
+        }
+        _html = '<div class="col-12 px-1 py-0">&nbsp;</div>';
+        list_floating_pins.insertAdjacentHTML('beforeend', _html);
+      }
+
+      function downloadFloatingPins() {
+        var str = "Pin,Mobile,SHN Start Date,SHN End Date";
+        for (i = 0; i < pins_floating.length; i++) {
+          str += '\n';
+          str += `${pins_floating[i]},,,`;
+        }
+        var fileName = `pins_${orgid}_${moment().format('DD-MM-YYYY_hh-mma')}`;
+        var uri = 'data:text/csv;charset=utf-8,' + str;
+        var downloadLink = document.createElement('a');
+        downloadLink.href = uri;
+        downloadLink.download = `${fileName}.csv`;
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+
+      var input_count_newpins = document.getElementById('input-count-newpins');
+      var input_newpin = document.getElementById('input-newpin');
+      var input_newpin_ccode = document.getElementById('input-newpin-ccode');
+      var input_newpin_mobile = document.getElementById('input-newpin-mobile');
+      var input_newpin_start = document.getElementById('input-newpin-start');
+      var input_newpin_end =  document.getElementById('input-newpin-end');
+
+      var input_newpin_maxvltn = document.getElementById('input-newpin-maxvltn');
+      var input_newpin_updfreq = document.getElementById('input-newpin-updfreq');
+      var input_newpin_mindist = document.getElementById('input-newpin-mindist');
+      var input_newpin_maxdist = document.getElementById('input-newpin-maxdist');
+      var input_newpin_minalt = document.getElementById('input-newpin-minalt');
+      var input_newpin_maxalt = document.getElementById('input-newpin-maxalt');
+
+      var input_list_pins_start = document.getElementById('input-list-pins-start');
+      var input_list_pins_end = document.getElementById('input-list-pins-end');
+      var input_list_pins_maxvltn = document.getElementById('input-list-pins-maxvltn');
+      var input_list_pins_updfreq = document.getElementById('input-list-pins-updfreq');
+      var input_list_pins_mindist = document.getElementById('input-list-pins-mindist');
+      var input_list_pins_maxdist = document.getElementById('input-list-pins-maxdist');
+      var input_list_pins_minalt = document.getElementById('input-list-pins-minalt');
+      var input_list_pins_maxalt = document.getElementById('input-list-pins-maxalt');
+
+      var alert_trigger = document.getElementById('trigger-alert');
+      var alert_input_list_pins = document.getElementById('input-list-pins-alert');
+      var alert_refresh_list_pins = document.getElementById('refresh-list-pins-alert');
+      var alert_input_count_newpin = document.getElementById('input-count-newpin-alert');
+      var alert_input_newpin = document.getElementById('input-newpin-alert');
+      var alert_batch_upload = document.getElementById('batch-upload-alert');
+
+      function inputNewPin(_pin) {
+        input_newpin.value = _pin;
+      }
+
+      function clearInputNewMobile() {
+        warningAlert(alert_input_newpin, "Clearing...", 3500);
+        
+        setTimeout(function() {
+          clearAlert(alert_input_newpin);
+        }, 1500);
+
+        input_newpin.value = input_newpin_ccode.value = input_newpin_mobile.value 
+        = input_newpin_maxvltn.value = input_newpin_updfreq.value = input_newpin_mindist.value
+        = input_newpin_maxdist.value = input_newpin_minalt.value = input_newpin_maxalt.value = null;
+
+        document.getElementById('input-newpin-maxvltn-preset').checked = false,
+        document.getElementById('input-newpin-updfreq-preset').checked = false,
+        document.getElementById('input-newpin-mindist-preset').checked = false,
+        document.getElementById('input-newpin-maxdist-preset').checked = false,
+        document.getElementById('input-newpin-minalt-preset').checked = false,
+        document.getElementById('input-newpin-maxalt-preset').checked = false;
+      }
+
+      function clearInputListConfig() {
+        warningAlert(alert_input_list_pins, "Clearing...", 3500);
+        
+        setTimeout(function() {
+          clearAlert(alert_input_list_pins);
+        }, 1500);
+
+        input_list_pins_start.value = input_list_pins_end.value
+        = input_list_pins_maxvltn.value = input_list_pins_updfreq.value = input_list_pins_mindist.value
+        = input_list_pins_maxdist.value = input_list_pins_minalt.value = input_list_pins_maxalt.value = null;
+
+        document.getElementById('input-list-pins-maxvltn-preset').checked = false,
+        document.getElementById('input-list-pins-updfreq-preset').checked = false,
+        document.getElementById('input-list-pins-mindist-preset').checked = false,
+        document.getElementById('input-list-pins-maxdist-preset').checked = false,
+        document.getElementById('input-list-pins-minalt-preset').checked = false,
+        document.getElementById('input-list-pins-maxalt-preset').checked = false;
+      }
+
+      function getPresetMaxVltn() { return localStorage.getItem('preset-maxvltn'); }
+      function getPresetUpdFreq() { return localStorage.getItem('preset-updfreq'); }
+      function getPresetMinDist() { return localStorage.getItem('preset-mindist'); }
+      function getPresetMaxDist() { return localStorage.getItem('preset-maxdist'); }
+      function getPresetMinAlt() { return localStorage.getItem('preset-minalt'); }
+      function getPresetMaxAlt() { return localStorage.getItem('preset-maxalt'); }
+
+      function submitInputListConfig() {      
+        var length = pins_configure.length;
+        if (length == 0) {
+          errorAlert(alert_input_list_pins, 'Error: No PIN is being re-configured.', 3500);
+          return;
+        }
+        var plural = (length > 1) ? "s' " : "'s ";
+        var settings = "";
+
+        var _loastart = input_list_pins_start.value;
+        var _loaend = input_list_pins_end.value;
+
+        if (_loaend != "" || _loastart != "") {
+          if (_loaend != "") {
+            _loaend = _loaend.split('-');
+            _loaend = `${_loaend[2]}/${_loaend[1]}/${_loaend[0]}`;
+
+            settings += "SHN End Date";
+
+            btn_list_config_submit.disabled = true;
+            config_count = length;
+
+            for (i = 0; i < length; i++) {
+              var payload = {
+                'pin': `${pins_configure[i]}`,
+                'newdate': _loaend
+              }
+              postReqCallbackAuth(change_end_date, payload, updateConfigCount);
+            }
+          }
+          if (_loastart != "") {
+            _loastart = _loastart.split('-');
+            _loastart = `${_loastart[2]}/${_loastart[1]}/${_loastart[0]}`;
+
+            settings = (settings == "") ? "SHN Start Date"
+            : "SHN Start and End Dates";
+
+            btn_list_config_submit.disabled = true;
+            config_count = length;
+
+            for (i = 0; i < length; i++) {
+              var payload = {
+                'pin': `${pins_configure[i]}`,
+                'newdate': _loastart
+              }
+              postReqCallbackAuth(change_start_date, payload, updateConfigCount);
+            }
+          }
+        } else {
+          var _maxvltn = input_list_pins_maxvltn.value;
+          if (_maxvltn == "") { _maxvltn = parseInt(localStorage.getItem('default-maxvltn')); }
+          var _updfreq = input_list_pins_updfreq.value;
+          if (_updfreq == "") { _updfreq = parseInt(localStorage.getItem('default-updfreq')); }
+          var _minalt = input_list_pins_minalt.value;
+          if (_minalt == "") { _minalt = parseInt(localStorage.getItem('default-minalt')); }
+          var _maxalt = input_list_pins_maxalt.value;
+          if (_maxalt == "") { _maxalt = parseInt(localStorage.getItem('default-maxalt')); }
+          var _mindist = input_list_pins_mindist.value;
+          if (_mindist == "") { _mindist = parseInt(localStorage.getItem('default-mindist')); }
+          var _maxdist = input_list_pins_maxdist.value;
+          if (_maxdist == "") { _maxdist = parseInt(localStorage.getItem('default-maxdist')); }
+
+          settings = "config settings";
+
+          btn_list_config_submit.disabled = true;
+          config_count = length;
+
+          for (i = 0; i < length; i++) {
+            var payload = {
+              'pin': `${pins_configure[i]}`,
+              'maxvltn': _maxvltn,
+              'updfreq': _updfreq,
+              'minalt': _minalt,
+              'maxalt': _maxalt,
+              'mindist': _mindist,
+              'maxdist': _maxdist
+            }
+            console.log('pin', pins_configure[i], 'payload', payload);
+            postReqCallbackAuth(change_config, payload, updateConfigCount);
+          }
+        }
+        pins_configure.length = 0;
+
+        successAlert(alert_input_list_pins, `${length} PIN${plural} ${settings} changed.`, 3500);
+        getReqCallbackAuth(`${get_all}/${orgid}`, loadPinDetails);
+      }
+
+      function checkInputNewMobile() {
+        var _mobile = input_newpin_mobile.value;
+        if (_mobile == "") {
+          errorAlert(alert_input_newpin, "Error: Empty mobile number field.", 3500);
+          return;
+        }
+        else if (_mobile.length < 8) {
+          errorAlert(alert_input_newpin, "Error: Incorrect mobile number length.", 3500);
+          return;
+        }
+        getReqCallbackWithParmAuth(`${get_all_mobile}/${_mobile}`, _mobile, submitInputNewMobile);
+      }
+
+      function submitInputNewMobile(result, _mobile) {
+        if (result.message.length > 0) {
+          result = result.message[0];
+          errorAlert(alert_input_newpin, "Error: PIN already assigned to mobile.", 3500);
+          return;
+        }
+
+        var _pin = input_newpin.value;
+        var _ccode = input_newpin_ccode.value;
+        _ccode = _ccode.replace(/\+/g, "");
+        if (_ccode == "") {
+          _mobile = "65" + _mobile;
+        } else {
+          _mobile = _ccode + _mobile;
+        }
+        console.log(_mobile);
+        var _loastart = input_newpin_start.value;
+        var _loastart_str;
+        var _loaend =  input_newpin_end.value;
+        var _loaend_str;
+        var skip = false;
+
+        if (_pin.length != 8) {
+          errorAlert(alert_input_newpin, 'Error: Invalid PIN', 3500);
+          skip = true;
+        }
+        if (!skip && _mobile.length < 8) {
+          errorAlert(alert_input_newpin, 'Error: Invalid mobile length', 3500);
+          skip = true;
+        }
+        if (!skip) {
+          if (_loastart != "") {
+            _loastart = _loastart.split('-');
+            _loastart = _loastart_str = `${_loastart[2]}/${_loastart[1]}/${_loastart[0]}`;
+            _loastart = moment(_loastart, "MM/DD/YYYY").valueOf();
+          } else {
+            errorAlert(alert_input_newpin, 'Error: Empty SHN Start Date.', 3500);
+            skip = true;
+          }
+        }
+        if (!skip) {
+          if (_loaend != "") {
+            _loaend = _loaend.split('-');
+            _loaend = _loaend_str = `${_loaend[2]}/${_loaend[1]}/${_loaend[0]}`;
+            _loaend = moment(_loaend, "MM/DD/YYYY").valueOf();
+          } else {
+            errorAlert(alert_input_newpin, 'Error: Empty SHN End Date.', 3500);
+            skip = true;
+          }
+        }
+        if (!skip) {
+          if (_loaend <= _loastart) {
+            errorAlert(alert_input_newpin, 'Error: Invalid SHN Start and End Dates.', 3500);
+            skip = true;
+          }
+        }
+
+        var object = {};
+
+        if (!skip) {
+          object['orgid'] = localStorage.getItem('orgid');
+          object['pin'] = _pin;
+          object['mobile'] = parseInt(_mobile);
+          object['loastart'] = _loastart_str;
+          object['loaend'] = _loaend_str;
+
+          var temp = input_newpin_maxvltn.value;
+          if (temp != "") {
+            object['maxvltn'] = parseInt(temp);
+          } else {
+            object['maxvltn'] = parseInt(localStorage.getItem('default-maxvltn'));
+          }
+          
+          var temp = input_newpin_updfreq.value;
+          if (temp != "") {
+            object['updfreq'] = parseInt(temp);
+          } else {
+            object['updfreq'] = parseInt(localStorage.getItem('default-updfreq'));
+          }
+          
+          var temp = input_newpin_mindist.value;
+          if (temp != "") {
+            object['mindist'] = parseInt(temp);
+          } else {
+            object['mindist'] = parseInt(localStorage.getItem('default-mindist'));
+          }
+
+          var temp = input_newpin_maxdist.value;
+          if (temp != "") {
+            object['maxdist'] = parseInt(temp);
+          } else {
+            object['maxdist'] = parseInt(localStorage.getItem('default-maxdist'));
+          }
+          
+          var temp = input_newpin_minalt.value;
+          if (temp != "") {
+            object['minalt'] = parseInt(temp);
+          } else {
+            object['minalt'] = parseInt(localStorage.getItem('default-minalt'));
+          }
+
+          var temp = input_newpin_maxalt.value;
+          if (temp != "") {
+            object['maxalt'] = parseInt(temp);
+          } else {
+            object['maxalt'] = parseInt(localStorage.getItem('default-maxalt'));
+          }
+        } else {
+          return;
+        }
+        console.log(object);
+        postReqCallbackAuth(set_floating_pins, object, submittedMobile);
+      }
+
+      function submittedMobile(result) {
+        if (result.error) {
+          var _mobile = result.error.error;
+          _mobile = _mobile.split('{');
+          _mobile = _mobile[1];
+          _mobile = _mobile.split('}');
+          _mobile = _mobile[0];
+          errorAlert(alert_input_newpin, `Error:  ${_mobile} has already been registered.`, 3500);
+        }
+        else if (result.message) {
+          var _mobile = result.message.mobile;
+          successAlert(alert_input_newpin, `Success:  ${_mobile} has been successfully registered.`, 3500);
+          
+          setTimeout(function() {
+            clearInputNewMobile();
+          }, 3510);
+        }
+      }
+
+      function generateNewPins() {
+        var count = input_count_newpins.value;
+        var orgid = localStorage.getItem('orgid');
+        if (count > 0 && orgid) {
+          getReqCallbackAuth(`${generate_floating_pins}/${count}/${orgid}`, reviewGeneratedPins);
+        } else if (count == 0 && orgid) {
+          errorAlert(alert_input_count_newpin, "Error: Amount field is empty.", 3500);
+        } else {
+          errorAlert(alert_input_count_newpin, "Error: Please relog.", 3500);
+        }
+      }
+
+      function reviewGeneratedPins(item) {
+        input_count_newpins.value = "";
+        var orgid = localStorage.getItem('orgid');
+        var count = item.message.length;
+        var plural = (count > 1) ? "s" : "";
+        successAlert(alert_input_count_newpin, `${count} PIN${plural} generated.`, 3500);
+        getReqCallback(`${get_floating_pins}/${orgid}`, loadFloatingPins);
+      }
+
+      function errorAlert(_element, _text, _timeout) {
+        _element.classList.add('error-alert'),
+        _element.classList.remove('success-alert'),
+        _element.classList.remove('warning-alert'),
+        _element.innerHTML = _text;
+        
+        if (_timeout) {
+          setTimeout(function() {
+            clearAlert(_element);
+          }, _timeout);
+        }
+      }
+
+      function clearAlert(_element) {
+        _element.innerHTML = '&nbsp;';
+      }
+
+      function successAlert(_element, _text, _timeout) {
+        _element.classList.add('success-alert'),
+        _element.classList.remove('error-alert'),
+        _element.classList.remove('warning-alert'),
+        _element.innerHTML = _text;
+        
+        if (_timeout) {
+          setTimeout(function() {
+            clearAlert(_element);
+          }, _timeout);
+        }
+      }
+
+      function warningAlert(_element, _text, _timeout) {
+        _element.classList.add('warning-alert'),
+        _element.classList.remove('error-alert'),
+        _element.classList.remove('success-alert'),
+        _element.innerHTML = _text;
+
+        if (_timeout) {
+          setTimeout(function() {
+            clearAlert(_element);
+          }, _timeout);
+        }
+      }
+
+      var pins;
+      var pin_details;
+      function loadPinDetails(details) {
+        pins = [];
+        pin_details = [];
+        details = details.message;
+        for (i = 0; i < details.length; i++) {
+          var _pin = details[i].pin;
+          pins.push(_pin);
+          var _mobile = details[i].mobile;
+          if (!_mobile || _mobile == "") { continue; }
+          var _end = details[i].hrloaend;
+          if (!_end) {
+            _end = details[i].loaend;
+            _end = moment(_end, "DD/MM/YYYY");
+          }
+          else { _end = parseInt(_end); }
+          var _cur = Date.now();
+          if (_cur > _end) { continue; }
+          var _end_str = moment(_end).format("DD/MM/YYYY");
+          var _start = details[i].hrloastart;
+          if (!_start) {
+            _start = details[i].loastart;
+            _start = moment(_start, "DD/MM/YYYY");
+          }
+          else { _start = parseInt(_start); }
+          var _start_str = moment(_start).format("DD/MM/YYYY");
+          var _min_dist = details[i].mindist;
+          var _max_dist = details[i].maxdist;
+          var _min_alt = details[i].minalt;
+          var _max_alt = details[i].maxalt;
+          var _max_vltn = details[i].maxvltn;
+          var _upd_freq = details[i].updfreq;
+          var _lastupdate = details[i].lastupdate;
+          var _lastupdate_str = moment(_lastupdate).format("DD/MM HH:mm");
+          var _biolastpush
+          try {
+            _biolastpush = details[i].biopush.length;
+          } catch {
+            _biolastpush = 0;
+          }
+          var _biolastpush_str = "";
+          if (_biolastpush > 0) {
+            _biolastpush = details[i].biopush[_biolastpush - 1].ts;
+            _biolastpush_str = moment(_biolastpush).format("DD/MM HH:mm");
+          } else {
+            _biolastpush = 0;
+            _biolastpush_str = '-';
+          }
+          var _biolastupdate = details[i].biolastupdate;
+          var _biolastupdate_str = moment(_biolastupdate).format("DD/MM HH:mm");
+          var _multilogin = details[i].multilogin;
+          var _issuspended = details[i].issuspended;
+          var _isbiometric = details[i].isbiometric || "true"; // TO-DO!!
+
+          var pin_detail = {
+            pin: _pin,
+            mobile: _mobile,
+            start: _start,
+            start_str: _start_str,
+            end: _end,
+            end_str: _end_str,
+            min_dist: _min_dist,
+            max_dist: _max_dist,
+            min_alt: _min_alt,
+            max_alt: _max_alt,
+            max_vltn: _max_vltn,
+            upd_freq: _upd_freq,
+            last_update: _lastupdate,
+            last_update_str: _lastupdate_str,
+            bio_last_push: _biolastpush,
+            bio_last_push_str: _biolastpush_str,
+            bio_last_update: _biolastupdate,
+            bio_last_update_str: _biolastupdate_str,
+            multi_login: _multilogin,
+            is_suspended: _issuspended,
+            is_biometric: _isbiometric
+          }
+          pin_details.push(pin_detail);
+        }
+        console.log(pins);
+        buildPinDetailsTable();
+      }
+
+      var sort_by = "";
+      var sort_order = "";      
+
+      function sortAndBuildPinDetails(_id) {
+        displayPinDetailsHeader(_id);
+        sortPinDetails();
+        buildPinDetailsTable();
+      }
+
+      function displayPinDetailsHeader(_id) {
+        pins_configure.length = 0;
+        pins_ad_hoc_push.length = 0;
+
+        var _sort_by = _id.split('-')
+        _sort_by = _sort_by[_sort_by.length - 1];
+        var _sort_symbol = "";
+        var _element;
+        if (sort_by == "") {
+          sort_by = _sort_by;
+          sort_order = "asc";
+          _sort_symbol = '<i class="fa fa-sort-asc" aria-hidden="true"></i>';
+          _element = document.getElementById(_id);
+        }
+        else if (sort_by == _sort_by) {
+          if (sort_order == "asc") {
+            sort_order = "desc";
+            _sort_symbol = '<i class="fa fa-sort-desc" aria-hidden="true"></i>';
+          }
+          else {
+            sort_order = "asc";
+          _sort_symbol = '<i class="fa fa-sort-asc" aria-hidden="true"></i>';
+          }
+          _element = document.getElementById(_id);
+          sort_by = _sort_by;
+        }
+        else {
+          var _element = document.getElementById(`list-info-${sort_by}`); 
+          _element.innerHTML = getPinDetailsInfoHeader(sort_by);
+          _element = document.getElementById(_id);
+          sort_by = _sort_by;
+          sort_order = "asc";
+          _sort_symbol = '<i class="fa fa-sort-asc" aria-hidden="true"></i>';
+        }
+        _element.innerHTML = getPinDetailsInfoHeader(sort_by) + "&nbsp;"
+          + _sort_symbol;
+      }
+
+      function sortPinDetails() {
+        console.log('sort_by', sort_by);
+        console.log('sort_order', sort_order);
+        console.log(pin_details);
+        pin_details = _.orderBy(pin_details, [sort_by], [sort_order]);
+        console.log(pin_details);
+      }
+
+      var checkboxes = {
+        config: false,
+        ad_hoc_push: false
+      }
+      function selectAllCheckboxes(_name, _class) {
+        var checkboxes = document.getElementsByClassName(_class);
+        var checked = checkboxes[_name] = (checkboxes[_name]) ? false : true;
+        for (i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = checked;
+        }
+      }
+      function clearAllCheckboxes(_class) {
+        var checkboxes = document.getElementsByClassName(_class);
+        for (i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = false;
+        }
+      }
+
+      function buildPinDetailsTable() {
+        var _pin_details_content = "";
+        var _pin_details_info_content = "";
+
+        for (i = 0; i < pin_details.length; i++) {
+          var _pin_detail = pin_details[i];
+          _pin_details_content += buildPinDetailsContent(i, _pin_detail);
+          _pin_details_content += buildPinConfigContent(i, _pin_detail.pin);
+          _pin_details_info_content += buildPinDetailsInfoContent(i, _pin_detail);
+        }
+        _pin_details_content += '<div class="col-12 px-1 py-0">&nbsp;</div>';
+        _pin_details_info_content += '<div class="col-12 px-1 py-0">&nbsp;</div>';
+
+        list_pins.innerHTML = _pin_details_content,
+        list_info.innerHTML = _pin_details_info_content;
+      }
+
+      function getPinDetailsInfoHeader(_sort_by) {
+        switch (_sort_by) {
+          case 'pin':             return "PIN";
+          case 'mobile':          return "Mobile";
+          case 'start':           return "SHN Start";
+          case 'end':             return "SHN End";
+          case 'min_alt':        return "Min. Altitude";
+          case 'max_alt':        return "Max. Altitude";
+          case 'min_dist':        return "Min. Distance";
+          case 'max_dist':        return "Max. Distance";
+          case 'max_vltn':        return "Max. Violations";
+          case 'upd_freq':        return "Update Freq.";
+          case 'last_update':     return "Last Update";
+          case 'bio_last_push':   return "Last Bio. Push";
+          case 'bio_last_update': return "Last Bio. Upd.";
+          case 'watch_list_item': return "Watch List";
+          default:                return "";
+        }
+      }
+
+      function buildPinDetailsContent(_index, _pin_detail) {
+        var _div_class = "col-7 px-1 py-0 v-mid";
+        var _shade = (_index % 2 == 0) ? 'shade' : '';
+        var _html = `<a href="#card-individual-checker">
+          <span onclick="setIndividualCheckerUser('${_pin_detail.pin}')">
+            ${_pin_detail.pin}</span></a>`;
+        return buildContent(_div_class, _shade, _html);
+      }
+
+      var pins_configure = [];
+      function buildPinConfigContent(_index, _pin) {
+        var _div_class = "col-5 px-1 py-0 v-mid";
+        var _shade = (_index % 2 == 0) ? 'shade' : '';
+        var _configure =
+          `&emsp;<input type="checkbox" class="checkbox-configure"
+          onclick="(this.checked) 
+          ? pins_configure.push('${_pin}')
+          : pins_configure.splice(pins_configure.indexOf('${_pin}'), 1)"/>`
+        return buildContent(_div_class, _shade, _configure);
+      }
+
+      function buildContent(div_class, shade, value) {
+        return `<div class="${div_class} ${shade}">${value}</div>`;
+      }
+
+      var pins_ad_hoc_push = [];
+      var pins_multi_login = [];
+      var pins_non_multi_login = [];
+      var pins_suspended = [];
+      var pins_non_suspended = [];
+      var pins_biometric = [];
+      var pins_non_biometric = [];
+      var pins_watch_list = [];
+
+      function buildPinDetailsInfoContent(_index, _pin_detail) {
+        //var _div_class = "col-1 px-1 py-0 mx-0 my-0 v-mid";
+        var _div_class = "div-unit px-1 py-0 mx-0 my-0 v-mid";
+        var _shade = (_index % 2 == 0) ? 'shade' : '';
+        var _html = "";
+        _html += buildContent(_div_class, _shade, _pin_detail.mobile);
+        _html += buildContent(_div_class, _shade, _pin_detail.start_str);
+        _html += buildContent(_div_class, _shade, _pin_detail.end_str);
+        var _with_units = _pin_detail.min_alt;
+        _with_units = (_with_units == "-") ? "-" : _with_units + "m";
+        _html += buildContent(_div_class, _shade, _with_units);
+        _with_units = _pin_detail.max_alt;
+        _with_units = (_with_units == "-") ? "-" : _with_units + "m";
+        _html += buildContent(_div_class, _shade, _with_units);
+        _with_units = _pin_detail.min_dist;
+        _with_units = (_with_units == "-") ? "-" : _with_units + "m";
+        _html += buildContent(_div_class, _shade, _with_units);
+        _with_units = _pin_detail.max_dist;
+        _with_units = (_with_units == "-") ? "-" : _with_units + "m";
+        _html += buildContent(_div_class, _shade, _with_units);
+        _with_units = _pin_detail.max_vltn;
+        _with_units = (_with_units == "-") ? "-" : _with_units + " times";
+        _html += buildContent(_div_class, _shade, _with_units);
+        _with_units = _pin_detail.upd_freq;
+        _with_units = (_with_units == "-") ? "-" : _with_units + " mins";
+        _html += buildContent(_div_class, _shade, _with_units);
+        _html += buildContent(_div_class, _shade, _pin_detail.last_update_str);
+        _html += buildContent(_div_class, _shade, _pin_detail.bio_last_push_str);
+        _html += buildContent(_div_class, _shade, _pin_detail.bio_last_update_str);
+        /*
+        var _ad_hoc_push =
+          `<input type="checkbox" class="checkbox-ad-hoc-push"
+          onclick="(this.checked) 
+          ? pins_ad_hoc_push.push('${_pin_detail.pin}')
+          : pins_ad_hoc_push.splice(pins_ad_hoc_push.indexOf('${_pin_detail.pin}'), 1)"/>`
+        _html += buildContent(_div_class, _shade, _ad_hoc_push);
+
+        var _multi_login = (_pin_detail.multi_login == "true")
+          ? `<input type="checkbox" checked
+            onclick="(this.checked)
+            ? pinArraysPushSplice('${_pin_detail.pin}', pins_multi_login, pins_non_multi_login)
+            : pinArraysPushSplice('${_pin_detail.pin}', pins_non_multi_login, pins_multi_login)"/>`
+          : `<input type="checkbox"
+            onclick="(this.checked)
+            ? pinArraysPushSplice('${_pin_detail.pin}', pins_multi_login, pins_non_multi_login)
+            : pinArraysPushSplice('${_pin_detail.pin}', pins_non_multi_login, pins_multi_login)"/>`
+        _html += buildContent(_div_class, _shade, _multi_login);
+
+        var _is_suspended = (_pin_detail.is_suspended == "true")
+          ? `<input type="checkbox" checked
+            onclick="(this.checked)
+            ? pinArraysPushSplice('${_pin_detail.pin}', pins_suspended, pins_non_suspended)
+            : pinArraysPushSplice('${_pin_detail.pin}', pins_non_suspended, pins_suspended)"/>`
+          : `<input type="checkbox"
+            onclick="(this.checked)
+            ? pinArraysPushSplice('${_pin_detail.pin}', pins_suspended, pins_non_suspended)
+            : pinArraysPushSplice('${_pin_detail.pin}', pins_non_suspended, pins_suspended)"/>`
+        _html += buildContent(_div_class, _shade, _is_suspended);
+
+        var _is_biometric = (_pin_detail.is_biometric == "true")
+          ? `<input type="checkbox" checked
+            onclick="(this.checked)
+            ? pinArraysPushSplice('${_pin_detail.pin}', pins_biometric, pins_non_biometric)
+            : pinArraysPushSplice('${_pin_detail.pin}', pins_non_biometric, pins_biometric)"/>`
+          : `<input type="checkbox"
+            onclick="(this.checked)
+            ? pinArraysPushSplice('${_pin_detail.pin}', pins_biometric, pins_non_biometric)
+            : pinArraysPushSplice('${_pin_detail.pin}', pins_non_biometric, pins_biometric)"/>`
+        _html += buildContent(_div_class, _shade, _is_biometric);
+
+        var _watch_list_item = (_pin_detail.watch_list_item == "true")
+          ? `<input type="checkbox" checked
+            onclick="(this.checked)
+            ? pins_watch_list.push('${_pin_detail.pin}')
+            : pins_watch_list.splice(pins_watch_list.indexOf('${_pin_detail.pin}'), 1)"/>`
+          : `<input type="checkbox"
+            onclick="(this.checked)
+            ? pins_watch_list.push('${_pin_detail.pin}')
+            : pins_watch_list.splice(pins_watch_list.indexOf('${_pin_detail.pin}'), 1)"/>`
+        _html += buildContent(_div_class, _shade, _watch_list_item);
+        */
+
+        //_html += "<div class='col-2 px-0 py-0'>&emsp;</div>";
+
+        return _html;
+      }
+
+      function pinArraysPushSplice(_pin, toPush, toSplice) {
+        toPush.push(_pin);
+        toSplice.splice(toSplice.indexOf(_pin), 1);
+      }
+
+      var config_count = 0;
+      function updateConfigCount() {
+        config_count -= 1;
+        console.log('config_count',trigger_count);
+        if (trigger_count <= 0) {
+          btn_list_config_submit.disabled = false;
+          successAlert(alert_input_list_pins, "Successfully updated.", 3500);
+        }
+      }
+
+      var btn_list_config_submit = document.getElementById('btn-list-config-submit');
+
+      function postReqCallbackIntervalAuth(url, obj, callback, interval) {
+        setTimeout(function() {
+          postReqCallbackAuth(url, obj, callback);
+        }, interval);        
+      }
+
+      var input_updfreq = document.getElementById('input-updfreq');
+      var input_mindist = document.getElementById('input-mindist');
+      var input_maxdist = document.getElementById('input-maxdist');
+      var input_minalt = document.getElementById('input-minalt');
+      var input_maxalt = document.getElementById('input-maxalt');
+      var input_maxvltn = document.getElementById('input-maxvltn');
+
+      function loadFrontEndConfig(config) {
+        config = config.message;
+
+        display_updfreq.innerText = input_newpin_updfreq.placeholder
+        = input_list_pins_updfreq.placeholder = config.updfreq;
+        localStorage.setItem('default-updfreq', config.updfreq);
+        var temp = localStorage.getItem('preset-updfreq');
+        if (!temp) {
+          localStorage.setItem('preset-updfreq', config.updfreq);
+          temp = config.updfreq;
+        }
+        input_updfreq.placeholder = temp;
+
+        display_mindist.innerText = input_newpin_mindist.placeholder
+        = input_list_pins_mindist.placeholder = config.mindist;
+        localStorage.setItem('default-mindist', config.mindist);
+        temp = localStorage.getItem('preset-mindist');
+        if (!temp) {
+          localStorage.setItem('preset-mindist', config.mindist);
+          temp = config.mindist;
+        }
+        input_mindist.placeholder = temp;
+
+        display_maxdist.innerText = input_newpin_maxdist.placeholder
+        = input_list_pins_maxdist.placeholder = config.maxdist;
+        localStorage.setItem('default-maxdist', config.maxdist);
+        temp = localStorage.getItem('preset-maxdist');
+        if (!temp) {
+          localStorage.setItem('preset-maxdist', config.maxdist);
+          temp = config.maxdist;
+        }
+        input_maxdist.placeholder = temp;
+
+        display_minalt.innerText = input_newpin_minalt.placeholder
+        = input_list_pins_minalt.placeholder = config.minalt;
+        localStorage.setItem('default-minalt', config.minalt);
+        temp = localStorage.getItem('preset-minalt');
+        if (!temp) {
+          localStorage.setItem('preset-minalt', config.minalt);
+          temp = config.minalt;
+        }
+        input_minalt.placeholder = temp;
+
+        display_maxalt.innerText = input_newpin_maxalt.placeholder
+        = input_list_pins_maxalt.placeholder = config.maxalt;
+        localStorage.setItem('default-maxalt', config.maxalt);
+        temp = localStorage.getItem('preset-maxalt');
+        if (!temp) {
+          localStorage.setItem('preset-maxalt', config.maxalt);
+          temp = config.maxalt;
+        }
+        input_maxalt.placeholder = temp;
+
+        display_maxvltn.innerText = input_newpin_maxvltn.placeholder
+        = input_list_pins_maxvltn.placeholder = config.maxvltn;
+        localStorage.setItem('default-maxvltn', config.maxvltn);
+        temp = localStorage.getItem('preset-maxvltn');
+        if (!temp) {
+          localStorage.setItem('preset-maxvltn', config.maxvltn);
+          temp = config.maxvltn;
+        }
+        input_maxvltn.placeholder = temp;
+      }
+
+      function updatePresetConfig() {
+        var temp = input_updfreq.value;
+        if (temp != "") {
+          localStorage.setItem('preset-updfreq', temp);
+          input_updfreq.value = "",
+          input_updfreq.placeholder = temp;
+        }
+        temp = input_mindist.value;
+        if (temp != "") {
+          localStorage.setItem('preset-mindist', temp);
+          input_mindist.value = "",
+          input_mindist.placeholder = temp;
+        }
+        temp = input_maxdist.value;
+        if (temp != "") {
+          localStorage.setItem('preset-maxdist', temp);
+          input_maxdist.value = "",
+          input_maxdist.placeholder = temp;
+        }
+        temp = input_minalt.value;
+        if (temp != "") {
+          localStorage.setItem('preset-minalt', temp);
+          input_minalt.value = "",
+          input_minalt.placeholder = temp;
+        }
+        temp = input_maxalt.value;
+        if (temp != "") {
+          localStorage.setItem('preset-maxalt', temp);
+          input_maxalt.value = "",
+          input_maxalt.placeholder = temp;
+        }
+        temp = input_maxvltn.value;
+        if (temp != "") {
+          localStorage.setItem('preset-maxvltn', temp);
+          input_maxvltn.value = "",
+          input_maxvltn.placeholder = temp;
+        }
+      }
+
+      function loadBioConfig(config) {
+        config = config.message.result[0].timings;
+        input_push_am_start.value = config.morStart;
+        input_push_am_end.value = config.morEnd;
+        input_push_pm_start.value = config.aftStart;
+        input_push_pm_end.value = config.aftEnd;
+        input_push_ev_start.value = config.eveStart;
+        input_push_ev_end.value = config.eveEnd;
+      }
+      
+      function quit() {
+        localStorage.removeItem('email');
+        localStorage.removeItem('orgid');
+        localStorage.removeItem('token');
+        window.location.reload(true);
+      }
+
+      var button_dark_mode = document.getElementById('button-dark-mode');
+
+      function toggleDarkMode() {
+        if (document.body.classList.contains('dark')) {
+          renderPage("light");
+        } else {
+          renderPage("dark");
+        }
+      }
+
+      function renderPage(render_mode) {
+        if (render_mode == "") {
+          render_mode = localStorage.getItem('render-mode');
+          if (render_mode == undefined) {
+            render_mode = "light";
+            localStorage.setItem('render-mode', render_mode);
+          }
+        } else {
+          localStorage.setItem('render-mode', render_mode);
+        }
+        if (render_mode == 'light') {
+          document.body.classList.remove('dark'),
+          button_dark_mode.innerHTML
+          = '<i class="fa fa-moon-o" aria-hidden="true"></i>';
+        } else if (render_mode == 'dark') {
+          document.body.classList.add('dark'),
+          button_dark_mode.innerHTML
+          = '<i class="fa fa-sun-o" aria-hidden="true"></i>';
+        }
+      }
+
+      function getDailySchedule() {
+        var today = moment().format("DD-MM-YYYY");
+        getReqCallback(`${get_scheduled_push_by_date}/${today}`, loadDailySchedule);
+      }
+
+      function processPushTiming(today, timing) {
+        var ts = moment(`${today} ${timing}`, "DD-MM-YYYY h:m:s").valueOf();
+        timing = timing.split(':');
+        for (i = 0; i < timing.length; i++) {
+          timing[i] = (timing[i] < 10) ? `0${timing[i]}` : timing[i];
+        }
+        timing = timing.join(':');
+        return {
+          ts: ts,
+          timing: timing
+        }
+      }
+
+      function loadDailySchedule(push_schedule) {
+        push_schedule = push_schedule.message.result[0];
+        try {
+          var push_today = push_schedule.today;
+        } catch {
+          console.log("Daily schedule not up yet.");
+          return;
+        }
+        today_push_date.innerText = push_today;
+        var push_am = push_schedule.scheduled.morning;
+        var result = processPushTiming(push_today, push_am);
+        var push_am_ts = result.ts;
+        push_am = result.timing;
+        console.log('push_am', push_am);
+        var push_pm = push_schedule.scheduled.afternoon;
+        result = processPushTiming(push_today, push_pm);
+        var push_pm_ts = result.ts;
+        push_pm = result.timing;
+        console.log('push_pm', push_pm);
+        var push_ev = push_schedule.scheduled.evening;
+        result = processPushTiming(push_today, push_ev);
+        var push_ev_ts = result.ts;
+        push_ev = result.timing;
+        console.log('push_ev', push_ev);
+        var cur = Date.now();
+
+        console.log('am', push_am_ts);
+        console.log('pm', push_pm_ts);
+        console.log('ev', push_ev_ts);
+        console.log('cur', cur);
+
+        var remove, add, status;
+        if (cur >= push_am_ts) {
+          setScheduledPushesStatus(today_push_am, today_push_am_status, true);
+        } else {
+          setScheduledPushesStatus(today_push_am, today_push_am_status, false);
+        }
+        today_push_am.innerText = push_am;
+
+        if (cur >= push_pm_ts) {
+          setScheduledPushesStatus(today_push_pm, today_push_pm_status, true);
+        } else {
+          setScheduledPushesStatus(today_push_pm, today_push_pm_status, false);
+        }
+        today_push_pm.innerText = push_pm;
+
+        if (cur >= push_ev_ts) {
+          setScheduledPushesStatus(today_push_ev, today_push_ev_status, true);
+        } else {
+          setScheduledPushesStatus(today_push_ev, today_push_ev_status, false);
+        }
+        today_push_ev.innerText = push_ev;
+      }
+      
+      function setScheduledPushesStatus(element, element_status, done) {
+        if (done) {
+          element.classList.remove('pending'),
+          element.classList.add('done'),
+          element_status.classList.remove('pending'),
+          element_status.classList.add('done'),
+          element_status.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+        } else {
+          element.classList.remove('done'),
+          element.classList.add('pending'),
+          element_status.classList.remove('done'),
+          element_status.classList.add('pending'),
+          element_status.innerHTML = '<i class="fa fa-hourglass-half" aria-hidden="true"></i>';
+        }
+      }
+
+      function getScheduledPushes() {
+        return {
+          'today': moment().format('DD-MM-YYYY'),
+          'timing': {
+            'morstart': 8,
+            'morend': 11,
+            'aftstart': 12,
+            'aftend': 14,
+            'evestart': 15,
+            'eveend': 18
+          },
+          'scheduled': {
+            'morning': "11:24:25",
+            'afternoon': "14:25:59",
+            'evening': "16:54:54"
+          }
+        }
+      }
+
+      var retry = 0;
+      var grabInterval = 600000; // 5 minutes
+      var lastGrab;
+      var lastPost;
+
+      function getReqCallback(url, callback) {
+        if (debug) { console.log(url); }
+        $.ajax({
+          url : `${url}`,
+          type: "GET",
+          processData: false,
+          contentType: 'application/json',
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastGrab = Date.now();
+            
+            callback(data);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+
+      function getReqCallbackWithParm(url, parm, callback) {
+        if (debug) { console.log(url); }
+        $.ajax({
+          url : `${url}`,
+          type: "GET",
+          processData: false,
+          contentType: 'application/json',
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastGrab = Date.now();
+            
+            callback(data, parm);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+      
+      function getReqCallbackAuth(url, callback) {
+        if (debug) { console.log(url); }
+        var token = localStorage.getItem('token');
+        if (!token) { getReqCallback(url, callback); }
+        $.ajax({
+          url : `${url}`,
+          type: "GET",
+          headers: { "Authorization": `Bearer ${token}`, },
+          processData: false,
+          contentType: 'application/json',
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastGrab = Date.now();
+            
+            callback(data);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+
+      function getReqCallbackWithParmAuth(url, parm, callback) {
+        if (debug) { console.log(url); }
+        var token = localStorage.getItem('token');
+        if (!token) { getReqCallbackWithParm(url, parm, callback); }
+        $.ajax({
+          url : `${url}`,
+          type: "GET",
+          headers: { "Authorization": `Bearer ${token}`, },
+          processData: false,
+          contentType: 'application/json',
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastGrab = Date.now();
+            
+            callback(data, parm);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+      
+      function postReqCallback(url, obj, callback) {
+        if (debug) {
+          console.log("url", url);
+          console.log("obj", obj);
+        }
+        $.ajax({
+          url : `${url}`,
+          type: "POST",
+          processData: true,
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(obj),
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastPost = Date.now();
+            
+            callback(data);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+
+      function postReq(url, obj) {
+        if (debug) {
+          console.log("url", url);
+          console.log("obj", obj);
+        }
+        $.ajax({
+          url : `${url}`,
+          type: "POST",
+          processData: true,
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(obj),
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastPost = Date.now();
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+      
+      function postReqAuth(url, obj) {
+        if (debug) {
+          console.log("url", url);
+          console.log("obj", obj);
+        }
+        var token = localStorage.getItem('token');
+        if (!token) { postReq(url, obj); }
+        $.ajax({
+          url : `${url}`,
+          type: "POST",
+          headers: { "Authorization": `Bearer ${token}`, },
+          processData: true,
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data : JSON.stringify(obj),      
+          /*beforeSend: function (xhr) {   //Include the bearer token in header
+              xhr.setRequestHeader("Authorization", 'Bearer '+ token);
+          },*/
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastPost = Date.now();
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+
+      function postReqCallbackWithParm(url, obj, parm, callback) {
+        if (debug) {
+          console.log("url", url);
+          console.log("obj", obj);
+        }
+        $.ajax({
+          url : `${url}`,
+          type: "POST",
+          processData: true,
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(obj),
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastPost = Date.now();
+            
+            callback(data, parm);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+      
+      function postReqCallbackAuth(url, obj, callback) {
+        if (debug) {
+          console.log("url", url);
+          console.log("obj", obj);
+        }
+        var token = localStorage.getItem('token');
+        if (!token) { postReqCallback(url, obj, callback); }
+        $.ajax({
+          url : `${url}`,
+          type: "POST",
+          headers: { "Authorization": `Bearer ${token}`, },
+          processData: true,
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(obj),
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastPost = Date.now();
+            
+            callback(data);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+
+      function postReqCallbackWithParmAuth(url, obj, parm, callback) {
+        if (debug) {
+          console.log("url", url);
+          console.log("obj", obj);
+        }
+        var token = localStorage.getItem('token');
+        if (!token) { postReqCallbackWithParm(url, obj, parm, callback); }
+        $.ajax({
+          url : `${url}`,
+          type: "POST",
+          headers: { "Authorization": `Bearer ${token}`, },
+          processData: true,
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(obj),
+          success: function(data, textStatus, jqXHR)
+          {
+            if (debug) { console.log(textStatus); console.log(data); }
+
+            retry = 0;
+            lastPost = Date.now();
+            
+            callback(data, parm);
+          },
+          error: function (err) {
+            data = {
+              error: err.status
+            }
+            console.log(data);
+            callback(data);
+          }
+        });
+      }
+
+      function downloadFile(fileName, uriData) {
+        if (debug) { console.log(`Downloading ${fileName}...`); }
+
+        // Create element for download link.
+        var downloadLink = document.createElement("a");
+        downloadLink.href = uriData;
+        downloadLink.download = fileName;
+
+        // Create click event for download.
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+      
+      function downloadBatchSMSTemplate() {
+        successAlert(alert_sms_batch, 'Initiating download...', 3500);
+        var str = 'PIN' + '\n';
+        var fileName = `SHN_Batch_SMS_Template.csv`;
+        var uriData = 'data:text/csv;charset=UTF-8,' + str;
+        downloadFile(fileName, uriData);
+      }
+
+      function downloadBatchPinTemplate() {
+        successAlert(alert_batch_upload, 'Initiating download...', 3500);
+        var str = template_header_new + '\n';
+        var fileName = `SHN_Batch_PIN_Assignment_Template.csv`;
+        var uriData = 'data:text/csv;charset=UTF-8,' + str;
+        downloadFile(fileName, uriData);
+      }
+
+      function downloadBatchPinCSV() {
+        var length = uploaded_batch.length;
+        if (length == 0) {
+          errorAlert(alert_batch_upload, `Error: Empty batch.`, 3500);
+          return;
+        } else {
+          successAlert(alert_batch_upload, 'Initiating download...', 3500);
+        }
+
+        var str = "PIN," + template_header_new + '\n';
+        for (i = 0; i < length; i++) {
+          str += uploaded_batch[i].pin;
+          str += ',';
+          str += uploaded_batch[i].mobile;
+          str += ',';
+          str += uploaded_batch[i].loastart;
+          str += ',';
+          str += uploaded_batch[i].loaend;
+          str += '\n';
+        }
+        str = str.replace(/,\r\n/g,'\n');
+
+        var fileName = `SHN_batch_${dateToday()}.csv`;
+        var uriData = 'data:text/csv;charset=UTF-8,' + str;
+        downloadFile(fileName, uriData);
+      }
+
+      function dateToday() {
+        var now = moment();
+        return now.format('YYYY-MM-DD');
+      }
+    </script>
+  </body>
+</html>

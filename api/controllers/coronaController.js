@@ -1,0 +1,361 @@
+const mongoose = require("mongoose");
+const Corona = require("../models/coronaModel");
+const UPDATECorona = require("../models/updCoronaModel")
+const fs = require('fs')
+
+exports.UPDATE_MONGODB = (req,res,next)=>{
+    console.log("sfdsfsafdsf", JSON.stringify(req.body.results[0].length), req.body.results.length)
+    // UPDATECorona.insertMany(req.body.results).then(function(abc){
+    //     console.log("insertmany::", abc)
+    // }).catch(function(err){
+    //     console.log(err)
+    // })
+    for(i=0; i< req.body.results.length; i++){
+        uploadDataIntoMongoDB(req.body.results[i])
+    }
+    
+    res.status(200).json({
+        message: "UpdateDoneSuccefully",
+    })
+}
+
+
+
+
+const uploadDataIntoMongoDB = function(calcData){
+        console.log("jain",calcData.uuid)
+        const coronaUpdate = new UPDATECorona({
+            _id: new mongoose.Types.ObjectId(),
+            uuid: calcData.uuid,
+            trk: calcData.trk,
+            timestamp: calcData.timestamp,
+            emailid: calcData.emailid,
+            name: calcData.name
+        });
+
+        UPDATECorona.find({uuid:calcData.uuid}).then(function(result){
+            console.log("dasfasdfsdf",result)
+            if(result.length >= 1){
+                console.log("it exists then clean the array and add new data")
+                return cleanupArray(calcData.uuid);
+            } else {
+                console.log('donot exist')
+                return false;
+            }
+        }).then(function(result){
+            if(result == false){
+                coronaUpdate.save();
+            } else {
+                // resolve(result)
+                console.log("cleanupddone")
+                return true;
+            }
+        }).then(function(status){
+            if(status){
+                return afterCleanUpTheArrayPushTrackerUpdateInfo(calcData.uuid, coronaUpdate)
+            }
+        }).then(function(final){
+            console.log("finally updated")
+        })
+        .catch(function(err){
+            console.log(err)
+        })
+}
+
+
+const afterCleanUpTheArrayPushTrackerUpdateInfo = function(updateInfo, coronaUpdate){
+    console.log()
+    return new Promise(function(resolve,reject){
+        UPDATECorona.findOneAndUpdate(
+            {uuid: updateInfo},
+            {
+                $push : {
+                trk :  coronaUpdate.trk
+                }
+            }).then(function(result){
+                // primus.send('chartData',updateInfo);
+                // io.emit('chartData', updateInfo)
+                resolve(result)
+            }).catch(function(err){
+                reject(err)
+            })
+        })
+}
+const cleanupArray = function(searchThisUUID){
+    return new Promise(function(resolve,reject){
+        UPDATECorona.update({uuid:searchThisUUID}, { $set: { trk: [] }}, function(err, affected){
+            console.log('affected: ', affected);
+            resolve("cleanedUpTheArray")
+        }).catch(function(err){
+            reject(err)
+        })
+    })
+}
+
+
+
+
+
+// const uploadDataIntoMongoDB2 = function(calcData){
+//     return new Promise(function(resolve,reject){
+//         for (i = 0; i < calcData.length; i++) {
+//             console.log(calcData[i])
+//           }
+//         // UPDATECorona.find().then(function(result){
+//         //     resolve(result)
+//         // }).catch(function(err){
+//         //     reject(err)
+//         // })
+//     })
+// }
+// 
+
+
+
+exports.CORONA = (req,res,next)=>{
+    var io = req.app.get('socketio');
+    var primus = req.app.get('primusio')
+
+    console.log(req.body.uuid)
+   var _uuid = req.body.uuid;
+   var _trk = {
+       lat: req.body.lat,
+       lng: req.body.lng,
+       ts: Date.now(),
+       temp: req.body.temperature,
+       symptoms: req.body.symptoms
+   }
+//    var temperature = req.body.temperature;
+   var _emailid = req.body.email;
+   var _name = req.body.name;
+   var  _mobile =  req.body.mobile;
+   var _temperature = req.body.temperature;
+   var _symptoms = req.body.symptoms
+   const coronaData = new Corona({
+        _id: new mongoose.Types.ObjectId(),
+        uuid: _uuid,
+        trk: _trk,
+        timestamp: Date.now(),
+        emailid: _emailid,
+        name: _name,
+        mobile: _mobile,
+        temp: _temperature,
+        symptoms: _symptoms
+    });
+    saveToDB(coronaData, primus, io).then(function(result){
+        console.log(result)
+        res.status(200).json({
+            message : result
+        })
+    }).catch(function(err){
+        res.status(500).json({
+            err0r: err
+        })
+        console.log(err)
+    })
+
+}
+// exports.CORONA = (req,res,next)=>{
+//     var io = req.app.get('socketio');
+//     var primus = req.app.get('primusio')
+
+//     console.log(req.body.uuid)
+//    var _uuid = req.body.uuid;
+//    var _trk = {
+//        lat: req.body.lat,
+//        lng: req.body.lng,
+//        ts: Date.now(),
+//    }
+// //    var temperature = req.body.temperature;
+//    var _emailid = req.body.email;
+//    var _name = req.body.name;
+//    var  _mobile =  req.body.mobile;
+//    var _temperature = req.body.temperature;
+//    var _symptoms = req.body.symptoms
+//    const coronaData = new Corona({
+//         _id: new mongoose.Types.ObjectId(),
+//         uuid: _uuid,
+//         trk: _trk,
+//         timestamp: Date.now(),
+//         emailid: _emailid,
+//         name: _name,
+//         mobile: _mobile,
+//         temp: _temperature,
+//         symptoms: _symptoms
+//     });
+//     saveToDB(coronaData, primus, io).then(function(result){
+//         console.log(result)
+//         res.status(200).json({
+//             message : result
+//         })
+//     }).catch(function(err){
+//         res.status(500).json({
+//             err0r: err
+//         })
+//         console.log(err)
+//     })
+
+// }
+
+
+exports.GET_UPDATED_DATA = (req,res,next)=>{
+    UPDATECorona.find().then(function(result){
+        res.status(200).json({
+            results: result
+        })
+    }).catch(function(err){
+        res.status(500).json({
+            message: err
+        })
+    })
+}
+
+exports.GETALLDATA = (req,res,next)=>{
+    Corona.find().then(function(result){
+        res.status(200).json({
+            results: result
+        })
+    }).catch(function(err){
+        res.status(500).json({
+            message: err
+        })
+    })
+}
+const saveToDB = function(coronaData, primus, io){
+    return new Promise(function(resolve,reject){
+        console.log("caling Savetodb", coronaData.uuid)
+        Corona.find({uuid: coronaData.uuid}).then(function(result){
+            console.log(result, result.length)
+            
+            if(result.length >= 1){
+            // if(!result == "null"){
+                //exists
+                // resolve(result)
+                console.log("it exists")
+                return updateDB(coronaData, primus, io);
+            } else {
+                return false;
+            }
+        }).then(function(result){
+            if(result == false){
+                primus.send('chartData',coronaData);
+                // io.emit('chartData', coronaData)
+                resolve(coronaData.save())
+            } else {
+                resolve(result)
+            }
+        }).catch(function(err){
+            console.log(err);
+            reject(err)
+        })
+    })
+}
+
+const updateDB = function(updateInfo, primus, io){
+    return new Promise(function(resolve,reject){
+        Corona.findOneAndUpdate(
+            {uuid: updateInfo.uuid},
+            {
+                $push : {
+                trk :  updateInfo.trk
+                }
+            }).then(function(result){
+                primus.send('chartData',updateInfo);
+                // io.emit('chartData', updateInfo)
+                resolve(result)
+            }).catch(function(err){
+                reject(err)
+            })
+        })
+}
+
+// router.post("/", (req, res, next) => {
+//     Product.findById(req.body.productId)
+//       .then(product => {
+//         if (!product) {
+//           return res.status(404).json({
+//             message: "Product not found"
+//           });
+//         }
+//         const order = new Order({
+//           _id: mongoose.Types.ObjectId(),
+//           quantity: req.body.quantity,
+//           product: req.body.productId
+//         });
+//         return order.save();
+//       })
+//       .then(result => {
+//         console.log(result);
+//         res.status(201).json({
+//           message: "Order stored",
+//           createdOrder: {
+//             _id: result._id,
+//             product: result.product,
+//             quantity: result.quantity
+//           },
+//           request: {
+//             type: "GET",
+//             url: "http://localhost:3000/orders/" + result._id
+//           }
+//         });
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         res.status(500).json({
+//           error: err
+//         });
+//       });
+//   });
+// const saveData = function
+// MyModel.findOneAndUpdate(
+//     {foo: 'bar'}, // find a document with that filter
+//     modelDoc, // document to insert when nothing was found
+//     {upsert: true, new: true, runValidators: true}, // options
+//     function (err, doc) { // callback
+//         if (err) {
+//             // handle error
+//         } else {
+//             // handle document
+//         }
+//     }
+// );
+
+
+const saveGeoData = function(coronaData){
+    return new Promise(function(resolve,reject){
+        coronaModel.findOneAndUpdate(
+            {uuid: coronaData.uuid},
+            coronaData,
+            {upsert: true, new: true, runValidators: true}
+            ).then(function(result){
+                resolve(result)
+            }).catch(function(err){
+           console.log(err)
+           reject("ErrorInSavingCoronaDataInMongoDB" + err)
+       })
+    })
+}
+
+const saveGeoData2 = function(coronaData){
+    return new Promise(function(resolve,reject){
+        coronaData.save().then(function(result){
+           resolve(result)
+       }).catch(function(err){
+           console.log(err)
+           reject("ErrorInSavingCoronaDataInMongoDB" + err)
+       })
+    })
+}
+
+
+ // var io = req.app.get('socketio');
+    // var primus = req.app.get('primusio')
+    // // console.log("dsd",primus)
+    // primus.send("jain", {"jain": "kkk"})
+    // primus.on('lufthansa', (data)=>{
+    //     console.log("datafrom Lufthansa:::", data)
+    // })
+    // io.emit('messages', {"jain":"jain" + Date.now()})
+    // res.status(200).json({
+    //     message: "SuccessFromRoutesJSFolder:::" + Date.now()
+    // })

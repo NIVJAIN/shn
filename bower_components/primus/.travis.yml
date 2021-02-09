@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "12"
+  - "10"
+  - "8"
+script:
+  - "npm run test && npm run integration"
+matrix:
+  fast_finish: true
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#primus"
+    on_success: change
+    on_failure: change

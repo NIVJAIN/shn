@@ -1,0 +1,1469 @@
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+   <head profile="http://gmpg.org/xfn/11">
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+      <title>SHN Enforcer</title>
+      <meta property="og:site_name" content="Stay-Home-Notice Enforcer">
+      <meta property="og:title" content="Stay-Home-Notice Enforcer">
+      <meta name="description" content="A comprehensive dashboard for operators to check on the compliance of their Stay-Home-Notice assignees.">
+      <meta property="og:description" content="A comprehensive dashboard for operators to check on the compliance of their Stay-Home-Notice assignees.">
+      <meta property="og:description:secure_url" content="A comprehensive dashboard for operators to check on the compliance of their Stay-Home-Notice assignees.">
+      <meta property="og:image" itemprop="image" content="/enforcer-ad.png">
+      <meta property="og:image:secure_url" itemprop="image" content="/enforcer-ad.png">
+
+      <link href="https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap" rel="stylesheet">
+      <link rel="icon" href="./favicon.ico" type="image/x-icon">
+ 
+      <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""/>
+
+      <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+      crossorigin=""></script>
+      <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+
+      <style>
+        /*
+        @font-face { font-family: 'Montserrat'; src: url('./Montserrat-Regular.woff') format('woff'); } 
+        @font-face { font-family: 'Montserrat'; font-style: italic; src: url('./Montserrat-Italic.woff') format('woff'); } 
+        @font-face { font-family: 'Montserrat'; font-weight: bold; src: url('./Montserrat-Bold.woff') format('woff'); }
+        */
+
+        body {
+          background-color: #323232;
+          padding: 0px;
+          margin: 0px;
+        }
+        .bg-gradient-imda {
+          background-color: #e01f34;
+          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #e01f34), to(#70358f));
+          background-image: linear-gradient(90deg, #e01f34 10%, #70358f 100%);
+          background-size: cover;
+        }
+
+        #banner {
+          height: 10%;
+          max-height: 10vh;
+          padding: 8px;
+        }
+        .svg-container { 
+          display: inline-block;
+          position: relative;
+          width: 100%;
+          height: 100%;
+          vertical-align: middle; 
+          overflow: hidden; 
+        }
+        .svg-content { 
+          display: inline-block;
+          position: absolute;
+          top: 0;
+        }
+        .logo {
+          height: 100%;
+          max-width: 150px;
+        }
+        .left { left: 0; }
+        .right { right: 0; }
+
+        div #fixed-box {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 100;
+          width: 100%;  
+          padding: 1px;
+          border: 0px;
+        }
+        div #scrollable-box{
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 100;
+          width: 100%;  
+          height: 60vh;   
+          overflow: hidden;
+          border: 2px solid black;
+          padding: 0px;
+        }
+        div #scrollable-content{
+          height: 60vh;
+          width: calc(100% + 20px);
+          width: 100%;
+          overflow-x: hidden;
+        }
+        #scrollable-content tr {
+          border-bottom: 1px solid black;
+        }
+
+        div #scrollable-content::-webkit-scrollbar {
+          display: none !important;
+          -ms-overflow-style: none !important;
+          overflow: -moz-scrollbars-none !important;
+        }
+
+        .fixed-header a {
+          font-size: 0.75rem;
+          color: white;
+        }
+
+  		  body thead.fixed-header th {
+          width: 30%;
+        }
+
+        html>body thead.fixed-header th + th {
+          width: 30%;
+        }
+
+        html>body thead.fixed-header th + th + th {
+          width: 20%;
+        }
+
+        html>body thead.fixed-header th + th + th + th{
+          width: 20%;
+        }
+
+        html>body tbody.scroll-content td {
+          width: 30%;
+        }
+
+        html>body tbody.scroll-content td + td {
+          width: 30%;
+        }
+
+        html>body tbody.scroll-content td + td + td {
+          width: 20%;
+        }
+
+        html>body tbody.scroll-content td + td + td + td {
+          width: 20%;
+        }
+
+        #map {
+          font-family: 'Montserrat';
+          border: 1px solid #AAA;
+          height: 90vh;
+          max-height: 860px;
+        }
+        .user-table td, .user-table th {
+          padding: 0.25rem;
+          font-size: 14;
+        }
+        @media (max-height:360px) {
+          #map {
+            height: 50vh;
+          }
+          div #scrollable-box{
+            height: 20vh;   
+          }
+          div #scrollable-content{
+            height: 20vh;
+          }
+        }
+        @media (max-width:992px) {
+          #map {
+            height: 90vh;
+          }
+          div #scrollable-box{
+            height: 60vh;   
+          }
+          div #scrollable-content{
+            height: 60vh;
+          }
+        }
+        @media (max-width:768px) {
+          #map {
+            height: 90vh;
+          }
+          div #scrollable-box{
+            height: 60vh;   
+          }
+          div #scrollable-content{
+            height: 60vh;
+          }
+        }
+        @media (max-width:576px) {
+          #map {
+            height: 50vh;
+          }
+          div #scrollable-box{
+            height: 20vh;   
+          }
+          div #scrollable-content{
+            height: 20vh;
+          }
+        }
+
+        .btn-style {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 100;
+          font-size: 0.625rem;
+          text-align: center;
+          height: 3.5rem;
+          padding: 0;
+        }
+        .btn-style i {
+          font-size: 1.25rem;
+        }
+        .btn-dark:disabled {
+          color: rgba(255,255,255,0.375);
+        }
+        .btn-dark:focus, .btn-dark.focus {
+          color: #fff;
+          background-color: #5a5c69;
+          border-color: #5a5c69;
+        }
+        .btn-light:focus, .btn-light.focus {
+          color: #3a3b45;
+          background-color: #f8f9fc;
+          border-color: #f8f9fc;
+        }
+
+        .info-panels tr {
+          height: 10vh;
+        }
+      </style>
+   </head>
+ 
+   <body>
+      <div id="banner" class="col-container bg-gradient-imda">
+        <div class="svg-container">
+          <svg version="1.1" viewBox="0 640 4800 2000" preserveAspectRatio="xMidYMid meet" class="svg-content logo left">
+            <g transform="translate(0.000000,3200.000000) scale(0.100000,-0.100000)" fill="#FFFFFF" stroke="none">
+              <path d="M4611 20956 c-3410 -3409 -4345 -4350 -4384 -4407 -96 -146 -165 -314 -203 -494 -26 -126 -26 -384 0 -510 55 -264 169 -484 349 -672 200 -209 445 -344 724 -400 121 -24 384 -24 505 0 255 51 487 171 671 346 l77 74 0 -4097 0 -4096 6600 0 6600 0 0 4096 0 4097 78 -74 c183 -175 415 -295 670 -346 121 -24 384 -24 505 0 405 81 747 336 945 707 50 93 106 253 129 368 25 125 24 386 -1 507 -38 184 -108 350 -213 508 -33 49 -333 355 -1079 1099 l-1034 1031 0 2204 0 2203 -1100 0 -1100 0 0 -1102 0 -1103 -2198 2198 c-1208 1208 -2199 2197 -2202 2197 -3 0 -1955 -1950 -4339 -4334z m4581 565 c304 -80 563 -301 678 -578 61 -147 73 -212 73 -393 0 -181 -12 -246 -73 -393 -92 -223 -304 -435 -527 -527 -147 -61 -212 -73 -393 -73 -181 0 -246 12 -393 73 -223 92 -435 304 -527 527 -61 147 -73 212 -73 393 0 181 12 246 73 393 124 299 413 530 738 592 107 20 322 13 424 -14z m1252 -2304 c411 -129 721 -496 850 -1005 57 -223 56 -184 56 -2050 0 -1879 3 -1779 -57 -1882 -179 -305 -607 -305 -786 0 -60 103 -57 9 -57 1817 l0 1653 -100 0 -100 0 0 -4435 c0 -3199 -3 -4449 -11 -4487 -6 -29 -29 -91 -50 -137 -55 -117 -162 -225 -280 -280 -175 -82 -343 -82 -518 0 -118 55 -225 163 -280 280 -21 46 -44 108 -50 137 -8 38 -11 789 -11 2637 l0 2585 -100 0 -100 0 0 -2585 c0 -1848 -3 -2599 -11 -2637 -6 -29 -29 -91 -50 -137 -55 -117 -162 -225 -280 -280 -175 -82 -343 -82 -518 0 -118 55 -225 163 -280 280 -21 46 -44 108 -50 137 -8 38 -11 1288 -11 4487 l0 4435 -100 0 -100 0 0 -1653 c0 -1808 3 -1714 -57 -1817 -179 -305 -607 -305 -786 0 -60 103 -57 3 -57 1882 0 1492 2 1732 15 1835 85 643 463 1128 966 1238 53 11 295 13 1444 12 l1380 -2 89 -28z"/>
+              <path d="M21205 20964 c-286 -28 -481 -66 -671 -129 -670 -224 -1044 -702 -1044 -1333 0 -416 165 -749 484 -976 257 -183 529 -285 1218 -455 244 -61 486 -123 539 -140 474 -146 669 -322 669 -605 0 -159 -44 -263 -159 -376 -87 -85 -169 -133 -307 -179 -268 -90 -718 -107 -1084 -41 -385 70 -778 230 -1058 430 -46 33 -86 60 -90 60 -4 0 -76 -156 -161 -347 -114 -258 -151 -351 -144 -362 32 -52 313 -222 496 -301 403 -172 846 -264 1332 -277 1045 -27 1782 351 2009 1030 51 155 61 226 60 442 -1 191 -2 205 -32 319 -105 400 -374 664 -879 865 -170 68 -370 125 -835 240 -518 129 -618 159 -794 247 -103 50 -147 78 -203 130 -121 112 -169 247 -150 419 32 293 275 488 699 562 140 25 553 25 710 0 285 -46 572 -139 838 -273 l164 -82 15 36 c9 21 73 179 144 352 l128 315 -22 17 c-42 33 -295 158 -411 203 -225 87 -501 155 -776 191 -118 15 -586 28 -685 18z"/>
+              <path d="M24200 18450 l0 -2450 455 0 455 0 0 1050 0 1050 1265 0 1265 0 0 -1050 0 -1050 455 0 455 0 0 2450 0 2450 -455 0 -455 0 0 -1010 0 -1010 -1265 0 -1265 0 0 1010 0 1010 -455 0 -455 0 0 -2450z"/>
+              <path d="M29870 18450 l0 -2450 450 0 450 0 2 1654 3 1655 1348 -1655 1349 -1654 374 0 374 0 0 2450 0 2450 -450 0 -450 0 -2 -1654 -3 -1655 -1348 1655 -1349 1654 -374 0 -374 0 0 -2450z"/>
+              <path d="M31550 14529 c-782 -96 -1373 -590 -1559 -1301 -49 -188 -56 -247 -56 -478 0 -231 7 -290 56 -478 189 -722 796 -1220 1588 -1303 142 -15 432 -7 556 16 213 38 450 117 604 202 433 239 731 620 850 1084 49 191 56 249 56 479 0 230 -7 288 -56 479 -119 464 -417 845 -850 1084 -153 85 -389 164 -604 203 -106 19 -471 28 -585 13z m540 -464 c273 -61 495 -179 675 -360 187 -188 308 -421 360 -695 13 -68 19 -142 19 -260 0 -183 -16 -293 -65 -443 -109 -334 -356 -615 -672 -766 -177 -84 -335 -120 -557 -128 -272 -9 -465 29 -685 137 -270 131 -460 319 -591 585 -101 202 -138 368 -138 615 0 176 14 276 59 425 31 103 118 279 183 371 195 275 520 471 877 529 120 19 429 13 535 -10z"/>
+              <path d="M39370 14529 c-637 -74 -1168 -435 -1431 -974 -206 -423 -237 -945 -84 -1403 87 -261 211 -460 409 -657 145 -145 264 -234 425 -318 401 -209 910 -273 1370 -171 303 68 547 189 768 383 133 116 131 107 32 208 -46 46 -119 116 -161 155 l-78 70 -68 -61 c-136 -122 -252 -197 -402 -258 -172 -71 -344 -98 -575 -90 -239 9 -411 51 -600 147 -128 65 -212 126 -323 234 -188 183 -305 401 -363 676 -18 86 -22 137 -22 280 0 143 4 194 22 280 58 275 175 493 363 676 193 188 399 297 670 355 137 30 399 37 543 15 258 -40 501 -157 682 -329 l73 -69 165 158 166 159 -97 92 c-248 239 -573 386 -967 438 -127 16 -391 18 -517 4z"/>
+              <path d="M19670 12750 l0 -1750 1270 0 1270 0 0 220 0 220 -1020 0 -1020 0 0 560 0 560 878 2 877 3 3 213 2 212 -880 0 -880 0 0 535 0 535 985 0 985 0 0 220 0 220 -1235 0 -1235 0 0 -1750z"/>
+              <path d="M23020 12750 l0 -1750 250 0 250 0 2 1300 3 1300 1045 -1299 1045 -1300 208 -1 207 0 0 1750 0 1750 -250 0 -250 0 -2 -1300 -3 -1300 -1045 1299 -1045 1300 -207 1 -208 0 0 -1750z"/>
+              <path d="M27080 12750 l0 -1750 250 0 250 0 0 710 0 710 880 0 880 0 0 215 0 215 -880 0 -880 0 0 605 0 605 985 0 985 0 0 220 0 220 -1235 0 -1235 0 0 -1750z"/>
+              <path d="M34420 12750 l0 -1750 250 0 250 0 0 530 0 530 448 0 c246 0 490 3 542 6 l95 5 374 -535 374 -536 274 0 274 0 -19 28 c-10 15 -194 275 -407 577 -213 303 -389 555 -392 561 -2 6 28 23 66 38 91 36 214 110 303 183 249 204 388 522 388 891 0 688 -440 1127 -1212 1211 -60 7 -389 11 -853 11 l-755 0 0 -1750z m1570 1300 c296 -37 508 -150 632 -339 140 -214 155 -554 35 -801 -32 -67 -58 -102 -122 -166 -68 -68 -97 -89 -185 -133 -124 -61 -252 -95 -411 -110 -63 -6 -318 -11 -566 -11 l-453 0 0 785 0 785 493 0 c280 0 529 -4 577 -10z"/>
+              <path d="M41670 12750 l0 -1750 1270 0 1270 0 0 220 0 220 -1020 0 -1020 0 0 560 0 560 878 2 877 3 3 213 2 212 -880 0 -880 0 0 535 0 535 985 0 985 0 0 220 0 220 -1235 0 -1235 0 0 -1750z"/>
+              <path d="M45020 12750 l0 -1750 250 0 250 0 0 530 0 530 448 0 c246 0 490 3 542 6 l95 5 374 -535 374 -536 274 0 274 0 -19 28 c-10 15 -194 275 -407 577 -213 303 -389 555 -392 561 -2 6 28 23 66 38 91 36 214 110 303 183 249 204 388 522 388 891 0 688 -440 1127 -1212 1211 -60 7 -389 11 -853 11 l-755 0 0 -1750z m1570 1300 c296 -37 508 -150 632 -339 140 -214 155 -554 35 -801 -32 -67 -58 -102 -122 -166 -68 -68 -97 -89 -185 -133 -124 -61 -252 -95 -411 -110 -63 -6 -318 -11 -566 -11 l-453 0 0 785 0 785 493 0 c280 0 529 -4 577 -10z"/>
+            </g>
+          </svg>
+          <svg version="1.1" viewBox="0 -108 1418 600" preserveAspectRatio="xMidYMid meet" class="svg-content logo right">
+            <g transform="translate(0.000000,357.000000) scale(0.100000,-0.100000)" fill="#FFFFFF" stroke="none">
+              <path d="M8393 3551 c-117 -42 -208 -143 -234 -255 -19 -88 -8 -213 26 -282 72 -146 217 -223 401 -212 148 9 269 91 332 225 24 51 27 70 27 163 0 93 -3 111 -27 163 -72 153 -184 217 -377 217 -68 -1 -111 -6 -148 -19z m269 -177 c52 -36 78 -87 85 -162 7 -71 -8 -121 -50 -168 -37 -43 -68 -59 -130 -68 -86 -13 -175 45 -205 133 -27 78 -9 186 41 240 62 68 182 80 259 25z"/>
+              <path d="M9283 3555 c-106 -33 -196 -115 -234 -214 -17 -43 -22 -78 -23 -151 0 -82 3 -103 26 -152 38 -82 75 -126 141 -169 107 -69 258 -86 370 -42 59 23 137 79 137 97 0 8 -27 37 -59 65 l-59 52 -45 -32 c-65 -45 -129 -50 -199 -16 -60 30 -91 70 -109 139 -24 101 21 207 105 248 66 31 149 25 201 -14 l37 -29 62 62 61 62 -35 29 c-63 53 -148 80 -248 79 -48 0 -106 -6 -129 -14z"/>
+              <path d="M9983 3556 c-185 -60 -287 -235 -254 -435 25 -152 125 -263 275 -306 79 -23 209 -16 289 14 71 28 153 104 193 181 27 52 29 62 29 180 0 121 -1 127 -32 186 -38 72 -96 127 -172 162 -49 23 -71 27 -171 29 -77 2 -129 -2 -157 -11z m222 -165 c151 -68 164 -307 21 -387 -147 -82 -298 12 -300 186 -2 163 139 265 279 201z"/>
+              <path d="M0 1786 c0 -971 3 -1766 6 -1766 3 0 178 91 390 202 l384 202 0 1355 0 1356 -380 205 c-210 113 -385 207 -390 208 -7 2 -10 -633 -10 -1762z"/>
+              <path d="M2043 3342 l-382 -207 -1 -1355 0 -1355 381 -200 c209 -110 387 -201 395 -203 12 -3 14 244 14 1762 0 1407 -3 1766 -12 1765 -7 0 -185 -94 -395 -207z"/>
+              <path d="M3660 3543 c0 -21 785 -1762 791 -1756 6 7 757 1682 780 1741 l9 22 -790 0 c-435 0 -790 -3 -790 -7z"/>
+              <path d="M6450 3185 l0 -365 90 0 90 0 0 365 0 365 -90 0 -90 0 0 -365z"/>
+              <path d="M6780 3185 l0 -366 88 3 87 3 -3 228 c-1 125 0 227 2 227 2 0 68 -104 146 -230 l143 -231 101 3 101 3 3 363 2 362 -90 0 -90 0 -2 -224 -3 -225 -138 225 -139 224 -104 0 -104 0 0 -365z"/>
+              <path d="M7600 3185 l0 -366 93 3 92 3 3 138 3 137 139 0 140 0 0 80 0 80 -140 0 -140 0 0 70 0 70 150 0 150 0 0 75 0 75 -245 0 -245 0 0 -365z"/>
+              <path d="M10610 3185 l0 -365 85 0 85 0 0 243 1 242 87 -243 87 -243 64 3 65 3 88 240 c48 132 89 243 90 248 2 4 1 -105 -1 -243 l-3 -250 91 0 91 0 0 365 0 365 -129 0 -129 0 -67 -197 c-38 -109 -73 -210 -79 -226 -10 -25 -17 -10 -91 198 l-80 225 -127 0 -128 0 0 -365z"/>
+              <path d="M11590 3185 l0 -365 85 0 85 0 0 248 1 247 88 -245 88 -245 64 -3 65 -3 89 246 90 246 3 -246 2 -246 88 3 87 3 3 363 2 362 -132 0 -133 0 -75 -220 c-41 -121 -77 -220 -80 -220 -3 0 -39 98 -81 218 l-76 217 -131 3 -132 3 0 -366z"/>
+              <path d="M6450 2255 l0 -365 85 0 85 0 1 238 0 237 86 -237 86 -238 67 0 68 0 72 198 c40 108 80 216 89 239 16 40 16 31 13 -197 l-4 -240 91 0 91 0 0 365 0 365 -129 0 -129 0 -67 -197 c-36 -109 -71 -211 -78 -226 -12 -27 -16 -17 -91 197 l-79 226 -128 0 -129 0 0 -365z"/>
+              <path d="M7410 2255 l0 -365 255 0 255 0 0 75 0 75 -170 0 -170 0 0 70 0 70 150 0 150 0 0 80 0 80 -150 0 -150 0 0 60 0 60 160 0 160 0 0 80 0 80 -245 0 -245 0 0 -365z"/>
+              <path d="M8010 2255 l0 -365 170 0 c93 0 193 5 222 11 204 44 318 208 288 417 -11 79 -40 140 -93 192 -86 86 -174 110 -419 110 l-168 0 0 -365z m367 190 c97 -29 146 -117 129 -227 -18 -109 -110 -168 -261 -168 l-45 0 0 205 0 205 63 0 c35 0 86 -7 114 -15z"/>
+              <path d="M8790 2255 l0 -365 90 0 90 0 0 365 0 365 -90 0 -90 0 0 -365z"/>
+              <path d="M9195 2264 c-82 -195 -152 -360 -153 -365 -3 -6 35 -9 98 -7 l103 3 26 68 26 67 136 0 136 0 25 -67 25 -68 101 -3 c56 -1 102 1 102 5 0 4 -66 169 -147 365 l-148 358 -90 0 -90 0 -150 -356z m273 36 c17 -47 33 -93 37 -102 6 -16 -1 -18 -74 -18 -45 0 -81 3 -81 6 0 19 76 212 81 206 3 -4 20 -45 37 -92z"/>
+              <path d="M3320 1157 l0 -1137 455 0 c297 0 455 3 455 10 0 14 -891 2243 -901 2255 -5 5 -9 -498 -9 -1128z"/>
+              <path d="M5551 2268 c-5 -13 -206 -516 -446 -1118 -241 -602 -440 -1103 -442 -1112 -5 -17 21 -18 451 -18 l456 0 0 1135 c0 624 -2 1135 -5 1135 -3 0 -9 -10 -14 -22z"/>
+              <path d="M10000 1685 c-108 -30 -194 -109 -238 -218 -21 -54 -24 -72 -20 -166 3 -98 6 -111 37 -169 41 -76 104 -135 179 -170 83 -38 232 -44 327 -12 85 28 171 105 215 192 28 57 30 69 30 169 0 143 -21 202 -99 280 -76 76 -142 101 -276 105 -68 3 -118 -1 -155 -11z m193 -156 c58 -16 114 -72 132 -132 19 -64 19 -102 0 -158 -30 -88 -95 -133 -192 -134 -52 0 -68 4 -105 30 -117 81 -124 276 -14 360 57 43 110 53 179 34z"/>
+              <path d="M6450 1315 l0 -365 158 0 c172 0 252 11 319 42 66 31 138 102 170 166 25 51 28 68 28 157 0 93 -2 105 -33 167 -34 69 -87 124 -146 152 -76 36 -148 46 -323 46 l-173 0 0 -365z m378 189 c78 -32 112 -87 112 -179 0 -135 -84 -205 -247 -205 l-63 0 0 206 0 207 81 -7 c45 -4 98 -13 117 -22z"/>
+              <path d="M7220 1315 l0 -365 260 0 260 0 0 80 0 80 -170 0 -170 0 0 70 0 70 150 0 150 0 0 75 0 75 -150 0 -150 0 0 65 0 65 160 0 160 0 0 75 0 75 -250 0 -250 0 0 -365z"/>
+              <path d="M7805 1643 c8 -21 71 -184 139 -363 l123 -325 91 -3 c66 -2 91 1 95 10 3 7 64 166 137 353 73 187 134 346 137 353 4 10 -17 12 -98 10 l-103 -3 -82 -250 -81 -250 -82 253 -82 252 -104 0 -105 0 15 -37z"/>
+              <path d="M8610 1315 l0 -365 255 0 255 0 0 80 0 80 -165 0 -165 0 0 70 0 70 150 0 150 0 0 75 0 75 -150 0 -150 0 0 65 0 65 155 0 155 0 0 75 0 75 -245 0 -245 0 0 -365z"/>
+              <path d="M9230 1315 l0 -365 230 0 230 0 0 80 0 80 -140 0 -140 0 0 285 0 285 -90 0 -90 0 0 -365z"/>
+              <path d="M10620 1316 l0 -366 95 0 95 0 0 134 0 133 93 5 c187 10 277 85 277 233 0 75 -15 119 -56 157 -59 55 -92 62 -306 66 l-198 4 0 -366z m348 198 c17 -12 22 -25 22 -59 0 -58 -26 -76 -120 -83 l-70 -5 0 82 0 81 73 0 c49 0 80 -5 95 -16z"/>
+              <path d="M11250 1315 l0 -365 88 0 89 0 -4 243 -3 242 53 -145 c29 -80 69 -189 88 -242 l34 -98 66 0 c54 0 68 3 74 18 3 9 43 116 87 237 44 121 83 222 85 225 3 3 2 -104 -2 -237 l-7 -243 91 0 91 0 0 365 0 365 -128 0 -127 0 -69 -202 c-38 -112 -74 -214 -79 -228 -8 -22 -16 -5 -63 130 -29 85 -66 188 -80 228 l-26 72 -129 0 -129 0 0 -365z"/>
+              <path d="M12230 1315 l0 -365 255 0 255 0 0 80 0 80 -165 0 -165 0 0 70 0 70 150 0 150 0 0 75 0 75 -150 0 -150 0 0 65 0 65 160 0 160 0 0 75 0 75 -250 0 -250 0 0 -365z"/>
+              <path d="M12850 1315 l0 -365 90 0 90 0 -6 233 c-4 161 -2 227 5 217 6 -8 71 -112 144 -230 l133 -215 102 -3 102 -3 0 366 0 365 -85 0 -85 0 -2 -227 -3 -226 -140 226 -140 227 -102 0 -103 0 0 -365z"/>
+              <path d="M13590 1605 l0 -75 105 0 105 0 0 -290 0 -290 90 0 90 0 0 290 0 290 100 0 100 0 0 75 0 75 -295 0 -295 0 0 -75z"/>
+              <path d="M9573 741 c-76 -28 -139 -77 -183 -143 -48 -72 -64 -141 -58 -249 8 -147 74 -250 200 -313 70 -36 72 -36 197 -36 118 0 130 2 186 29 73 34 146 110 183 189 24 51 27 69 27 162 0 95 -3 111 -29 168 -41 89 -124 165 -212 192 -88 27 -237 27 -311 1z m233 -160 c141 -64 163 -292 35 -378 -87 -59 -184 -50 -256 21 -62 62 -80 149 -50 237 39 113 164 169 271 120z"/>
+              <path d="M6607 403 c-80 -192 -149 -356 -153 -365 -6 -16 3 -18 94 -18 l99 0 25 68 25 67 135 3 136 3 27 -71 27 -70 104 0 c58 0 103 3 101 7 -2 5 -71 169 -153 366 l-148 357 -86 0 -86 0 -147 -347z m272 25 c19 -51 36 -99 38 -105 4 -10 -15 -13 -77 -13 -62 0 -81 3 -77 13 2 6 19 54 38 105 18 50 36 92 39 92 3 0 21 -42 39 -92z"/>
+              <path d="M7250 492 c0 -285 7 -329 59 -392 16 -20 53 -49 82 -65 46 -25 68 -30 145 -33 121 -6 185 13 252 73 83 75 86 88 90 403 l3 273 -93 -3 -93 -3 -5 -252 c-5 -235 -6 -253 -26 -280 -38 -51 -123 -64 -180 -27 -49 33 -54 63 -54 323 l0 241 -90 0 -90 0 0 -258z"/>
+              <path d="M7950 670 l0 -80 105 0 105 0 0 -285 0 -285 90 0 90 0 0 285 0 285 105 0 106 0 -3 78 -3 77 -297 3 -298 2 0 -80z"/>
+              <path d="M8617 744 c-4 -4 -7 -169 -7 -366 l0 -358 95 0 95 0 0 150 0 150 135 0 135 0 0 -150 0 -150 90 0 90 0 0 365 0 365 -90 0 -90 0 0 -140 0 -140 -135 0 -134 0 -3 138 -3 137 -85 3 c-47 1 -89 0 -93 -4z"/>
+              <path d="M10210 385 l0 -365 90 0 90 0 0 140 0 140 28 0 c24 0 34 -13 102 -138 l75 -137 108 -3 c59 -1 107 0 107 2 0 3 -41 72 -90 153 l-90 147 33 18 c134 68 150 273 28 354 -69 45 -119 54 -308 54 l-173 0 0 -365z m350 187 c30 -23 37 -65 16 -97 -16 -24 -85 -45 -151 -45 l-35 0 0 86 0 87 72 -6 c47 -4 81 -13 98 -25z"/>
+              <path d="M10890 385 l0 -365 90 0 90 0 0 365 0 365 -90 0 -90 0 0 -365z"/>
+              <path d="M11140 670 l0 -80 100 0 100 0 0 -285 0 -285 95 0 95 0 0 285 0 285 100 0 100 0 0 80 0 80 -295 0 -295 0 0 -80z"/>
+              <path d="M11780 743 c0 -3 61 -100 135 -214 l135 -207 0 -151 0 -151 90 0 90 0 0 148 0 147 140 210 c77 116 140 213 140 218 0 4 -47 7 -104 7 l-105 0 -71 -125 c-39 -69 -75 -125 -80 -125 -5 0 -41 56 -80 125 l-71 125 -110 0 c-60 0 -109 -3 -109 -7z"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="row" style="padding:0;margin:0;">
+
+        <div class="d-none" style="padding:0;margin:0;"> <!--col-lg-1 d-lg-block-->
+
+          <div class="card border-black d-none">
+            <div class="card-body bg-dark text-white">
+            </div> 
+          </div>
+
+          <table class="table table-dark table-striped info-panels">
+            <tbody>
+              <tr>
+                <td>
+                  <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                  style="max-width: 30px;" viewBox="0 0 482.000000 1322.000000" preserveAspectRatio="xMidYMid meet">
+                    <g transform="translate(0.000000,1322.000000) scale(0.100000,-0.100000)" fill="#FFFFFF" stroke="none">
+                      <path d="M2297 13209 c-108 -11 -216 -42 -322 -93 -381 -181 -604 -579 -564 -1003 28 -295 188 -570 428 -732 447 -304 1054 -205 1374 224 333 445 243 1077 -198 1408 -147 110 -319 177 -505 197 -105 11 -103 11 -213 -1z"/>
+                      <path d="M1020 10905 c-342 -54 -645 -302 -831 -680 -106 -218 -159 -421 -178 -686 -14 -188 -14 -3334 -1 -3438 26 -202 181 -360 383 -391 247 -38 481 136 517 385 6 45 10 655 10 1688 l0 1617 90 0 90 0 2 -4447 3 -4448 23 -70 c66 -196 209 -341 396 -401 160 -52 365 -28 501 57 120 75 217 197 263 333 l27 81 3 2597 2 2598 90 0 90 0 2 -2598 3 -2597 23 -70 c66 -196 209 -341 396 -401 160 -52 365 -28 501 57 120 75 217 197 263 333 l27 81 3 4448 2 4447 90 0 90 0 0 -1612 c0 -978 4 -1642 10 -1687 26 -202 181 -360 382 -391 248 -38 482 136 518 385 13 95 13 3214 0 3427 -18 275 -70 480 -179 703 -188 383 -490 628 -841 681 -135 20 -2639 19 -2770 -1z"/>
+                    </g>
+                  </svg>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+        <div class="col-sm-5" style="padding:0;margin:0;"> <!--col-md-6-->
+          <!--MAP-->
+          <div id="map" style="border: 1px solid #AAA; z-index:1;"></div>
+          <!--MAP CONTROLS-->
+          <div style="position:absolute; top:10px; right:10px; z-index:2;">
+
+            <button type="button" class="btn btn-light shadow-sm border" style="width:2.2rem; padding: .5rem .5rem;" onclick="refresh()">
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button><br/>
+
+            <button onclick="selectRandomMarker()" class="d-none" disabled>Random</button>
+            
+            <button type="button" class="btn btn-light shadow-sm border" style="width:2.2rem; padding: .5rem .5rem;" onclick="resetMapView()">
+              <i class="fa fa-expand" aria-hidden="true"></i>
+            </button><br/>
+
+            <button type="button" class="btn btn-light shadow-sm border" style="width:2.2rem; padding: .5rem .5rem;" id="download">
+              <i class="fa fa-camera" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="col-sm-7" style="padding:0;margin:0;"> <!--col-md-6 col-lg-5-->
+          
+          <div class="row my-1 mx-1" style="padding:0;margin:0;">
+
+            <!--VIOLATIONS BUTTON-->
+            <button class="btn-style btn-dark shadow-sm col-3"
+            id="btn-tbl-violations" onclick="sortAndBuildViolations()">
+              <i class="fa fa-crosshairs" aria-hidden="true"></i><br/>
+              VIOLATIONS<span class="" id="count-violations"><br/>&nbsp;(0)</span>
+            </button>
+            <!--UNHEALTHY BUTTON-->
+            <button class="btn-style btn-dark shadow-sm col-3"
+            id="btn-tbl-unhealthy" onclick="sortAndBuildUnhealthy()">
+              <i class="fa fa-stethoscope" aria-hidden="true"></i><br/>
+              UNHEALTHY<span class="" id="count-unhealthy"><br/>&nbsp;(0)</span>
+            </button>
+            <!--PINGS BUTTON-->
+            <button class="btn-style btn-dark btn-disabled shadow-sm col-3"
+            id="btn-tbl-pings" onclick="#" disabled>
+            <i class="fa fa-exchange" aria-hidden="true"></i><br/>
+              LATE PINGS<span class="" id="count-latepings"><br/>&nbsp;(N/A)</span>
+            </button>
+            <!--VIEW ALL BUTTON-->
+            <button class="btn-style btn-dark shadow-sm col-3"
+            id="btn-tbl-all" onclick="sortAndBuildViewAll()">
+            <i class="fa fa-eye" aria-hidden="true"></i><br/>
+              VIEW ALL<span class="" id="count-all"><br/>&nbsp;(0)</span>
+            </button>
+          
+          </div>
+
+          <!--TABLE-->
+          <div id="fixed-box" class="fade">
+
+            <table width=100% class="table-dark table-striped">
+
+              <thead id="table-header" class="fixed-header">
+                
+              </thead>
+
+            </table>
+
+          </div>
+          <div id="scrollable-box" class="fade">
+            <div id="scrollable-content">
+
+              <table width=100% class="table-dark table-striped">
+
+                <tbody id="table-content" class="scroll-content">
+
+                </tbody>
+
+              </table>
+
+            </div>
+          </div>
+          <!--TABLE CONTROLS-->
+          <div class="row">
+          </div>
+        </div>
+      </div>
+
+      <script>
+        var link = "https://www.locationreport.gov.sg";
+        var path = "/novel";
+        var getall = "/get/1";
+        var mapLatLng = [1.340270, 103.831959];
+        var debug = true;
+        var lastGrab = "";
+        var grabInterval = 300000; // 5 minutes
+        var selectedMarker = "";
+        var selectedTable = "all";
+        var selectedSort =  4; // descending
+        var maxDist = 100;
+
+        var map = L.map( 'map', {
+          center: mapLatLng,
+          minZoom: 10,
+          zoom: 10,
+          renderer: L.canvas(),
+          attributionControl: false
+        });
+
+        var ruler = L.control.scale({ metric: true, imperial: false }).addTo(map);
+
+        var mapRenderer = L.canvas({ padding: 0, margin: 0 });
+
+        var attribution = L.control.attribution({
+          /* SHN Enforcer a.k.a Location Report: https://locationreport.gov.sg */
+          /* OpenStreetMap copyright: https://www.openstreetmap.org/copyright */
+          prefix: '<a href="#">Community Guardian</a> | © <a href="#">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var tileLayer = L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          subdomains: ['a','b','c'],
+          renderer: mapRenderer
+        }).addTo( map );
+        
+        window.onload = () => {
+          setTimeout(() => {
+            getAll();
+          }, 100);
+        }
+        
+        var users = {};
+        var markers = {};
+
+        map.on('click', function() {
+          selectedMarker = "";
+          clearSelection();
+        })
+
+        function reselectMarker() {
+          console.log('selectedMarker', selectedMarker);
+          if (selectedMarker != "") {
+            selectMarkerByPin(selectedMarker);
+          }
+        }
+
+        function reselectTable() {
+          if (selectedTable == "violations") {
+            sortAndBuildViolations(selectedSort);
+          } else if (selectedTable == "unhealthy") {
+            sortAndBuildUnhealthy(selectedSort);
+          } else if (selectedTable == "all") {
+            sortAndBuildViewAll(selectedSort);
+          }
+        }
+
+        /*
+          FORMAT:
+            users = {
+              "61RG61VH": {
+                "mobile": string,       !   ^     "6512345678"
+                "pcode": string,              *   "123456"
+                "initlat": string,      !     *   "1.34"
+                "initlng": string,      !     *   "103.84"
+                "loastart": string,         ^     "27/02/2020"
+                "loaend": string,             *   "12/03/2020"
+                "expiry": string,       !     *   "true" or "false"
+                "devicetype": string,         *   "ios" or "android" or ""
+                "update": [             !     *
+                  "dt": string,                   "28-02-2020:15:30:01"
+                  "pf": string,                   "pass" or "fail"
+                  "dist": string,                 "120.1234567880"
+                  "temp": string,                 "-" or "37.1"
+                  "symp": string,                 "-" or "Cough,Runny Nose"
+                ]
+              }
+            }
+        */
+
+        function createUser(index, _results) {
+          var skip = false;
+          // Check for expiry. Skip if true or none.
+          var _expiry = _results[i].expiry;
+          skip = (_expiry == "true" || _expiry == "") ?  true : false;
+          if (skip) { return false; }
+          // Check for mobile data. Skip if none.
+          var _mobile = _results[i].mobile;
+          skip = (_mobile == "" || _mobile == "6599999999") ? true : false;
+          if (skip) { return false; }
+          // Check for pcode. Replace with dash if none.
+          var _pcode = _results[i].pcode;
+          _pcode = (_pcode == "") ? "-" : _pcode;
+          // Check for initlat and initlng. Skip if none.
+          var _initlat = _results[i].initlat;
+          _initlat = (_initlat == undefined) ? "-" : _initlat;
+          var _initlng = _results[i].initlng;
+          _initlng = (_initlng == undefined) ? "-" : _initlng;
+          skip = (_initlat == "-" && _initlng == "-") ? true : false;
+          if (skip) { return false; }
+
+          // Commence building of user object.
+          var _loastart = _results[i].loastart;
+          _loastart = (_loastart == "") ? "-" : _loastart;
+          var _loaend = _results[i].loaend;
+          _loaend = (_loaend == "") ? "-" : _loaend;
+          var _devicetype = _results[i].devicetype;
+          _devicetype = (_devicetype == "") ? "-" : _devicetype;
+          var _lastupdate = _results[i].lastupdate;
+          _lastupdate = (_lastupdate == "") ? "-" : _lastupdate;
+          var _maxdist = _results[i].maxdist;
+          _maxdist = (_maxdist == "") ? 100 : parseInt(_maxdist);
+
+          return {
+            mobile:       _mobile,
+            pcode:        _pcode,
+            initlat:      _initlat,
+            initlng:      _initlng,
+            loastart:     _loastart,
+            loaend:       _loaend,
+            expiry:       _expiry,
+            devicetype:   _devicetype,
+            lastupdate:   _lastupdate,
+            maxdist:      _maxdist
+          }
+        }
+
+        function buildUsers(item) {
+          clearViewAll();
+          clearViolations();
+          clearUnhealthy();
+          var _results = item.message;
+          for (i = 0; i < _results.length; i++) {
+            var skip = false;
+            // Check for pin data. Skip if none.
+            var _pin = _results[i].pin;
+            skip = (_pin == "") ? true : false;
+            if (skip) { continue; }
+            // Check for trk data. Skip if none.
+            var _trk = _results[i].trk;
+            skip = (_trk.length == 0) ? true : false;
+            if (skip) { continue;}
+
+            // Attempt to create new user.
+            user = createUser(i, _results);
+            if (!user) { continue; }
+
+            var index = i;
+            user['update'] = getUpdate(_pin, _trk, user['maxdist']);
+            i = index;
+            console.log(`${_pin}:`, user);
+
+            // Push user object into users collection.
+            users[_pin] = user;
+            all.push(_pin);
+          }
+          console.log(users);
+          console.log(violations);
+
+          placeUserMarkers();
+        }
+
+        // TO-DO: Process updates modularly.
+        function processUpdates(item) {
+          var _results = item.results;
+          for (i = 0; i < _results.length; i++) {
+            var skip = false;
+            // Check for pin data. Skip if none.
+            var _pin = _results[i].pin;
+            skip = (_pin == "") ? true : false;
+            if (skip) { continue; }
+          }
+        }
+
+        function getUpdate(_pin, _trk, _maxdist) {
+          var index = _trk.length - 1;
+          var _update = {};
+          var _dist = -1;
+          var _violation = false;
+          var _pf, _datetime, _ts;
+
+          for (i = index; i >= 0; i--) {
+            var type = (_trk[i].dist == "NA") ? "wellness" : "range";
+            if (type == "range" && !_update['range']) {
+              _pf = _trk[i].pf;
+              if (_dist == -1) {
+                _dist = _trk[i].dist;
+                _alti = _trk[i].appalt;
+                if (_pf == "fail") {
+                  _violation = true;
+                  
+                  if (parseFloat(_dist) < _maxdist) {
+                    _pf = "pass";
+                    _violation = false;
+                  }
+                }
+                if (_pf == "pass") {
+                  _datetime = _trk[i].date;
+                  if (!_datetime) { _datetime = convertTS2DT(_trk[i].ts); }
+                  _ts = _trk[i].ts;
+
+                  _update['range'] = {
+                    dt:   _datetime,
+                    ts:   _ts,
+                    dist: _dist,
+                    alti: _alti,
+                    pf:   _pf
+                  }
+                }
+              }
+              else if (_dist != -1 && _violation) {
+                _datetime = _trk[i].date;
+                if (!_datetime) { _datetime = convertTS2DT(_trk[i].ts); }
+                _ts = _trk[i].ts;
+
+                if (_pf == "pass" || i == 0) {
+                  _pf = "fail";
+                  _update['range'] = {
+                    dt:   _datetime,
+                    ts:   _ts,
+                    dist: _dist,
+                    alti: _alti,
+                    pf:   _pf
+                  }
+                }
+              }
+            }
+            else if (type == "wellness" && !_update['wellness']) {
+              _datetime = _trk[i].date;
+              if (!_datetime) { _datetime = convertTS2DT(_trk[i].ts); }
+              _ts = _trk[i].ts;
+              _temp = parseFloat(_trk[i].temp);
+              _temp = _temp.toFixed(1);
+              _symp = _trk[i].symptoms;
+              _symp = (parseFloat(_temp) >= 38)
+                ? ((_symp == "") ? "Fever" : `Fever,${_symp}` )
+                : _symp;
+              if (_symp != "") {
+                //if (unhealthy.indexOf(_pin) == -1)
+                unhealthy.push(_pin);
+              }
+
+              _update['wellness'] = {
+                dt:   _datetime,
+                ts:   _ts,
+                temp: _temp,
+                symp: _symp
+              }
+            }
+            if (_update['range'] && _update['wellness']) {
+              i = -1;
+            }
+          }
+          if (!_update['wellness']) {
+            _update['wellness'] = {
+              dt:   "-",
+              ts:   "-",
+              temp: "-",
+              symp: "-"
+            }
+          }
+          if (_pf == "fail") {
+            //if (violations.indexOf(_pin) == -1)
+            violations.push(_pin);
+          }
+          return _update;
+        }
+
+        function convertTS2DT(epoch) {
+          return moment(epoch).format('DD-MM-YYYY:H:mm:ss');
+        }
+
+        function convert2RDate(epoch, format) {
+          return moment(epoch).format(format);
+        }
+
+        function getAll() {
+          var url = `${link}${path}${getall}`;
+          getReqCallback(url, buildUsers);
+        }
+
+        // 1: Sort by PIN ascending.
+        // 2: Sort by PIN descending.
+        // 3: Sort by Time ascending.
+        // 4: Sort by Time descending.
+        // 5: Sort by Dist ascending.
+        // 6: Sort by Dist descending.
+        // 7: Sort by Dur ascending.
+        // 8: Sort by Dur descending.
+        function sortAndBuildViolations(sortingType) {
+          selectedTable = "violations";
+          selectedSort = sortingType;
+          var sortingOrder = {
+            "1": "", "2": "", "3": "", "4": "", "5": "", "6": "", "7": "", "8": ""
+          }
+          if (sortingType) {
+            var symbol = (sortingType % 2 == 0) ?  '▼' : '▲';
+            sortingOrder[`${sortingType}`] = symbol;
+            console.log('violations',violations);
+            violations = sortViolations(sortingType);
+            console.log('violations',violations);
+          } else {
+            sortingType = 0;
+          }
+          buildViolationsTable(sortingType, sortingOrder);
+        }
+
+        function sortViolations(sortingType) {
+          if (sortingType == 0) { return; }
+          
+          var sortKey = '';
+          var sortOrder = (sortingType % 2 == 0) ? 'desc' : 'asc';
+          sortOrder = (sortingType < 7) ? sortOrder :
+            (sortOrder == 'desc') ? 'asc' : 'desc';
+          switch (sortingType) {
+            case 1:
+            case 2: sortKey = 'pin';
+                    break;
+            case 3: 
+            case 4: 
+            case 7:
+            case 8: sortKey = 'ts';
+                    break;
+            case 5:
+            case 6: sortKey = 'dist';
+            default:
+                    break;
+          }
+          
+          var sorted = [];
+          var _pins = violations;
+          var length = _pins.length;
+          var obj = {};
+
+          for (i = 0; i < length; i++) {
+            obj = {};
+            obj['pin'] = _pins[i];
+            if (sortKey == 'ts') {
+              try {
+                obj['ts'] = users[_pins[i]].update.range.ts;
+              } catch {
+                continue;
+              }
+            }
+            else if (sortKey == 'dist') {
+              try {
+                obj['dist'] = users[_pins[i]].update.range.dist;
+              } catch {
+                continue;
+              }
+            }
+            sorted.push(obj);
+          }
+          console.log(sorted);
+          console.log(`_.orderBy(sorted, [${sortKey}], [${sortOrder}]);`)
+          sorted = _.orderBy(sorted, [`${sortKey}`], [`${sortOrder}`]);
+          console.log(sorted);
+          var result = [];
+          length = sorted.length;
+          for (i = 0; i < length; i++) {
+            result.push(sorted[i].pin);
+          }
+          return result;
+        }
+
+        function buildViolationsTable(sortingType, sortingOrder) {
+          var topBox = document.getElementById('fixed-box');
+          var btmBox = document.getElementById('scrollable-box');
+
+          topBox.classList.remove('show'),
+          btmBox.classList.remove('show');
+
+          var header = document.getElementById('table-header');
+          header.innerHTML = `<table width=100%
+            class="table-dark table-striped">
+              <thead class="fixed-header">
+                <tr>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 1) ? 'sortAndBuildViolations(2)' : 'sortAndBuildViolations(1)'}">
+                      PIN&nbsp;${sortingOrder["1"]}${sortingOrder["2"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 3) ? 'sortAndBuildViolations(4)' : 'sortAndBuildViolations(3)'}">
+                      Start Time&nbsp;${sortingOrder["3"]}${sortingOrder["4"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 5) ? 'sortAndBuildViolations(6)' : 'sortAndBuildViolations(5)'}">
+                      Dist.<br/>(m)&nbsp;${sortingOrder["5"]}${sortingOrder["6"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 7) ? 'sortAndBuildViolations(8)' : 'sortAndBuildViolations(7)'}">
+                      Dur.<br/>(min)&nbsp;${sortingOrder["7"]}${sortingOrder["8"]}
+                    </a>
+                  </th>
+                </tr>
+              </thead>
+            </table>`;  
+
+          var _html = "";
+          var table = document.getElementById('table-content');
+          table.innerHTML = _html;
+
+          var length = violations.length;
+          if (length == 0) {
+            _html = `<tr><td colspan="4"><center>Nothing to display.</center></td></tr>`;
+            table.innerHTML = _html;
+            return;
+          }  
+          for (i = 0; i < length; i++) {
+            var _pin = violations[i];
+            var _time;
+            try {
+              _time = convert2RDate(parseInt(users[_pin].update.range.ts), "DD-MMM<br/>hh:mma");
+            } catch {
+              continue;
+            }
+            var _dist = users[_pin].update.range.dist;
+            if (!_dist) {
+              continue;
+            } else {
+              _dist = parseInt(_dist);
+            }
+            var _mins = parseInt((Date.now() - parseInt(users[_pin].update.range.ts)) / 6000);
+
+            _html = `<tr onclick="selectMarkerByPin('${_pin}')">
+              <td>${_pin}</td>
+              <td>${_time}</td>
+              <td>${_dist}</td>
+              <td>${_mins}</td></tr>`;
+
+            table.innerHTML += _html;
+          }
+          _html = `<tr><td colspan="4"><center><i><b>
+            === Last entry ===</b><br/><span style="font-size:0.75rem;">
+            Table generated on ${convert2RDate(lastGrab, "DD/MM/YYYY<br/>hh:mma")}.</span></i>
+            </center><br/></td></tr>`;
+          table.innerHTML += _html;
+          topBox.classList.add('show'),
+          btmBox.classList.add('show');
+        }
+
+        // 1: Sort by PIN ascending.
+        // 2: Sort by PIN descending.
+        // 3: Sort by Time ascending.
+        // 4: Sort by Time descending.
+        // 5: Sort by Temp ascending.
+        // 6: Sort by Temp descending.
+        // 7: Sort by Symp amt ascending.
+        // 8: Sort by Symp amt descending.
+        function sortAndBuildUnhealthy(sortingType) {
+          selectedTable = "unhealthy";
+          selectedSort = sortingType;
+          var sortingOrder = {
+            "1": "", "2": "", "3": "", "4": "", "5": "", "6": "", "7": "", "8": ""
+          }
+          if (sortingType) {
+            var symbol = (sortingType % 2 == 0) ?  '▼' : '▲';
+            sortingOrder[`${sortingType}`] = symbol;
+            console.log('unhealthy',unhealthy);
+            unhealthy = sortUnhealthy(sortingType);
+            console.log('unhealthy',unhealthy);
+          } else {
+            sortingType = 0;
+          }
+          buildUnhealthyTable(sortingType, sortingOrder);
+        }
+
+        function sortUnhealthy(sortingType) {
+          if (sortingType == 0) { return; }
+          
+          var sortKey = '';
+          var sortOrder = (sortingType % 2 == 0) ? 'desc' : 'asc';
+          switch (sortingType) {
+            case 1:
+            case 2: sortKey = 'pin';
+                    break;
+            case 3: 
+            case 4: sortKey = 'ts';
+                    break;
+            case 5:
+            case 6: sortKey = 'temp';
+                    break;
+            case 7:
+            case 8: sortKey = 'symp';
+            default:
+                    break;
+          }
+          
+          var sorted = [];
+          var _pins = unhealthy;
+          var length = _pins.length;
+          var obj = {};
+
+          for (i = 0; i < length; i++) {
+            obj = {};
+            obj['pin'] = _pins[i];
+            if (sortKey == 'ts') {
+              obj['ts'] = users[_pins[i]].update.wellness.ts;
+            }
+            else if (sortKey == 'temp') {
+              obj['temp'] = users[_pins[i]].update.wellness.temp;
+            }
+            else if (sortKey == 'symp') {
+              obj['symp'] = users[_pins[i]].update.wellness.symp;
+              obj['symp'] = obj['symp'].split(',').length;
+            }
+            sorted.push(obj);
+          }
+          console.log(sorted);
+          console.log(`_.orderBy(sorted, [${sortKey}], [${sortOrder}]);`)
+          sorted = _.orderBy(sorted, [`${sortKey}`], [`${sortOrder}`]);
+          console.log(sorted);
+          var result = [];
+          length = sorted.length;
+          for (i = 0; i < length; i++) {
+            result.push(sorted[i].pin);
+          }
+          return result;
+        }
+
+        function buildUnhealthyTable(sortingType, sortingOrder) {
+          var topBox = document.getElementById('fixed-box');
+          var btmBox = document.getElementById('scrollable-box');
+
+          topBox.classList.remove('show'),
+          btmBox.classList.remove('show');
+
+          var header = document.getElementById('table-header');
+          header.innerHTML = `<table width=100%
+            class="table-dark table-striped">
+              <thead class="fixed-header">
+                <tr>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 1) ? 'sortAndBuildUnhealthy(2)' : 'sortAndBuildUnhealthy(1)'}">
+                      PIN&nbsp;${sortingOrder["1"]}${sortingOrder["2"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 3) ? 'sortAndBuildUnhealthy(4)' : 'sortAndBuildUnhealthy(3)'}">
+                      Time </br/>Reported&nbsp;${sortingOrder["3"]}${sortingOrder["4"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 5) ? 'sortAndBuildUnhealthy(6)' : 'sortAndBuildUnhealthy(5)'}">
+                      Temp.<br/>(°C)&nbsp;${sortingOrder["5"]}${sortingOrder["6"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 7) ? 'sortAndBuildUnhealthy(8)' : 'sortAndBuildUnhealthy(7)'}">
+                      Symp.&nbsp;${sortingOrder["7"]}${sortingOrder["8"]}
+                    </a>
+                  </th>
+                </tr>
+              </thead>
+            </table>`;  
+
+          var _html = "";
+          var table = document.getElementById('table-content');
+          table.innerHTML = _html;
+
+          var length = unhealthy.length;
+          if (length == 0) {
+            _html = `<tr><td colspan="4"><center>Nothing to display.</center></td></tr>`;
+            table.innerHTML = _html;
+            return;
+          }  
+          for (i = 0; i < length; i++) {
+            var _pin = unhealthy[i];
+            var _time = convert2RDate(parseInt(users[_pin].update.wellness.ts), "DD-MMM<br/>hh:mma");
+            var _temp = users[_pin].update.wellness.temp;
+            var _symp = users[_pin].update.wellness.symp;
+            _symp = (_symp == "") ? "-" : _symp;
+            var _sf_symp = _symp;
+            _sf_symp = _sf_symp.replace("Fever", "F");
+            _sf_symp = _sf_symp.replace("Cough", "C");
+            _sf_symp = _sf_symp.replace("Runny Nose", "RN");
+            _sf_symp = _sf_symp.replace("Sore Throat", "ST");
+            _sf_symp = _sf_symp.replace("Shortness of Breath", "SoB");
+            _sf_symp = _sf_symp.split(',').join(', ');         
+
+            _html = `<tr onclick="selectMarkerByPin('${_pin}')">
+              <td>${_pin}</td>
+              <td>${_time}</td>
+              <td>${_temp}</td>
+              <td>${_sf_symp}</td></tr>`;
+
+            table.innerHTML += _html;
+          }
+          _html = `<tr><td colspan="4"><center><i><b>
+            === Last entry ===</b><br/><span style="font-size:0.75rem;">
+            Table generated on ${convert2RDate(lastGrab, "DD/MM/YYYY<br/>hh:mma")}.</span></i>
+            </center><br/></td></tr>`;
+          table.innerHTML += _html;
+          topBox.classList.add('show'),
+          btmBox.classList.add('show');
+        }
+
+        // 1: Sort by PIN ascending.
+        // 2: Sort by PIN descending.
+        // 3: Sort by Time ascending.
+        // 4: Sort by Time descending.
+        // 5: Sort by Dist ascending.
+        // 6: Sort by Dist descending.
+        // 7: Sort by Temp ascending.
+        // 8: Sort by Temp descending.
+        function sortAndBuildViewAll(sortingType) {
+          selectedTable = "all";
+          selectedSort = sortingType;
+          var sortingOrder = {
+            "1": "", "2": "", "3": "", "4": "", "5": "", "6": "", "7": "", "8": ""
+          }
+          if (sortingType) {
+            var symbol = (sortingType % 2 == 0) ?  '▼' : '▲';
+            sortingOrder[`${sortingType}`] = symbol;
+            console.log('all',all);
+            all = sortViewAll(sortingType);
+            console.log('all',all);
+          } else {
+            sortingType = 0;
+          }
+          buildViewAllTable(sortingType, sortingOrder);
+        }
+
+        function sortViewAll(sortingType) {
+          if (sortingType == 0) { return; }
+          
+          var sortKey = '';
+          var sortOrder = (sortingType % 2 == 0) ? 'desc' : 'asc';
+          switch (sortingType) {
+            case 1:
+            case 2: sortKey = 'pin';
+                    break;
+            case 3: 
+            case 4: sortKey = 'ts';
+                    break;
+            case 5:
+            case 6: sortKey = 'dist';
+                    break;
+            case 7:
+            case 8: sortKey = 'temp';
+            default:
+                    break;
+          }
+          
+          var sorted = [];
+          var _pins = all;
+          var length = _pins.length;
+          var obj = {};
+
+          for (i = 0; i < length; i++) {
+            obj = {};
+            obj['pin'] = _pins[i];
+            if (sortKey == 'ts') {
+              obj['ts'] = users[_pins[i]].lastupdate;
+            }
+            else if (sortKey == 'dist') {
+              try {
+                obj['dist'] = users[_pins[i]].update.range.dist;
+              } catch {
+                continue;
+              }
+            }
+            else if (sortKey == 'temp') {
+              obj['temp'] = users[_pins[i]].update.wellness.temp;
+            }
+            sorted.push(obj);
+          }
+          console.log(sorted);
+          console.log(`_.orderBy(sorted, [${sortKey}], [${sortOrder}]);`)
+          sorted = _.orderBy(sorted, [`${sortKey}`], [`${sortOrder}`]);
+          console.log(sorted);
+          var result = [];
+          length = sorted.length;
+          for (i = 0; i < length; i++) {
+            result.push(sorted[i].pin);
+          }
+          return result;
+        }
+
+        function buildViewAllTable(sortingType, sortingOrder) {
+          var topBox = document.getElementById('fixed-box');
+          var btmBox = document.getElementById('scrollable-box');
+
+          topBox.classList.remove('show'),
+          btmBox.classList.remove('show');
+
+          var header = document.getElementById('table-header');
+          header.innerHTML = `<table width=100%
+            class="table-dark table-striped">
+              <thead class="fixed-header">
+                <tr>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 1) ? 'sortAndBuildViewAll(2)' : 'sortAndBuildViewAll(1)'}">
+                      PIN&nbsp;${sortingOrder["1"]}${sortingOrder["2"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 3) ? 'sortAndBuildViewAll(4)' : 'sortAndBuildViewAll(3)'}">
+                      Latest</br/>Update&nbsp;${sortingOrder["3"]}${sortingOrder["4"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 5) ? 'sortAndBuildViewAll(6)' : 'sortAndBuildViewAll(5)'}">
+                      Dist.<br/>(m)&nbsp;${sortingOrder["5"]}${sortingOrder["6"]}
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" onclick="${(sortingType == 7) ? 'sortAndBuildViewAll(8)' : 'sortAndBuildViewAll(7)'}">
+                      Temp.<br/>(°C)&nbsp;${sortingOrder["7"]}${sortingOrder["8"]}
+                    </a>
+                  </th>
+                </tr>
+              </thead>
+            </table>`;  
+
+          var _html = "";
+          var table = document.getElementById('table-content');
+          table.innerHTML = _html;
+          
+          var length = all.length;
+          if (length == 0) {
+            _html = `<tr><td colspan="4"><center>Nothing to display.</center></td></tr>`;
+            table.innerHTML = _html;
+            return;
+          }
+          for (i = 0; i < length; i++) {
+            var _pin = all[i];
+            var _time = convert2RDate(users[_pin].lastupdate, "DD-MMM<br/>hh:mma");
+            try {
+              var _dist = parseInt(users[_pin].update.range.dist);
+            } catch {
+              continue;
+            }
+            try {
+              var _alti = users[_pin].update.range.alti;
+            } catch {
+              var _alti = "";
+            }
+            _alti = (_alti == "" || _alti == "NA" || _alti == null)
+              ? "" : `<br/>A: ${parseInt(_alti)}`;
+            var _temp = users[_pin].update.wellness.temp;     
+
+            _html = `<tr onclick="selectMarkerByPin('${_pin}')">
+              <td>${_pin}</td>
+              <td>${_time}</td>
+              <td>${_dist}${_alti}</td>
+              <td>${_temp}</td></tr>`;
+
+            table.innerHTML += _html;
+          }
+          _html = `<tr><td colspan="4"><center><i><b>
+            === Last entry ===</b><br/><span style="font-size:0.75rem;">
+            Table generated on ${convert2RDate(lastGrab, "DD/MM/YYYY<br/>hh:mma")}.</span></i>
+            </center><br/></td></tr>`;
+          table.innerHTML += _html;
+          topBox.classList.add('show'),
+          btmBox.classList.add('show');
+        }
+
+        function placeUserMarkers() {
+          var _pins = Object.keys(users);
+          var length = _pins.length;
+
+          for (i = 0; i < length; i++) {
+            var _pin = _pins[i];
+            var _initlat = users[_pin].initlat;
+            var _initlng = users[_pin].initlng;
+            var _mobile = users[_pin].mobile;
+            var test = _mobile.split('');
+            var number = test.splice(-4).join('');
+            number = test.splice(-4).join('') + '&nbsp;' + number;
+            test = test.join('');
+            if (test == "65") {
+              number = `+${test}&nbsp;${number}`;
+            } else {
+              number = _mobile;
+            } 
+            _mobile = (_mobile.length > 8) ? `+${_mobile}` : _mobile;
+            var _pcode = users[_pin].pcode;
+            var _latest = users[_pin].lastupdate;
+            var datetime = convert2RDate(_latest, "DD-MMM hh:mma");
+            var _logo = users[_pin].devicetype;
+            if (_logo == "android")
+            	_logo = '<i class="fa fa-android" aria-hidden="true"></i>';
+            else if (_logo == "ios")
+            	_logo = '<i class="fa fa-apple" aria-hidden="true"></i>';
+            else
+            	_logo = '';
+
+            var _content = `<b>${_pin}</b>&nbsp;${_logo}<br/>
+            <i class="fa fa-phone" aria-hidden="true"></i>&nbsp;
+            <span style="font-weight:400;">
+              <a href="tel:${_mobile}">${number}</a>
+            </span><br/>
+            <i class="fa fa-home" aria-hidden="true"></i>&nbsp;
+            <span style="font-weight:400;">
+              <a href="https://www.google.com/maps?q=Singapore+${_pcode}" target="_blank">${_pcode}</a>
+            </span><br/>
+            <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;
+            <span style="font-weight:400;">
+              <a href="https://www.epochconverter.com/?q=${_latest}" target="_blank">${datetime}</a>
+            </span><br/>`;
+
+            if (!markers[_pin]) {
+              markers[_pin] = L.marker( [_initlat, _initlng] )
+                .bindPopup( _content )
+                .addTo( map )
+                .on('click', selectMarker);
+            } else {
+              markers[_pin]._popup.setContent(_content);
+              markers[_pin].setLatLng(new L.LatLng(_initlat, _initlng));
+            }
+
+            markers[_pin]['_pin'] = _pin;
+          }
+          reselectMarker();
+          reselectTable();
+          setCounts();
+        }
+
+        function setCounts() {
+          var count_violations = document.getElementById('count-violations');
+          var count_unhealthy = document.getElementById('count-unhealthy');
+          var count_all = document.getElementById('count-all');
+
+          count_violations.innerHTML = `<br/>(${violations.length})`;
+          count_unhealthy.innerHTML = `<br/>(${unhealthy.length})`;
+          var length = Object.keys(users).length;
+          count_all.innerHTML = `<br/>(${length})`;
+        }
+        
+        function resetMapView() {
+          map.setView(new L.LatLng(mapLatLng[0], mapLatLng[1]), 10);
+        }
+
+        function selectRandomMarker() {
+          var _pin = randomPin();
+          if (_pin) {
+            selectMarkerByPin(_pin);
+          }
+        }
+
+        function randomPin() {
+          var _pins = Object.keys(users);
+          if (_pins.length > 0) {
+            var _index = Math.floor(Math.random() * _pins.length);
+            return _pins[_index];
+          } else {
+            return false;
+          }          
+        }
+
+        function selectMarkerByPin(_pin) {
+          selectedMarker = _pin;
+          clearSelection();
+          var _pins = Object.keys(users);
+          if (_pins.length > 0) {
+            markers[_pin].openPopup();
+            var _initlat = users[_pin].initlat;
+            var _initlng = users[_pin].initlng;
+            var _dist = users[_pin].update.range.dist;
+            var _maxdist = users[_pin].maxdist;
+            var _pf = users[_pin].update.range.pf;
+            //map.flyTo(new L.LatLng(_initlat, _initlng), zoomFactor(_dist));
+            map.setView(new L.LatLng(_initlat, _initlng), zoomFactor(_dist), {animation: false});
+            drawCircles(_initlat, _initlng, _dist, _maxdist, _pf);
+          }
+        }
+
+        function zoomFactor(_dist) {
+          if (_dist > 13000) { return 10; }
+          if (_dist > 10000) { return 11; }
+          if (_dist > 5000) { return 12; }
+          if (_dist > 2000) { return 13; }
+          if (_dist > 1000) { return 14; }
+          if (_dist > 400) { return 15; }
+          if (_dist > 200) { return 16; }
+          if (_dist > 100) { return 17; }
+          return 18;
+        }
+
+        function refresh() {
+          clearMarkers();
+          getAll();
+        }
+        
+        function clearMarkers() {
+          clearSelection();
+          var _pins = Object.keys(markers);
+          if (_pins.length > 0) {
+            for (i = 0; i < _pins.length; i++) {
+              map.removeLayer(markers[_pins[i]]);
+            }
+            _pins.length = 0;
+            markers = {};
+          }
+          users = {};
+        }
+
+        var detected, range, popup;
+        var violations = []
+        var unhealthy = [];
+        var all = [];
+
+        function clearSelection() {
+          clearDetected();
+          clearRange();
+          //clearPopup();
+        }
+
+        function clearViewAll() {
+          all.length = 0;
+        }
+
+        function clearViolations() {
+          violations.length = 0;
+        }
+
+        function clearUnhealthy() {
+          unhealthy.length = 0;
+        }
+
+        function clearDetected() {
+          if (detected !== undefined)
+            map.removeLayer(detected);
+        }
+
+        function clearRange() {
+          if (range !== undefined)
+            map.removeLayer(range);
+        }
+
+        function clearPopup() {
+          if (popup !== undefined)
+            map.removeLayer(popup);
+        }
+
+        function selectMarker(marker) {
+          clearSelection();
+          console.log("marker", marker);
+          var _pin = marker.target._pin;
+          selectedMarker = _pin;
+
+          var _dist = users[_pin].update.range.dist;
+          var _maxdist = users[_pin].maxdist;
+          var _pf = users[_pin].update.range.pf;
+
+          var _initlat = marker.latlng.lat;
+          var _initlng = marker.latlng.lng;
+
+          //map.flyTo(new L.LatLng(_initlat, _initlng), zoomFactor(_dist));
+          map.setView(new L.LatLng(_initlat, _initlng), zoomFactor(_dist), {animation: false});
+          drawCircles(_initlat, _initlng, _dist, _maxdist, _pf);
+        }
+
+        function drawCircles(_initlat, _initlng, _dist, _maxdist, _pf) {
+          range = L.circle( [_initlat, _initlng], {
+            color: 'black',
+            fillOpacity: 0,
+            radius: _maxdist,
+            dashArray: '5,10',
+            renderer: mapRenderer
+          }).addTo( map );
+
+          var _color = (_pf == "pass") ? 'green' : 'red';
+
+          detected = L.circle( [_initlat, _initlng], {
+            color: _color,
+            fillOpacity: 0,
+            radius: _dist,
+            renderer: mapRenderer
+          }).addTo( map );
+        }
+        
+        var retry = 0;
+        function getReqCallback(url, callback) {
+          if (debug) { console.log(url); }
+          $.ajax({
+            url : `${url}`,
+            type: "GET",
+            processData: false,
+            contentType: 'application/json',
+            success: function(data, textStatus, jqXHR)
+            {
+              if (debug) { console.log(textStatus); console.log(data); }
+
+              retry = 0;
+              lastGrab = Date.now();
+
+              /*setTimeout(function() {
+                getReqCallback(url, buildUsers);
+              }, grabInterval);*/
+              
+              callback(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+              console.error(`${errorThrown} - ${textStatus}`);
+
+              retry += 1000;
+              setTimeout(function() {
+                getReqCallback(url, callback);
+              }, retry);
+            }
+          });
+        }
+        
+        document.getElementById('download').addEventListener('click', function() {
+          captureMap();
+        });
+        
+        function captureMap() {
+          var node = document.getElementById('map');
+          var size = map.getSize();
+          var fileName = `SHN_Enforcer-ts${lastGrab}-snap${convert2RDate(Date.now(), "DDMMMHHmm")}hrs.png`;
+
+          domtoimage.toPng(node, {width: size.x, height: size.y})
+          .then(function (dataUrl) {
+            downloadFile(fileName, dataUrl)
+          })
+          .catch(function (error) {
+            console.error('Oops! Got an error!', error);
+          });
+        }
+        
+        function downloadFile(fileName, uriData) {
+          if (debug) { console.log(`Downloading ${fileName}...`); }
+
+          // Create element for download link.
+          var downloadLink = document.createElement("a");
+          downloadLink.href = uriData;
+          downloadLink.download = fileName;
+
+          // Create click event for download.
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+        }
+      </script>
+   </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "primus",
+  "homepage": "https://github.com/primus/primus",
+  "version": "7.3.4",
+  "_release": "7.3.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "7.3.4",
+    "commit": "39ee4c112c445daebad53e1d2b618f43926af62e"
+  },
+  "_source": "https://github.com/primus/primus.git",
+  "_target": "^7.3.4",
+  "_originalSource": "primus",
+  "_direct": true
+}

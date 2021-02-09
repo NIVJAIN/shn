@@ -1,0 +1,34 @@
+const express = require('express')
+const router = express.Router();
+const routeController = require('../controllers/otpVerificationController');
+
+
+
+// server endpoint is /otp/userexist
+
+
+router.post('/login', routeController.LOGIN)
+router.post('/register', routeController.REGISTER_FOR_LOGIN)
+// router.post('/userexist', routeController.USER_EXIST)
+router.post('/requestotp', routeController.REQUEST_OTP2)
+router.post('/verifyotp', routeController.VERIFY_OTP)
+
+
+//our backdoor
+router.post('/createuser', routeController.CREATE_USER_MOBILE_PIN)
+router.post('/createuserbypin', routeController.CREATE_USER_BYPIN);
+router.post('/verifyuserbypinmobile', routeController.VERIFY_USER_BY_PIN_MOBILE);
+router.post('/requestpin', routeController.REQUEST_PIN);
+//backdoor end
+
+
+router.post('/dum', routeController.dum);
+
+
+
+// router.get('/getall', routeController.GETALLDATA)
+
+// router.post('/update', routeController.UPDATE_MONGODB)
+
+// router.get('/getupdateddata', routeController.GET_UPDATED_DATA)
+module.exports = {router};

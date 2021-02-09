@@ -1,0 +1,21 @@
+{
+  "name": "nodejs_socketio_erik",
+  "description": "",
+  "main": "server.js",
+  "authors": [
+    "Sripal Jain <sripal_jain@imda.gov.sg>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "device-uuid": "^1.0.4"
+  }
+}

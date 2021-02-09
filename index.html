@@ -1,0 +1,1294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Location Report</title>
+    <meta property="og:title" content="Location Report">
+    <meta name="description" content="People under Leave-of-Absence have to use this application to report their temperature readings and GPS positions at regular intervals.">
+    <meta property="og:description" content="People under Leave-of-Absence have to use this application to report their temperature readings and GPS positions at regular intervals.">
+    <meta name="author" content="IMDA">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <style>
+        html { font-size: 6vw; }
+
+        #splash {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4vw;
+            color: white;
+            position: absolute;
+            z-index: 2;
+            width:100%;
+            height:100%;
+            background-color: #6e368d;
+            text-align: center;
+            vertical-align: middle;
+        }
+        #splash span {
+            position: relative;
+            top: 37.5%;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        .main-title {
+            font-family: 'Montserrat=all rev=1', sans-serif;
+            font-size: 9vw;
+            font-weight: 800;
+            color: #6e368d;
+        }
+        
+        .text-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 9vw;
+            font-weight: bold;
+            color: #6e368d;
+        }
+
+        .text-desc {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 6.5vw;  
+        }
+
+        .text-tiny {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5vw;
+            line-height: 5vw;   
+        }
+
+        body { overflow: hidden; }
+
+        #content-wrapper, #content {
+            display: block;
+            height: 100%;
+        }
+
+        .sectors {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+
+        .sector {
+            display: flex;
+            padding: 3vw;
+            line-height: 0.75;
+            flex-direction: column;
+            position: relative;
+            width: 100vw;
+        }
+        .sector-16 { height: 16.66666vh; }  /* 1/3 */
+        .sector-25 { height: 25vh; }        /* 1/4 */
+        .sector-27 { height: 27.77777vh; }
+        .sector-33 { height: 33.33333vh; }
+        .sector-38 { height: 38.88888vh; }
+
+        .sector-top { justify-content: flex-start; }
+        .sector-mid { justify-content: center; }
+        .sector-bot { justify-content: flex-end; }
+
+        .sector-p-top-0 { padding-top: 0 }
+
+        .alert-text {
+            display: flex;
+            height: 10vw;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items:center;
+        }
+        .alert-text td {
+            font-weight: bold;
+            color: #e01f32;
+            text-align:center;
+        }
+        .input-edge-red, .input-edge-purple {
+            margin-top: 0.5vw;
+            margin-bottom: 0.5vw;
+        }
+        .input-edge-purple {
+            border: 0.75vw solid #6e368d;
+            background: #6e368d;
+        }
+        .input-edge-red {
+            border: 0.75vw solid #e01f32;
+            background: #e01f32;
+        }
+        .input-edge-purple:not(.fill), .input-edge-red:not(.fill) {
+            background: white;
+        }
+        .input-icons {
+            border: 0px;
+            width: 16vw;
+            height:12vw;
+            text-align: center;
+        }
+        .input-icons i, .input-icons svg {
+            color: #6e368d;
+            font-size: 6vw;
+        }
+
+        input[type="checkbox"]
+        {
+            position:relative;
+            float: right;
+            vertical-align: middle;
+        }
+        .checkboxText
+        {
+            font-family: 'Montserrat', sans-serif;  
+            font-size: 4vw;
+            font-weight: bold;
+            color: #6e368d;
+            position:relative;
+            bottom: 0.5vw;
+            vertical-align: middle;
+        }
+        input[type="text"], textarea {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 7vw;    
+            border: 0px;
+            position: relative;
+            display: block;
+            float: left;
+            margin: auto;
+            width: 100%;
+            background-color: rgba(225, 225, 225, 0);
+        }
+        .input-prefix, .input-suffix {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 7vw;
+            color: #6e368d;
+            border: 0px;
+            padding-right: 2vw;
+            text-align: center;
+        }
+        
+        .bg-transparent { background-color: transparent !important; }
+        .bg-white, .bg-white-100 { background-color: rgb(255, 255, 255) !important; }
+        .bg-white-90 { background-color: rgba(255, 255, 255, 0.9) !important; }
+        .bg-white-75 { background-color: rgba(255, 255, 255, 0.75) !important; }
+        .bg-white-50 { background-color: rgba(255, 255, 255, 0.50) !important; }
+        .bg-gray, .bg-gray-100 { background-color: rgb(128, 128, 128) !important; }
+        .bg-gray-90 { background-color: rgba(128, 128, 128, 0.9) !important; }
+        .bg-gray-75 { background-color: rgba(128, 128, 128, 0.75) !important; }
+        .bg-gray-50 { background-color: rgba(128, 128, 128, 0.5) !important; }
+        .bg-purple { background-color: #6e368d; }
+        .bg-red { background-color: #e01f32; }
+        
+        .block {
+            font-family: 'Montserrat', sans-serif;
+            display: block;
+            width: 100%;
+            height: 12vw;
+            border: 0px;
+            color: white;
+            font-size: 7vw;
+            cursor: pointer;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .block i, .block svg {
+            color: white;
+            font-size: 6vw;
+        }
+
+        .undraw {
+            display: inline-block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .logo-imda {
+            width: 36vw;
+            padding-top: 1vw;
+        }
+
+        .d-none { display: none !important; }
+        .fade {
+            -webkit-transition: opacity 0.15s linear;
+            transition: opacity 0.15s linear;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .fade {
+                -webkit-transition: none;
+                transition: none;
+            }
+        }
+        .fade:not(.show) { opacity: 0; }
+
+        #curtain {
+            position:fixed;
+            z-index:-98;
+            width:100%;
+            height:100%;
+            left: 0;
+            top: 0;
+            background: rgba(225, 225, 225, 0.8);
+        }
+        #map {
+            width:100%;
+            height:110%;
+            top:-10%;
+            position:fixed;
+            overflow:hidden;
+            z-index:-99;
+        }
+        #map-holder {
+            width:100%;
+            height:100%;
+        }
+
+  </style>
+
+</head>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+
+<body>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <div id="splash" class="d-none">
+                <span id="splashText"></span>
+            </div>
+
+            <!-- Cover Page -->
+            <div id="pg-cover" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span class="main-title">LOCATION</span>
+                </div>
+
+                <div class="sector sector-16 text-left sector-top sector-p-top-0 bg-transparent">
+                    <span class="text-desc">REPORT</span>
+                </div>
+
+                <div class="sector sector-33 bg-transparent"></div>
+
+                <div class="sector sector-33 text-left sector-bot bg-transparent">
+                    <div>
+                        <span class="text-tiny">An initiative of</span><br/>
+                        <img class="logo-imda" src="https://lufthansadsl.tk/resources/img/imda-logo.png">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Page -->
+            <div id="pg-reg" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span class="main-title">LOCATION</span>
+                </div>
+
+                <div class="sector sector-16 text-left sector-top sector-p-top-0 bg-transparent">
+                    <span class="text-desc">REPORT</span>
+                </div>
+
+                <div class="sector sector-16 bg-transparent"></div>
+
+                <div class="sector sector-33 sector-bot bg-transparent">
+                    <table width="100%" class="alert-text text-tiny">
+                        <tr>
+                            <td id="alert-reg"></td>
+                        </tr>   
+                    </table>
+                    <table width="100%" class="input-edge-purple">
+                        <tr>
+                            <td class="input-icons">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                            </td>
+                            <td>
+                                <input id="input-reg-fname" type="text" placeholder="Full Name"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%" class="input-edge-purple">
+                        <tr>
+                            <td class="input-icons">
+                                <i class="fa fa-mobile" aria-hidden="true"></i>
+                            </td>
+                            <td class="input-prefix">
+                                +65
+                            </td>
+                            <td>
+                                <input id="input-reg-mobile" type="text" placeholder="Mobile Num."/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <table width="100%">
+                        <tr>
+                            <td width=49%>
+                                <button class="block bg-red" id="btn-reg-clear">
+                                    <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Clear
+                                </button>
+                            </td>
+                            <td width=2%></td>
+                            <td width=49%>
+                                <button class="block bg-purple" id="btn-reg-submit">
+                                    Submit<!--&nbsp;<i class="fa fa-check" aria-hidden="true"></i>-->
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Phone One-Time Password (OTP) Page -->
+            <div id="pg-otp" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span class="text-title">One-Time Password</span>
+                </div>
+
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-desc">Verifying your mobile device.</span>
+                </div>
+
+                <div class="sector sector-33 bg-transparent">
+                    <img class="undraw" src="https://lufthansadsl.tk/resources/img/undraw_my_password_d6kg.svg">
+                </div>
+                
+                <div id="card-otp-1" class="fade show">
+                    <div class="sector sector-16 sector-top bg-transparent fade show">
+                        <span class="text-tiny" style="text-align:center;"><b>You should be receiving an SMS containing a 6-digit code to verify your registration, check your inbox.</b><br/>
+                            (Got to check this, got to confirm that. Bear with us!)</span>
+                    </div>
+                    <div class="sector sector-16 sector-bot bg-transparent">
+                        <button class="block bg-purple" id="btn-otp-next">
+                            Next&nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="card-otp-2" class="fade d-none">
+                    <div class="sector sector-16 sector-bot bg-transparent">
+                        <table width="100%" class="alert-text text-tiny">
+                            <tr>
+                                <td id="alert-otp"></td>
+                            </tr>   
+                        </table>
+                        <table width="100%" class="input-edge-purple">
+                            <tr>
+                                <td class="input-icons">
+                                    <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input id="input-otp" type="text" placeholder="OTP"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="sector sector-16 sector-bot bg-transparent">
+                        <table width="100%">
+                            <tr>
+                                <td width=49%>
+                                    <button class="block bg-red" id="btn-otp-clear">
+                                        <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Clear
+                                    </button>
+                                </td>
+                                <td width=2%></td>
+                                <td width=49%>
+                                    <button class="block bg-purple" id="btn-otp-submit">
+                                        Submit
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Postal Code Page -->
+            <div id="pg-pcode" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span class="text-title">Postal Code</span>
+                </div>
+
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-desc">Pinpointing your home location.</span>
+                </div>
+
+                <div class="sector sector-33 bg-transparent">
+                    <img class="undraw" src="https://lufthansadsl.tk/resources/img/undraw_address_udes.svg">
+                </div>
+                
+                <div id="card-pcode-1" class="fade show">
+                    <div class="sector sector-16 sector-top bg-transparent fade show">
+                        <span class="text-tiny" style="text-align:center;"><b>Kindly provide us the location that you will be based at when serving your Leave-of-Absence.</b><br/>
+                            (Making sure that you stay put at one location!)</span>
+                    </div>
+                    <div class="sector sector-16 sector-bot bg-transparent">
+                        <button class="block bg-purple" id="btn-pcode-next">
+                            Next&nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="card-pcode-2" class="fade d-none">
+                    <div class="sector sector-16 sector-bot bg-transparent">
+                        <table width="100%" class="alert-text text-tiny">
+                            <tr>
+                                <td id="alert-pcode"></td>
+                            </tr>   
+                        </table>
+                        <table width="100%" class="input-edge-purple">
+                            <tr>
+                                <td class="input-icons">
+                                    <i class="fa fa-home" aria-hidden="true"></i>
+                                </td>
+                                <td>
+                                    <input id="input-pcode" type="text" placeholder="Postal Code"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="sector sector-16 sector-bot bg-transparent">
+                        <table width="100%">
+                            <tr>
+                                <td width=49%>
+                                    <button class="block bg-red" id="btn-pcode-clear">
+                                        <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Clear
+                                    </button>
+                                </td>
+                                <td width=2%></td>
+                                <td width=49%>
+                                    <button class="block bg-purple" id="btn-pcode-submit">
+                                        Submit
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intro Page 1 -->
+            <div id="pg-intro-1" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span class="text-title">Location Service</span>
+                </div>
+
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-desc">Reporting your position.</span>
+                </div>
+
+                <div class="sector sector-33 sector-mid bg-transparent">
+                    <img class="undraw" src="https://lufthansadsl.tk/resources/img/undraw_taking_selfie_lbo7.svg">
+                </div>
+                
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-tiny" style="text-align:center;"><b>Please kindly keep your mobile phone within reach and leave this web app open throughout your LOA.</b><br/>
+                        (You can still take selfies with it, at home!)</span>
+                </div>
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <button class="block bg-purple" id="btn-intro-1-next">
+                        Next&nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Intro Page 2 -->
+            <div id="pg-intro-2" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span class="text-title">Stay Home</span>
+                </div>
+
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-desc">Minimising the spread.</span>
+                </div>
+
+                <div class="sector sector-33 sector-mid bg-transparent">
+                    <table>
+                        <img class="undraw" src="https://lufthansadsl.tk/resources/img/undraw_yoga_248n.svg">
+                    </table>
+                </div>
+                
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-tiny" style="text-align:center;"><b>This would help us prevent the creation of any new, potential cluster, as well as keep every one of us safe.</b><br/>
+                        (You can finally spend all that quality time at home!)</span>
+                </div>
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <table width="100%">
+                        <tr>
+                            <td width=49%>
+                                <button class="block bg-red" id="btn-intro-2-back">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
+                                </button>
+                            </td>
+                            <td width=2%></td>
+                            <td width=49%>
+                                <button class="block bg-purple" id="btn-intro-2-next">
+                                   Next&nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Intro Page 3 -->
+            
+            <div id="pg-intro-3" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span class="text-title">Update Us</span>
+                </div>
+
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-desc">Telling us how you are feeling.</span>
+                </div>
+
+                <div class="sector sector-33 sector-mid bg-transparent">
+                    <table>
+                        <img class="undraw" src="https://lufthansadsl.tk/resources/img/undraw_private_data_7q35.svg">
+                    </table>
+                </div>
+                
+                <div class="sector sector-16 sector-top bg-transparent">
+                    <span class="text-tiny" style="text-align:center;"><b>Take your temperature regularly and inform us of any symptoms that may arise during your LOA.</b><br/>
+                        (Thanks in advance for your cooperation!)</span>
+                </div>
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <table width="100%">
+                        <tr>
+                            <td width=49%>
+                                <button class="block bg-red" id="btn-intro-3-back">
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
+                                </button>
+                            </td>
+                            <td width=2%></td>
+                            <td width=49%>
+                                <button class="block bg-purple" id="btn-intro-3-start">
+                                    Start
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Temperature Logging Page -->
+            <div id="pg-report" class="sectors fade d-none">
+
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <span id="am-pm-greeting" class="text-title"></span>
+                </div>
+
+                <div class="sector sector-16 text-left sector-top sector-p-top-0 bg-transparent">
+                    <span id="well-wishes" class="text-desc"></span>
+                </div>
+
+                <div class="sector sector-16 bg-transparent"></div>
+
+                <div class="sector sector-33 sector-bot bg-transparent">
+                    <table width="100%" class="alert-text text-tiny">
+                        <tr>
+                            <td><span id="alert-report"></span></td>
+                        </tr>   
+                    </table>
+                    <table width="100%" class="input-edge-purple">
+                        <tr>
+                            <td class="input-icons">
+                                <i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>
+                            </td>
+                            <td>
+                                <input id="input-report-temp" type="text" placeholder="Temperature"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="input-edge-purple">
+                        <table width="100%">
+                            <tr>
+                                <td width="9%">
+                                    <input id="input-report-cough" type="checkbox" name="Cough"/>
+                                </td>
+                                <td width="28%">
+                                    <span class="checkboxText">&nbsp;&nbsp;Cough</span>
+                                </td>
+                                <td width="6%">
+                                    <input id="input-report-sthroat" type="checkbox" name="Sore Throat"/>
+                                <td width="28%">
+                                    <span class="checkboxText">&nbsp;&nbsp;Sore<br>&nbsp;&nbsp;Throat</span>
+                                </td>
+                                <td width="6%">
+                                    <input id="input-report-rnose" type="checkbox" name="Runny Nose"/>
+                                </td>
+                                <td>
+                                    <span class="checkboxText">&nbsp;&nbsp;Runny<br>&nbsp;&nbsp;Nose</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="sector sector-16 sector-bot bg-transparent">
+                    <table width="100%">
+                        <tr>
+                            <td width=49%>
+                                <button class="block bg-red" id="btn-report-clear">
+                                    <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Clear
+                                </button>
+                            </td>
+                            <td width=2%></td>
+                            <td width=49%>
+                                <button class="block bg-purple" id="btn-report-submit">
+                                    Submit
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <!-- END of Main Content -->
+
+        <div id="curtain"></div>
+
+        <div id="map-holder">
+            <iframe id="map" scrolling="no" frameborder="0"></iframe>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script>
+        var debug = true;
+        // const link = "https://lufthansadsl.tk";
+        // const link = "http://localhost:4200"
+        // const url = "http://localhost:5000";
+        // const path_db = "/virusrip/novel/corona";
+        // const path_sms = "/virusrip/sendtousers/sms";
+
+        const link = "http://localhost:4200"
+        const url = "http://localhost:4200"
+        const path_db = "/novel/corona";
+        const path_sms = "/sendtousers/sms";
+        var blocker = true;
+
+        // Session storage
+        var ses_pg, ses_uuid, ses_fname, ses_mobile, ses_pcode, ses_lat, ses_lng, ses_res;
+
+        // Pages
+        var pg_cover = document.getElementById('pg-cover');
+        var pg_reg = document.getElementById('pg-reg');
+        var pg_otp = document.getElementById('pg-otp');
+        var pg_pcode = document.getElementById('pg-pcode');
+        var pg_intro_1 = document.getElementById('pg-intro-1');
+        var pg_intro_2 = document.getElementById('pg-intro-2');
+        var pg_intro_3 = document.getElementById('pg-intro-3');
+        var pg_locate = document.getElementById('pg-locate');
+        var pg_report = document.getElementById('pg-report');
+
+        // Cards
+        var card_otp_1 = document.getElementById('card-otp-1');
+        var card_otp_2 = document.getElementById('card-otp-2');
+        var card_pcode_1 = document.getElementById('card-pcode-1');
+        var card_pcode_2 = document.getElementById('card-pcode-2');
+
+        // Buttons
+        var btn_reg_clear = document.getElementById('btn-reg-clear');
+        var btn_reg_submit = document.getElementById('btn-reg-submit');
+        var btn_otp_next = document.getElementById('btn-otp-next');
+        var btn_otp_clear = document.getElementById('btn-otp-clear');
+        var btn_otp_submit = document.getElementById('btn-otp-submit');
+        var btn_pcode_clear = document.getElementById('btn-pcode-clear');
+        var btn_pcode_next = document.getElementById('btn-pcode-next');
+        var btn_pcode_submit = document.getElementById('btn-pcode-submit');
+        var btn_intro_1_next = document.getElementById('btn-intro-1-next');
+        var btn_intro_2_back = document.getElementById('btn-intro-2-back');
+        var btn_intro_2_next = document.getElementById('btn-intro-2-next');
+        var btn_intro_3_back = document.getElementById('btn-intro-3-back');
+        var btn_intro_3_start = document.getElementById('btn-intro-3-start');
+        var btn_report_clear = document.getElementById('btn-report-clear');
+        var btn_report_submit = document.getElementById('btn-report-submit');
+
+        function swapCards(incoming, outgoing) {
+            outgoing.classList.remove('show'),
+            outgoing.classList.add('d-none'),
+            incoming.classList.remove('d-none'),
+            incoming.classList.add('show');
+        }
+        function fadeCards(incoming, outgoing) {
+            outgoing.classList.remove('show');
+
+            setTimeout(function() {
+                outgoing.classList.add('d-none'),
+                incoming.classList.remove('d-none');
+            }, 250);
+
+            setTimeout(function() {
+                incoming.classList.add('show');
+            }, 280);
+        }
+
+        function openPage(next) {
+            ses_pg = next;
+            sessionStorage.setItem('page', next);
+
+            next.classList.remove('d-none'),
+            next.classList.add('show');
+        }
+        function fadePages(next) {
+            var current = ses_pg;
+            ses_pg = next;
+            sessionStorage.setItem('page', ses_pg);
+        
+            current.classList.remove('show');
+
+            setTimeout(function() {
+                current.classList.add('d-none'),
+                next.classList.remove('d-none');
+            }, 250);
+
+            setTimeout(function() {
+                next.classList.add('show');
+            }, 280);
+        }
+
+        var input_reg_fname = document.getElementById('input-reg-fname');
+        var input_reg_mobile = document.getElementById('input-reg-mobile');
+        var input_otp = document.getElementById('input-otp');
+        var input_pcode = document.getElementById('input-pcode');
+        var input_report_temp = document.getElementById('input-report-temp');
+        var input_report_cough = document.getElementById('input-report-cough');
+        var input_report_sthroat = document.getElementById('input-report-sthroat');
+        var input_report_rnose = document.getElementById('input-report-rnose');
+
+        var alert_reg = document.getElementById('alert-reg');
+        var alert_otp = document.getElementById('alert-otp');
+        var alert_pcode = document.getElementById('alert-pcode');
+        var am_pm_greeting = document.getElementById('am-pm-greeting');
+        var well_wishes = document.getElementById('well-wishes');
+        var alert_report = document.getElementById('alert-report');
+        var msg_res = document.getElementById('msg-res');
+
+    // STARTING POINT
+        window.onload = function() {
+            var platform = platformCheck();
+
+            if (platform != 'desktop') {
+                openPage(pg_cover);
+                reload();
+                if (debug) { testSessionData(); }
+            }
+        }
+        function platformCheck() {
+            var agent = navigator.userAgent;
+            var iOS = /iPhone|iPad|iPod/i.test(agent);
+            if (iOS) { return 'iOS'; }
+
+            var android = /Android/i.test(agent);
+            if (android) { return 'android'; }
+
+            var html = `You are using a Desktop.<br/><small><i><sub>Please use a mobile device instead.</sub></i></small>`;
+            document.getElementById('splashText').innerHTML = html,
+            document.getElementById('splash').classList.remove("d-none");
+            // return 'desktop';
+            return 'iOS';
+
+        }
+
+        function retrieveSession() {
+            ses_uuid = sessionStorage.getItem('uuid');
+            if (ses_uuid == "null" || ses_uuid == null || ses_uuid == undefined) {
+                ses_uuid = generateUUID();
+                sessionStorage.setItem('uuid', ses_uuid);
+            }
+            ses_fname = sessionStorage.getItem('fname');
+            ses_mobile = sessionStorage.getItem('mobile');
+            if (ses_mobile == "null" || ses_mobile == null || ses_mobile == undefined) { return pg_reg; }
+            ses_otp = sessionStorage.getItem('otp');
+            if (ses_otp == "null" || ses_otp == null || ses_otp == undefined) { return pg_otp; }
+            ses_pcode = sessionStorage.getItem('pcode');
+            if (ses_pcode == "null" || ses_pcode == null || ses_pcode == undefined) { return pg_pcode; }
+            ses_lat = sessionStorage.getItem('lat');
+            ses_lng = sessionStorage.getItem('lng');
+            if (ses_lat == "null" || ses_lat == null || ses_lat == undefined) { return pg_intro_1; }
+            updateLatLong(postPos);
+            setInterval(() => {
+                updateLatLong(postPos);
+            }, 600000);
+            return pg_report;
+        }
+
+        function clearSession() {
+            sessionStorage.setItem('fname', null);
+            sessionStorage.setItem('mobile', null);
+            sessionStorage.setItem('otp', null);
+            sessionStorage.setItem('pcode', null);
+            sessionStorage.setItem('lat', null);
+            sessionStorage.setItem('lng', null);
+            sessionStorage.setItem('res', null);
+        }
+
+        function reload() {
+            var page = retrieveSession();
+            if (page == pg_report) {
+                prepReportPage(2000);
+            } else { 
+                clearAll();
+                setTimeout(() => {
+                    fadePages(page);
+                }, 2000);
+            }
+        }
+
+        function clearAll() {
+            clearInput(input_reg_fname);
+            clearInput(input_reg_mobile);
+            clearInput(input_otp);
+            clearInput(input_pcode);
+            clearInput(input_report_cough);
+            clearInput(input_report_rnose);
+            clearInput(input_report_sthroat);
+            clearInput(input_report_temp);
+            clearAlert(alert_reg);
+            clearAlert(alert_otp);
+            clearAlert(alert_pcode);
+            clearAlert(alert_report);
+        }
+        function clearInputs(arrOfInputs) {
+            var len = arrOfInputs.length;
+            for (i = 0; i < len; i++) {
+                clearInput(arrOfInputs[i]);
+            }
+        }
+        function clearInput(input_item) {
+            try {
+                input_item.value = '';
+            } catch {
+                return;
+            }
+        }
+        function clearAlert(alert_item) {
+            try {
+                alert_item.innerText = '';
+            } catch {
+                return;
+            }
+        }
+
+    // REGISTRATION
+        btn_reg_clear.addEventListener('click', function() {
+            clearInputs([input_reg_fname, input_reg_mnumber]);
+        });
+        btn_reg_submit.addEventListener('click', function() {
+            // Check registration details.
+            var res = checkRegDetails(input_reg_fname.value, input_reg_mobile.value);
+            // Checking cleared. Proceed with submission.
+            if (res == true) { submitReg(input_reg_fname.value, input_reg_mobile.value); }
+            // Display error for failed attempts.
+            else { alert_reg.innerHTML = res; }
+        });
+        function checkRegDetails(name, mobile) {
+        // Check full name.
+            if (name == '') { return 'Empty name field.'; }
+            var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?0123456789]/;
+            if (format.test(name)) { return 'Invalid full name.'; }
+        // Check mobile number.
+            if (mobile == '') { return 'Empty mobile number field.'; }
+            if (isNaN(mobile)) { return 'Invalid characters in mobile number.'; }
+            if (mobile.length != 8) { return 'Invalid mobile number length.'; }
+            return true;
+        }
+        function submitReg(name, mobile) {
+            ses_fname = name;
+            ses_mobile = mobile;
+            sessionStorage.setItem('fname', name);
+            sessionStorage.setItem('mobile', mobile);
+            if (debug) { testSessionData(); }
+            post(path_db, { name: ses_fname, mobile: ses_mobile });
+            swapCards(card_otp_1, card_otp_2);
+            fadePages(pg_otp);
+        }
+
+    // OTP
+        btn_otp_next.addEventListener('click', function() {
+            fadeCards(card_otp_2, card_otp_1);
+        // ALERT: Function below contains insecure OTP handling.
+        // Change it prior to productising. Only for testing.
+            otpSMS();
+        });
+        btn_otp_clear.addEventListener('click', function() {
+            clearInput(input_otp);
+        });
+        var tries = 3;
+        var otp; // WARNING: This method of OTP illustrated here is not secure. Only for testing.
+        btn_otp_submit.addEventListener('click', function() {
+            if (input_otp.value != otp) {
+                clearInput(input_otp);
+                alert_otp.innerHTML = 'Invalid OTP. ';
+                if (tries > 1) { alert_otp.innerHTML += `${tries} tries remaining.`; }
+                else if (tries == 1) { alert_otp.innerHTML += `${tries} try remaining.`; }
+                else {
+                    alert_otp.innerHTML += 'Invalid session.';
+                    input_otp.disabled = true;
+                    setTimeout(() => {
+                        input_otp.disabled = false;
+                    }, 6000);
+                    setTimeout(() => {
+                        fadePages(pg_cover);
+                        clearSession();
+                        reload();
+                        if (debug) { testSessionData(); }
+                    }, 5000);
+                }
+                tries -= 1;
+            } else {
+                sessionStorage.setItem('otp', otp);
+                swapCards(card_pcode_1, card_pcode_2);
+                fadePages(pg_pcode);
+            }
+        });
+        // Insecure OTP handling here. Only for testing.
+        // To-do: Deploy OTP generation and checking as a microservice.
+        function otpSMS() {
+            var subject = 'IMDAteamDSL';
+            otp = randomDigits(6);
+            message = `Use this One Time Password (OTP) to validate your log in: ${otp}`;
+            sendSMS(ses_mobile, subject, message);
+        }
+        function randomDigit() {
+            return Math.floor(Math.random() * 10);
+        }
+        function randomDigits(digits) {
+            var result = '';
+            for (i = 0; i < digits; i++) {
+                result += `${randomDigit()}`;
+            }
+            return result;
+        }
+        // END of unsecure OTP handling function.
+
+    // POSTAL CODE
+        btn_pcode_next.addEventListener('click', function() {
+            fadeCards(card_pcode_2, card_pcode_1)
+        });
+        btn_pcode_clear.addEventListener('click', function() {
+            clearInput(input_pcode);
+        });
+        btn_pcode_submit.addEventListener('click', function() {
+            // Check postal code details.
+            var res = checkPCodeDetails(input_pcode.value);
+            // Checking cleared. Proceed with submission.
+            if (res == true) { submitPCode(input_pcode.value); }
+            // Display error for failed attempts.
+            else { alert_pcode.innerHTML = res; }
+        });
+        function checkPCodeDetails(pcode) {
+        // Check postal code number.
+            if (pcode == '') { return 'Empty postal code field.'; }
+            var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/;
+            if (format.test(pcode)) { return 'Invalid postal code.'; }
+            if (isNaN(pcode)) { return 'Invalid characters in postal code.'; }
+            if (pcode.length != 6) { return 'Invalid postal code length.'; }
+            return true;
+        }
+        function submitPCode(pcode) {
+            ses_pcode = pcode;
+            sessionStorage.setItem('pcode', pcode);
+            if (debug) { testSessionData(); }
+            post(path_db, { name: ses_fname, mobile: ses_mobile, pcode: ses_pcode });
+            fadePages(pg_intro_1);
+        }
+
+    // INTRO PAGES
+        btn_intro_1_next.addEventListener('click', function() {
+            fadePages(pg_intro_2);
+        });
+        btn_intro_2_back.addEventListener('click', function() {
+            fadePages(pg_intro_1);
+        });
+        btn_intro_2_next.addEventListener('click', function() {
+            fadePages(pg_intro_3);
+        });
+        btn_intro_3_back.addEventListener('click', function() {
+            fadePages(pg_intro_2);
+        });
+        btn_intro_3_start.addEventListener('click', function() {
+            updateLatLong(prepReportPage(100));
+        })
+
+    // REPORTING PAGE
+        function prepReportPage(timeout) {
+            post(path_db, { name: ses_fname, mobile: ses_mobile, pcode: ses_pcode, lat: ses_lat, lng: ses_lng });
+            am_pm_greeting.innerText = greeting();
+            well_wishes.innerText = wishing();
+            ses_res = sessionStorage.getItem('res');
+            if (ses_res == null || ses_res == "null" || ses_res == undefined) { 
+                ses_res = "";
+                sessionStorage.setItem('res', "");
+            }
+            alert_report.innerHTML = ses_res;
+            setTimeout(() => {
+                fadePages(pg_report);
+            }, timeout);
+        }
+        btn_report_clear.addEventListener('click', function() {
+            clearReport();
+        });
+        btn_report_submit.addEventListener('click', function() {
+            updateLatLong(submitReport());
+        });
+        function submitReport() {
+            // Check temperature.
+            var res = checkReportDetails(input_report_temp.value);
+            // Checking cleared. Proceed with compiling of symptoms.
+            if (res == true) { 
+                var symptoms = compileSymptoms();
+                post(path_db, {
+                    name: ses_fname,
+                    mobile: ses_mobile,
+                    pcode: ses_pcode,
+                    lat: ses_lat,
+                    lng: ses_lng,
+                    temperature: ses_temp, 
+                    symptoms: symptoms});
+                clearReport();
+            }
+            // Display error for failed attempts.
+            else { alert_report.innerHTML = res; }
+        };
+        function clearReport() {
+            input_report_temp.value = '',
+            input_report_cough.checked = false,
+            input_report_rnose.checked = false,
+            input_report_sthroat.checked = false;
+        }
+        
+        var ses_temp;
+        function checkReportDetails(temp) {
+        // Check temperature.
+            temp = temp.replace(/。/g, ".");
+            temp = temp.replace(/ /g, "");
+            ses_temp = temp;
+            if (temp == '') { return 'Empty temperature field.'; }
+            var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]/;
+            if (format.test(temp)) { return 'Invalid temperature.'; }
+            if (isNaN(temp)) { return 'Invalid characters in temperature.'; }
+            temp = parseFloat(temp);
+            if (temp >= 35.0 && temp <= 41.0) {
+                ses_res = `<font color="light-gray">Temperature of ${temp}°C last submitted<br>at ${timestamp()}.</font>`;
+                sessionStorage.setItem('res', ses_res);
+                alert_report.innerHTML = ses_res;
+                return true;
+            } else {
+                return "Invalid temperature.";
+            }
+        }
+
+        function compileSymptoms() {
+            var symptoms = "";
+            if (input_report_cough.checked) {
+                symptoms += "Cough";
+            }
+            if (input_report_sthroat.checked) {
+                if (symptoms == "")
+                    symptoms += "Sore Throat";
+                else
+                    symptoms += ",Sore Throat";
+            }
+            if (input_report_rnose.checked) {
+                if (symptoms == "")
+                    symptoms += "Runny Nose";
+                else
+                    symptoms += ",Runny Nose";
+            }
+            return symptoms;
+        }
+    
+    
+        function updateLatLong(callback){
+            function onPositionUpdate(position)
+            {
+                ses_lat = position.coords.latitude;
+                ses_lng = position.coords.longitude;
+                sessionStorage.setItem('lat', ses_lat);
+                sessionStorage.setItem('lng', ses_lng);
+                if (debug) { console.log(`lat=${ses_lat}, lng=${ses_lng}`) }
+                if (ses_lat == null) {
+                    if (debug) { console.log('Repeating geolocation request.'); }
+                    updateLatLong(callback);
+                } else {
+                    renderMap();
+                    if (callback) { callback(); }
+                }
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(onPositionUpdate);
+            } else {
+                console.error("navigator.geolocation is not available.");
+            }
+        }
+        function postPos() {
+            var formData = {
+                uuid: ses_uuid,
+                lat: ses_lat,
+                lng: ses_lng,
+                name: ses_fname,
+                mobile: ses_mobile,
+                timestamp: unixTimestamp()
+            }
+            post(path_db, formData);
+        }
+
+        function testSessionData() {
+            var object = {
+                uuid: ses_uuid,             // "6e4ac603-1a58-XXXX-8f12-e7fXXXXb44e5"
+                lat: ses_lat,               // "1.2XXXX"
+                lng: ses_lng,               // "103.8XXXX"
+                name: ses_fname,            // "Abraham Aaron Ang"
+                mobile: ses_mobile,         // "9XXXXXXX"
+                pcode: ses_pcode,           // "XXXXXX"
+                timestamp: unixTimestamp()  // "1581490100"
+            }
+            console.log('Checking storage');
+            console.log(object);
+        }
+
+    // OPEN SOURCED UUID SOLUTION
+        function generateUUID() { // Public Domain/MIT
+            var d = new Date().getTime();//Timestamp
+            var d2 = (performance && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16;//random number between 0 and 16
+                if(d > 0){//Use timestamp until depleted
+                    r = (d + r)%16 | 0;
+                    d = Math.floor(d/16);
+                } else {//Use microseconds since page-load if supported
+                    r = (d2 + r)%16 | 0;
+                    d2 = Math.floor(d2/16);
+                }
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+        
+        function renderMap() {
+            var lat = ses_lat;
+            var lng = ses_lng;
+            if (lat != "" || lng != "") {
+                var url = `https://www.openstreetmap.org/export/embed.html?bbox=${lng},${lat},${lng},${lat}&amp;layer=mapnik`;
+                document.getElementById('map').src = url;
+            }
+        }
+        
+    // UTILITY FUNCTIONS BELOW
+        function timestamp() {
+            moment.locale('sg');
+            var now = moment();
+            return now.format('LT, DD MMM YYYY');
+        }
+
+        function unixTimestamp() {
+            var d = new Date();
+            return d.getTime();
+        }
+        
+        function greeting() {
+            moment.locale('sg');
+            var now = moment();
+            var time = now.format('h');
+            var am_pm = now.format('a');
+            if (am_pm == 'pm') {
+                if (time == 12 || time <= 6) {
+                    return 'Good Afternoon!';
+                } else {
+                    return 'Good Evening!';
+                }
+            } else {
+                return 'Good Morning!';
+            }
+        }
+
+        function wishing() {
+            var initial = [
+                "Thank you for helping us contain the spread of the virus.",
+                "Thank you for doing your part in keeping us safe.",
+                "Thank you for your understanding and cooperation."
+            ]
+            var questions = [
+                "How are you feeling now?",
+                "Are you feeling okay?",
+                "How are you faring today?",
+                "Are you feeling alright?",
+                "How are you doing today?",
+                "Are you doing okay?",
+                "How well are you today?",
+                "Are you doing well?",
+                "Are you feeling well?"
+            ];
+            var string = initial[Math.floor(Math.random() * initial.length)];
+            string += " " + questions[Math.floor(Math.random() * questions.length)];
+            return string;
+        }
+    
+        function post(path, item) {
+            if (debug) {
+                console.log(`Posting to ${url}${path}.`);
+                console.log(item);
+            }
+            if (blocker) {
+                console.log('Transmission blocked.');
+                return;
+            }
+            $.ajax({
+                url : `${url}${path}`,
+                type: "POST",
+                processData: false,
+                contentType: 'application/json',
+                data : JSON.stringify(item),
+                success: function(data, textStatus, jqXHR)
+                {
+                    if (debug) { console.log(textStatus); }
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    console.error(errorThrown,textStatus);
+                }
+            });
+        }
+
+        function sendSMS(_number, _subject, _message) {
+            if (debug) {
+                console.log(_message);
+            }
+            if (blocker) {
+                alert(`${_subject} - ${_message}`);
+                console.log('Transmission blocked.');
+                return;
+            }
+            var item = {
+                number: _number,    //65XXXXXXXX
+                subject: _subject,  //DSLteamIMDA
+                message: _message   //Dear XXX, you have been registered...
+            }
+            post(path_sms, item);
+        }
+    </script>
+</body>

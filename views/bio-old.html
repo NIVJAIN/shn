@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="IMDA">
+    
+    <title>SHN Biometric Checker</title>
+    <meta property="og:site_name" content="Stay-Home-Notice Biometric Checker">
+    <meta property="og:title" content="Stay-Home-Notice Biometric Checker">
+
+    <meta name="description" content="A service to check on the biometric push alerts of a specific SHN assignee.">
+    <meta property="og:description" content="A service to check on the biometric push alerts of a specific SHN assignee.">
+    <meta property="og:description:secure_url" content="A service to check on the biometric push alerts of a specific SHN assignee.">
+    <meta property="og:image" itemprop="image" content="/image.png">
+    <meta property="og:image:secure_url" itemprop="image" content="/image.png">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;  
+            background-color: gray;
+        }
+
+        .titleStart, .titleEnd {
+          font-family: 'Montserrat=all rev=1', sans-serif;
+          font-weight: 800;
+          font-size: 1.4rem;
+          line-height: 1.0rem;
+          color: #6e368d;
+        }
+
+        .titleEnd {
+          font-weight: 500;
+          color: darkred;
+        }
+
+        .downloadDesc {
+          font-size: 0.6rem;
+        }
+
+        .formTable {
+            border: 1px solid #6e368d;
+            background-color: #bababa;
+            width: 642px;
+            text-align:left;
+        }
+
+        div.tableContainer {
+            clear: both;
+            border: 1px solid #6e368d;
+            height: 245px;
+            overflow: auto;
+            width: 640px;
+            background-color: lightgray
+        }
+
+        /* Reset overflow value to hidden for all non-IE browsers. */
+        html>body div.tableContainer {
+            overflow: hidden;
+            width: 640px
+        }
+
+        /* define width of table. IE browsers only                 */
+        div.tableContainer table {
+            float: left;
+            width: 640px
+        }
+
+        /* define width of table. Add 16px to width for scrollbar.           */
+        /* All other non-IE browsers.                                        */
+        html>body div.tableContainer table {
+            width: 640px
+        }
+
+        /* set table header to a fixed position. WinIE 6.x only                                       */
+        /* In WinIE 6.x, any element with a position property set to relative and is a child of       */
+        /* an element that has an overflow property set, the relative value translates into fixed.    */
+        /* Ex: parent element DIV with a class of tableContainer has an overflow property set to auto */
+        thead.fixedHeader tr {
+            position: relative
+        }
+
+        /* set THEAD element to have block level attributes. All other non-IE browsers            */
+        /* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+        html>body thead.fixedHeader tr {
+            display: block
+        }
+
+        /* make the TH elements pretty */
+        thead.fixedHeader th {
+            background: #7f479e;
+            border-left: 1px solid #9a63b7;
+            border-right: 1px solid #6e368d;
+            border-top: 1px solid #9a63b7;
+            font-weight: normal;
+            padding: 4px 3px;
+            text-align: left
+        }
+
+        /* make the A elements pretty. makes for nice clickable headers                */
+        thead.fixedHeader a, thead.fixedHeader a:link, thead.fixedHeader a:visited {
+            color: #FFF;
+            display: block;
+            text-decoration: none;
+            width: 100%
+        }
+
+        /* make the A elements pretty. makes for nice clickable headers                */
+        /* WARNING: swapping the background on hover may cause problems in WinIE 6.x   */
+        thead.fixedHeader a:hover {
+            color: #FFF;
+            display: block;
+            text-decoration: underline;
+            width: 100%
+        }
+
+        /* define the table content to be scrollable                                              */
+        /* set TBODY element to have block level attributes. All other non-IE browsers            */
+        /* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+        /* induced side effect is that child TDs no longer accept width: auto                     */
+        html>body tbody.scrollContent {
+            display: block;
+            height: 217px;
+            overflow: auto;
+            width: 100%
+        }
+
+        /* make TD elements pretty. Provide alternating classes for striping the table */
+        /* http://www.alistapart.com/articles/zebratables/                             */
+        tbody.scrollContent td, tbody.scrollContent tr.normalRow td {
+            background: #FFF;
+            border-bottom: none;
+            border-left: none;
+            border-right: 1px solid #CCC;
+            border-top: 1px solid #DDD;
+            padding: 2px 3px 3px 4px
+        }
+
+        tbody.scrollContent tr.alternateRow td {
+            background: #EEE;
+            border-bottom: none;
+            border-left: none;
+            border-right: 1px solid #CCC;
+            border-top: 1px solid #DDD;
+            padding: 2px 3px 3px 4px
+        }
+
+        /* define width of TH elements: 1st, 2nd, and 3rd respectively.          */
+        /* Add 16px to last TH for scrollbar padding. All other non-IE browsers. */
+        /* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+        html>body thead.fixedHeader th {
+            width: 200px;
+        }
+
+        html>body thead.fixedHeader th + th {
+            width: 200px;
+        }
+
+        html>body thead.fixedHeader th + th + th {
+            width: 216px;
+        }
+
+        /* define width of TD elements: 1st, 2nd, and 3rd respectively.          */
+        /* All other non-IE browsers.                                            */
+        /* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+        html>body tbody.scrollContent td {
+            width: 200px;
+        }
+
+        html>body tbody.scrollContent td + td {
+            width: 200px;
+        }
+
+        html>body tbody.scrollContent td + td + td {
+            width: 199px;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <form name="form-shn" autocomplete="off" onSubmit="return false">
+            <table class="formTable">
+                <tr>
+                  <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="30.000000pt" height="30.000000pt" viewBox="0 0 192.000000 192.000000" preserveAspectRatio="xMidYMid meet">
+    
+                      <g transform="translate(0.000000,192.000000) scale(0.100000,-0.100000)" fill="#6e368d" stroke="none">
+                      <path d="M502 1437 l-452 -453 0 -47 c0 -40 5 -53 34 -85 32 -34 39 -37 90 -37 47 0 59 4 85 29 l31 30 0 -422 0 -422 670 0 670 0 0 422 0 422 31 -30 c26 -25 38 -29 85 -29 51 0 58 3 90 37 29 33 34 45 34 89 l0 52 -120 114 -120 115 0 229 0 229 -125 0 -125 0 0 -102 0 -103 -208 208 c-114 114 -209 207 -212 207 -3 0 -209 -204 -458 -453z m543 1 c51 -61 13 -143 -66 -143 -79 0 -115 83 -63 144 37 44 91 44 129 -1z m102 -208 c63 -38 68 -55 71 -253 2 -99 1 -190 -2 -202 -9 -35 -45 -43 -68 -15 -16 19 -18 43 -18 181 0 135 -2 159 -15 159 -13 0 -15 -56 -15 -447 0 -401 -2 -448 -17 -465 -21 -23 -45 -23 -66 0 -14 16 -17 54 -19 278 -3 222 -5 259 -18 259 -13 0 -15 -37 -18 -259 -2 -224 -5 -262 -19 -278 -20 -22 -41 -23 -65 -1 -17 15 -18 43 -18 465 0 392 -2 448 -15 448 -13 0 -15 -24 -15 -159 0 -138 -2 -162 -18 -181 -23 -28 -59 -20 -68 15 -3 12 -4 103 -2 202 3 198 8 215 71 253 28 17 51 20 167 20 116 0 139 -3 167 -20z"></path>
+                      </g>
+                    </svg>
+                  </td>
+                  <td>
+                    <span class="titleStart">SHN</span> <span class="titleEnd"><b>BIOMETRIC</b> CHECK</span>
+                  </td>
+                  
+                  <td width="40%">
+                    <table>
+                      <tr>
+                          <td width=100% colspan="2">
+                            <div id="form-shn-alert" style="height:20px; width:100%; clear:both; color:#a50000; text-align: center; font-size:0.8rem;">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="form-shn-pin">PIN:</label>
+                        </td>
+                        <td>
+                            <input type="text" name="name" id="form-shn-pin"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="form-shn-mobile">Mobile:&nbsp;</label>
+                        </td>
+                        <td>
+                            <input type="text" name="mobile" id="form-shn-mobile"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <input type="button" value="Clear" onclick="clearForm();"/>&nbsp;&nbsp;
+                            <input type="submit" value="Submit Form" onclick="checkForm();"/>
+                        </td>
+                    </tr>
+                  </table>
+                </td>
+  
+                <td width="30%">
+                  <center>
+                    <span class="downloadDesc">Only for Chrome browsers</span>
+                    <button onclick="downloadCSV()">Download<br>CSV</button>&nbsp;&nbsp;
+                    <button onclick="downloadJSON()">Download<br>JSON</button>
+                  </center>
+                </td>
+              </tr>
+            </table>
+          </form>
+  
+
+        <div id="tableContainer" class="tableContainer">
+            <table class="scrollTable" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <thead class="fixedHeader">
+                    <tr class="alternateRow">
+                        <th><a href="#">Date</a></th>
+                        <th><a href="#">Time</a></th>
+                        <th><a href="#">Status</a></th>
+                    </tr>
+                </thead>
+                <tbody class="scrollContent">
+                </tbody>
+            </table>
+        </div>
+    </center>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js" integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+
+<script>
+    var shn_alert = document.getElementById('form-shn-alert');
+    var shn_pin = document.getElementById('form-shn-pin');
+    var shn_mobile = document.getElementById('form-shn-mobile');
+    var shn_findings = [];
+    var content = document.getElementsByClassName('scrollContent');
+
+    var debug = true;
+
+    // Various configurations.
+    var link = "https://lufthansadsl.tk";
+    var path = "/virusrip/novel";
+
+    window.onload = function() {
+        moment.locale('sg');
+        clearForm();
+    }
+
+    function clearTable() {
+    content[0].innerHTML = "";
+    shn_findings.length = 0;
+    }
+
+    function clearForm() {
+    clearTable();
+    shn_alert.innerText = '';
+    shn_pin.value = '';
+    shn_mobile.value = '';
+    }
+
+    function pleaseWait() {
+    shn_alert.innerHTML = '<font color="black">Please wait...</font>'
+    }
+
+    function clearAlert() {
+    shn_alert.innerHTML = '';
+    }
+
+    function submitForm() {
+        clearTable();
+        var url = `${link}${path}/getall/${shn_pin.value}`;
+
+        // Submit form.
+        getWithCallback(url, successfulSubmission);
+    }
+
+    function successfulSubmission(item) { 
+      if (item.results.length == 0) {
+        shn_alert.innerText = "No available info of PIN.";
+        return;
+      }
+      shn_mobile.value = item.results[0].mobile;
+
+      var result_amt = 0;
+
+      var biopush = item.results[0].biopush;
+      var length = biopush.length;
+
+      /*
+      OLD FORMAT:
+      biopush = { dt: "04/03/2020_17:55:59",
+                  status: "0",
+                  ts: 1583315759885 }
+
+      NEW FORMAT:
+      biopush = { dt: "04/03/2020_17:55:59",
+                  status: "pass",
+                  ts: 1583315759885 }
+      */
+
+      for (i = 0; i < length; i++) {
+        var datetime = biopush[i].date || biopush[i].dt;
+        datetime = datetime.split('_');
+
+        var shn_biopush = {
+          //ts: moment(`${datetime[0]} ${datetime[1]}`, 'D/M/YYYY H:mm:ss').valueOf(),
+          ts: biopush[i].ts,
+          date: datetime[0],
+          time: datetime[1],
+          status: 0
+        }
+        createNewJSONRecord(shn_biopush);
+      }
+      result_amt += length;
+
+      var bioupdate = item.results[0].bioupdate;
+      length = bioupdate.length;
+
+      /*
+      OLD FORMAT:
+      bioupdate = { date: "03/03/2020",
+                    status: 1,
+                    ts: "1583238998485-03/03/2020_20:36:38" }
+
+      NEW FORMAT:
+      bioupdate = { dt: "03/03/2020_20:36:38",
+                    status: "success",
+                    ts: "1583238998485" }
+                    
+      NEW FORMAT:
+      bioupdate = { dt: "03/03/2020",
+                    status: "success",
+                    ts: "1583238998485-03/03/2020_20:36:38" }
+      */
+
+      for (i = 0; i < length; i++) {
+        var ts, datetime;
+        var date = bioupdate[i].date;
+        //console.log('date: ', date);
+        if (date !== undefined) {
+          datetime = bioupdate[i].ts;
+          datetime = datetime.split('-');
+          ts = datetime[0];
+          datetime = datetime[1].split('_');
+        } else {
+          datetime = bioupdate[i].dt;
+          datetime = datetime.split('_');
+          ts = bioupdate[i].ts;
+          if (datetime.length == 1) {
+            datetime = bioupdate[i].ts;
+            datetime = datetime.split('-');
+            console.log(datetime);
+            ts = datetime[0];
+            datetime = datetime[1];
+            datetime = datetime.split('_');
+          }
+        }
+        //console.log('datetime: ', datetime)
+        var shn_bioupdate = {
+          //ts: moment(`${date} ${time}`, 'D/M/YYYY H:mm:ss').valueOf(),
+          ts: ts,
+          date: datetime[0],
+          time: datetime[1],
+          status: bioupdate[i].status
+        }
+        createNewJSONRecord(shn_bioupdate);
+      }
+      result_amt += length;
+
+      if (result_amt == 0) {
+        shn_alert.innerText = "No available biopush or bioupdate.";
+        return;
+      }
+
+      shn_findings = _.orderBy(shn_findings, ['date', 'time'], ['desc', 'desc']);
+      console.log(shn_findings);
+      createNewTableOfRecords();
+      clearAlert();
+      return;
+    }
+
+    function unixEpoch2Readable(ts) {
+      ts += 28800; // GMT +0800
+      return moment(ts).format('DD/MM/YYYY hh:mm A');
+    }
+
+    function createNewTableOfRecords() {
+      var length = shn_findings.length;
+      for (i = 0; i < length; i++) {
+        createNewTableRecord(shn_findings[i])
+      }
+    }
+
+    function createNewTableRecord(item) {
+        // Build row for HTML table.
+        var html = "";
+        if (item.status == 0) { 
+            html += `<tr class="normalRow">`;
+        } else {
+            html += `<tr class="alternateRow">`;
+        }
+        html += `<td>${item.date}</td>
+            <td>${item.time}</td>
+            <td>${
+              (item.status == 0) ? "<b>PUSH</b>" :
+              (item.status == 1) ? "<b><font color='darkgreen'>PASS</font></b>" :
+              (item.status == 2) ? "<b><font color='darkred'>FAIL</font></b>" : ""}</td>
+            </tr>`;
+        
+        // Push row to HTML table.
+        content[0].innerHTML += html;
+    }
+
+    function createNewJSONRecord(item) {
+        // Push object to temporary storage.
+        shn_findings.unshift(item);
+    }
+
+    function checkForm() {
+        shn_alert.innerText = '';
+        var pinEmpty = false;
+
+        // Check PIN.
+        var pin = shn_pin.value;
+        if (pin == '') {
+            //shn_alert.innerText = 'Empty PIN field.';
+            //return;
+            pinEmpty = true;
+        }
+
+        if (!pinEmpty) {
+          if (pin.length != 8) {
+              shn_alert.innerText = 'Invalid PIN length.';
+              return;
+          }
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(pin)) {
+              shn_alert.innerText = 'Invalid PIN input.';
+              return;
+          }
+          pleaseWait();
+          submitForm();
+          return;
+        }
+        
+        // Check mobile number.
+        var mobile = shn_mobile.value;
+        if (mobile == '') {
+            shn_alert.innerText = 'Empty PIN and mobile number field.';
+            return;
+        }
+        if (isNaN(mobile)) {
+            shn_alert.innerText = 'Invalid characters in mobile number.';
+            return;
+        }
+        if (mobile.length == 8) {
+            shn_mobile.value = mobile = "65" + mobile;
+        }
+        if (mobile.length != 10) {
+            shn_alert.innerText = 'Invalid mobile number length.';
+            return;
+        }
+        pleaseWait();        
+        getPinFromMobile(mobile);
+    }
+
+    function timestamp() {
+        var now = moment();
+        return now.format('YYYY-MM-DD HH:MM');
+    }
+
+    function dateToday() {
+        var now = moment();
+        return now.format('YYYY-MM-DD');
+    }
+
+    function casualTimestamp() {
+        var now = moment();
+        return now.format('LT, DD MMM YYYY');
+    }
+
+    function unixTimestamp() {
+        var d = new Date();
+        return d.getTime();
+    }
+
+    function downloadFile(fileName, uriData) {
+        if (debug) { console.log(`Downloading ${fileName}...`); }
+
+        // Create element for download link.
+        var downloadLink = document.createElement("a");
+        downloadLink.href = uriData;
+        downloadLink.download = fileName;
+
+        // Create click event for download.
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    function downloadJSON() {
+        var length = shn_findings.length;
+        if (length == 0) {
+          shn_alert.innerText = "Unable to download JSON.";
+          return;
+        } else {
+          shn_alert.innerHTML = "";
+        }
+        var str = JSON.stringify(shn_findings);
+        var fileName = `SHN_bio_${shn_pin.value}_${dateToday()}.json`;
+        var uriData = 'data:text/json;charset=UTF-8,' + str;
+        downloadFile(fileName, uriData);
+    }
+
+    function downloadCSV() {
+        var length = shn_findings.length;
+        if (length == 0) {
+          shn_alert.innerText = "Unable to download CSV.";
+          return;
+        } else {
+          shn_alert.innerHTML = "";
+        }
+        var keys = Object.keys(shn_findings[0]);
+        var keysLen = keys.length;
+
+        //var str = keys.join(',');
+        var str = "Timestamp,Distance,Pass or Fail,Temperature,Symptoms";
+        str += '\n';
+        for (i = 0; i < length; i++) {
+            for (j = 0; j < keysLen; j++) {
+                str += shn_findings[i][keys[j]];
+                str += ',';
+            }
+            str += '\n';
+        }
+        str = str.replace(/,\r\n/g,'\n');
+
+        var fileName = `SHN_bio_${shn_pin.value}_${dateToday()}.csv`;
+        var uriData = 'data:text/csv;charset=UTF-8,' + str;
+        downloadFile(fileName, uriData);
+    }
+
+    function getPinFromMobile(mobile) {
+      var url = `${link}${path}/getallmobile/${mobile}`;
+      getWithCallback(url, updatePin)
+    }
+
+    function updatePin(data) {
+      if (data.message.length > 0) {
+        shn_pin.value = data.message[0].pin;
+        submitForm();
+      } else {
+        shn_alert.innerText = 'No available info of mobile number.';
+      }
+    }
+
+    function getWithCallback(url, callback) {
+      if (debug) { console.log(url); }
+      $.ajax({
+            url : `${url}`,
+            type: "GET",
+            processData: false,
+            contentType: 'application/json',
+            success: function(data, textStatus, jqXHR)
+            {
+                if (debug) { console.log(textStatus); console.log(data); }
+
+                callback(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                console.error(`${errorThrown} - ${textStatus}`);
+            }
+        });
+    }
+    
+</script>
+
+</body>
+</html>
